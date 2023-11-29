@@ -1,7 +1,7 @@
-import { Suspense } from 'react'
 import SessionMenu from './SessionMenu'
-import SessionMenuLoader from '@/app/(main)/loading'
 import ClientHeaderProvider from './ClientHeaderProvider'
+import { Suspense } from 'react'
+import SessionMenuLoader from '@/app/(main)/loading'
 
 export default function MainHeader() {
   return (

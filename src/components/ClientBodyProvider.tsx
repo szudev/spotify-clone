@@ -1,15 +1,22 @@
 'use client'
 
+import { cn } from '@/lib/utils'
 import useScrollStore from '@/store/main-view-scroll'
+import { usePathname } from 'next/navigation'
 import { ReactNode, useEffect, useRef } from 'react'
+import { shuffle } from 'lodash'
+import { ListofColors } from '@/lib/background-colors'
+import useBgColor from '@/hooks/use-bg-color'
 
 export default function ClientBodyProvider({
   children
 }: {
   children: ReactNode
 }) {
+  const pathname = usePathname()
   const { setScrollState } = useScrollStore()
   const mainRef = useRef<HTMLDivElement>(null)
+  const { backgroundColorValue, backgroundColorSetter } = useBgColor()
 
   useEffect(() => {
     if (!mainRef.current) return
@@ -39,8 +46,18 @@ export default function ClientBodyProvider({
     }
   }, [])
 
+  useEffect(() => {
+    backgroundColorSetter(shuffle(ListofColors).pop())
+  }, [pathname])
+
   return (
-    <main ref={mainRef} className='bg-transparent overflow-y-auto flex-1'>
+    <main
+      ref={mainRef}
+      className={cn('overflow-y-auto flex-1 to-zinc-900 bg-gradient-to-b', {
+        [backgroundColorValue ? backgroundColorValue : 'from-[#222222]']:
+          pathname.startsWith('/playlist')
+      })}
+    >
       {children}
     </main>
   )

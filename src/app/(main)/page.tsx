@@ -1,21 +1,19 @@
-export default function Home() {
+import RecentlyPlayed from '@/components/RecentlyPlayed'
+import { getAuthSession } from '@/lib/auth'
+import spotifyApi from '@/lib/spotify'
+import { Suspense } from 'react'
+import { RecentlyPlayedSkeleton } from './loading'
+
+export default async function Home() {
+  const session = await getAuthSession()
+  if (session?.user && session.user.accessToken) {
+    spotifyApi.setAccessToken(session.user.accessToken)
+  }
   return (
-    <section className='flex flex-col to-zinc-900 bg-gradient-to-b from-[#222222] px-6 pb-4 pt-16 min-h-full'>
-      <p className='text-white font-bold text-4xl'>
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt
-        libero vero ducimus architecto magni, tenetur ex dolor aliquam!
-        Necessitatibus et commodi beatae repellat illo omnis, amet voluptatem?
-        Saepe, quos quis. Lorem ipsum dolor, sit amet consectetur adipisicing
-        elit. Incidunt libero vero ducimus architecto magni, tenetur ex dolor
-        aliquam! Necessitatibus et commodi beatae repellat illo omnis, amet
-        voluptatem? Saepe, quos quis. Lorem ipsum dolor, sit amet consectetur
-        adipisicing elit. Incidunt libero vero ducimus architecto magni, tenetur
-        ex dolor aliquam! Necessitatibus et commodi beatae repellat illo omnis,
-        amet voluptatem? Saepe, quos quis. Lorem ipsum dolor, sit amet
-        consectetur adipisicing elit. Incidunt libero vero ducimus architecto
-        magni, tenetur ex dolor aliquam! Necessitatibus et commodi beatae
-        repellat illo omnis, amet voluptatem? Saepe, quos quis.
-      </p>
+    <section className='flex flex-col gap-6 to-zinc-900 bg-gradient-to-b from-[#222222] px-6 pb-4 pt-16 min-h-full'>
+      <Suspense fallback={<RecentlyPlayedSkeleton />}>
+        <RecentlyPlayed spotifyApi={spotifyApi} />
+      </Suspense>
     </section>
   )
 }

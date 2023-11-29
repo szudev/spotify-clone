@@ -1,9 +1,12 @@
 import AsideMenuItem from './AsideMenuItem'
 import { HomeIcon, LibraryIcon, PlusIcon, SearchIcon } from './Icons'
+import { Suspense } from 'react'
+import { AsideUserPlaylistSkeleton } from '@/app/(main)/loading'
+import UserPlaylistsStream from './UserPlaylistsStream'
 
-export default function AsideMenu() {
+export default async function AsideMenu() {
   return (
-    <nav className='flex flex-col gap-2 flex-1'>
+    <nav className='flex flex-col gap-2 overflow-y-auto flex-1'>
       <div className='bg-zinc-900 rounded-lg p-2'>
         <ul className='flex flex-col gap-5 p-4'>
           <AsideMenuItem href='/'>
@@ -16,9 +19,9 @@ export default function AsideMenu() {
           </AsideMenuItem>
         </ul>
       </div>
-      <div className='bg-zinc-900 rounded-lg p-2 flex-1'>
-        <ul className='flex flex-col gap-5 p-4'>
-          <div className='flex justify-between items-center'>
+      <div className='bg-zinc-900 rounded-lg p-2 flex-1 overflow-y-auto'>
+        <div className='flex flex-col overflow-y-auto flex-1'>
+          <ul className='flex justify-between items-center p-4'>
             <AsideMenuItem href='#'>
               <LibraryIcon className='h-6 w-6' />
               Your Library
@@ -28,8 +31,11 @@ export default function AsideMenu() {
                 <PlusIcon className='h-4 w-4' />
               </span>
             </button>
-          </div>
-        </ul>
+          </ul>
+          <Suspense fallback={<AsideUserPlaylistSkeleton />}>
+            <UserPlaylistsStream />
+          </Suspense>
+        </div>
       </div>
     </nav>
   )

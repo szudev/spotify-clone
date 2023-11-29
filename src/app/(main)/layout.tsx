@@ -24,7 +24,7 @@ export default function RootLayout({
         className={`${inter.className} grid md:[grid-template-areas:'aside_main_main'_'footer_footer_footer'] [grid-template-areas:'aside'_'main'_'footer'] md:grid-cols-[250px_1fr] grid-cols-[1fr] md:grid-rows-[1fr_auto] grid-rows-[auto_1fr_auto] h-[100svh] relative p-2 gap-2 bg-black`}
       >
         <Providers>
-          <aside className='[grid-area:aside] flex flex-col overflow-y-auto'>
+          <aside className='[grid-area:aside] flex flex-col overflow-y-auto flex-1'>
             <AsideMenu />
           </aside>
           <div className='flex relative rounded-lg flex-col overflow-y-hidden [grid-area:main]'>
