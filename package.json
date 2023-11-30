@@ -23,8 +23,7 @@
     "react-dom": "^18",
     "spotify-web-api-node": "5.0.2",
     "tailwind-merge": "2.0.0",
-    "tailwindcss-animate": "^1.0.7",
-    "zustand": "4.4.6"
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@swc-jotai/react-refresh": "^0.1.0",

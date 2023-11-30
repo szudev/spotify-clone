@@ -1,12 +1,12 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import useScrollStore from '@/store/main-view-scroll'
 import { usePathname } from 'next/navigation'
 import { ReactNode, useEffect, useRef } from 'react'
 import { shuffle } from 'lodash'
 import { ListofColors } from '@/lib/background-colors'
 import useBgColor from '@/hooks/use-bg-color'
+import useScrollBehaviour from '@/hooks/use-scroll-behaviour'
 
 export default function ClientBodyProvider({
   children
@@ -14,23 +14,23 @@ export default function ClientBodyProvider({
   children: ReactNode
 }) {
   const pathname = usePathname()
-  const { setScrollState } = useScrollStore()
   const mainRef = useRef<HTMLDivElement>(null)
   const { backgroundColorValue, backgroundColorSetter } = useBgColor()
+  const { scrollSetter } = useScrollBehaviour()
 
   useEffect(() => {
     if (!mainRef.current) return
     const handleScroll = () => {
       if (!mainRef.current) return
       if (mainRef.current.scrollTop === 0) {
-        setScrollState({ still: true })
+        scrollSetter({ still: true })
       } else if (
         mainRef.current.scrollTop > 0 &&
         mainRef.current.scrollTop < 50
       ) {
-        setScrollState({ scrolling: true })
+        scrollSetter({ scrolling: true })
       } else if (mainRef.current.scrollTop >= 50) {
-        setScrollState({ scrolled: true })
+        scrollSetter({ scrolled: true })
       }
     }
 
@@ -44,11 +44,16 @@ export default function ClientBodyProvider({
         mainRef.current.removeEventListener('scroll', handleScroll)
       }
     }
-  }, [])
+  }, [scrollSetter])
 
   useEffect(() => {
-    backgroundColorSetter(shuffle(ListofColors).pop())
-  }, [pathname])
+    if (pathname.endsWith('/') || pathname.startsWith('/genre')) {
+      backgroundColorSetter('bg-[#222222] from-[#222222]')
+    }
+    if (pathname.startsWith('/playlist')) {
+      backgroundColorSetter(shuffle(ListofColors).pop())
+    }
+  }, [pathname, backgroundColorSetter])
 
   return (
     <main

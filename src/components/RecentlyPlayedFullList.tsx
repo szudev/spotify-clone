@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import SpotifyWebApi from 'spotify-web-api-node'
 import { PauseIcon } from './Icons'
+import Link from 'next/link'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -11,7 +12,7 @@ export default async function RecentlyPlayedFullList({ spotifyApi }: Props) {
   return (
     <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4'>
       {body.items.map((song) => (
-        <a
+        <Link
           key={song.track.id}
           href={`/${song.context?.type ?? song.track.type}/${
             song.track.album.id
@@ -41,7 +42,7 @@ export default async function RecentlyPlayedFullList({ spotifyApi }: Props) {
               {song.track.artists[0].name}
             </p>
           </div>
-        </a>
+        </Link>
       ))}
     </div>
   )

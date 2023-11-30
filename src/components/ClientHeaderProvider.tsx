@@ -1,25 +1,29 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 import { Button } from './Button'
 import { BackArrowIcon, ForwardArrowIcon } from './Icons'
-import useScrollStore from '@/store/main-view-scroll'
 import { cn } from '@/lib/utils'
+import useScrollBehaviour from '@/hooks/use-scroll-behaviour'
+import useBgColor from '@/hooks/use-bg-color'
 
 export default function ClientHeaderProvider({
   children
 }: {
   children: ReactNode
 }) {
-  const { isScrolled, isScrolling, isStill } = useScrollStore()
+  const { scrollBehaviourValue } = useScrollBehaviour()
+  const { backgroundColorValue } = useBgColor()
+
   return (
     <header
       className={cn(
         'hidden z-[999] md:flex md:w-full h-16 md:absolute top-0 justify-between items-center px-6 transition-all duration-300',
         {
-          'bg-transparent': !isStill,
-          'bg-zinc-900 bg-opacity-20': isScrolling,
-          'bg-zinc-900': isScrolled
+          'bg-transparent': !scrollBehaviourValue.isStill,
+          [`${backgroundColorValue} bg-opacity-40`]:
+            scrollBehaviourValue.isScrolling,
+          [`${backgroundColorValue}`]: scrollBehaviourValue.isScrolled
         }
       )}
     >
