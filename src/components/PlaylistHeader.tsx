@@ -27,7 +27,7 @@ export default async function PlaylistHeader({
   const { body: playlistUser } = userResponse
 
   return (
-    <div className='flex pt-8 gap-4'>
+    <div className='flex pt-8 gap-4 px-6'>
       <Image
         src={playlist.images[0].url}
         width={192}
@@ -37,7 +37,7 @@ export default async function PlaylistHeader({
         priority
       />
       <div
-        className={cn('flex flex-col gap-6 justify-end', {
+        className={cn('flex flex-col justify-end', {
           'gap-6': !playlist.description,
           'gap-2': playlist.description
         })}

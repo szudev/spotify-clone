@@ -10,7 +10,7 @@ export default async function RecentlyPlayed() {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
   return (
-    <section className='flex flex-col gap-4'>
+    <section className='flex flex-col gap-4 flex-1'>
       <div className='flex items-center justify-start'>
         <p className='text-white text-xl font-semibold'>Recently played</p>
       </div>

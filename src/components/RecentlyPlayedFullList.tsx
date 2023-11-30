@@ -11,9 +11,9 @@ export default async function RecentlyPlayedFullList({ spotifyApi }: Props) {
   const { body } = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 8 })
   return (
     <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4'>
-      {body.items.map((song) => (
+      {body.items.map((song, i) => (
         <Link
-          key={song.track.id}
+          key={`#${i}-${song.track.id}-${song.track.album.id}`}
           href={`/${song.context?.type ?? song.track.type}/${
             song.track.album.id
           }`}

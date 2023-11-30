@@ -70,3 +70,28 @@ function RecentlyPlayedItemSkeleton() {
     </div>
   )
 }
+
+export function PlaylistHeaderSkeleton() {
+  return (
+    <div className='flex pt-8 gap-4 w-full px-6'>
+      <div className='bg-zinc-500 animate-pulse rounded-md w-full md:w-[26%] h-48' />
+      <div className='gap-2 flex-col flex justify-end w-full'>
+        <div className='flex flex-col gap-3'>
+          <div className='bg-zinc-500 animate-pulse rounded-full h-5 w-14' />
+          <div className='bg-zinc-500 animate-pulse rounded-full h-[60px] w-3/5' />
+          <div className='flex flex-col gap-2'>
+            <div className='bg-zinc-500 animate-pulse rounded-full h-3 w-full' />
+            <div className='bg-zinc-500 animate-pulse rounded-full h-3 w-1/2' />
+          </div>
+        </div>
+        <div className='flex gap-1 items-center w-full'>
+          <div className='h-8 w-8 rounded-full animate-pulse bg-zinc-500' />
+          <div className='rounded-full animate-pulse bg-zinc-500 h-3 w-16' />
+          <div className='before:content-["•"] flex items-center before:text-zinc-500 before:mr-1 before:animate-pulse'>
+            <div className='bg-zinc-500 animate-pulse h-3 w-32 rounded-full' />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

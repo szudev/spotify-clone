@@ -1,12 +1,9 @@
 import PlaylistHeader from '@/components/PlaylistHeader'
 import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
-import { cn, formatSongDuration } from '@/lib/utils'
-import { getPlaylistById } from '@/services/playlists'
-import { getUserById } from '@/services/user'
-import Image from 'next/image'
-import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
+import { PlaylistHeaderSkeleton } from '@/app/(main)/loading'
+import PlaylistTable from '@/components/PlaylistTable'
 
 interface Props {
   params: {
@@ -22,16 +19,13 @@ export default async function Playlist({ params }: Props) {
   }
 
   return (
-    <section className='flex flex-col gap-6 px-6 pb-4 pt-16 min-h-full'>
-      <Suspense
-        fallback={
-          <strong className='text-white font-bold animate-pulse text-6xl'>
-            LOADING HEADER...
-          </strong>
-        }
-      >
+    <section className='flex flex-col gap-6 pt-16 min-h-full'>
+      <Suspense fallback={<PlaylistHeaderSkeleton />}>
         <PlaylistHeader playlistId={playlistId} spotifyApi={spotifyApi} />
       </Suspense>
+      <div className='bg-gradient-to-b from-black/10 to-zinc-900 w-full flex-1'>
+        <PlaylistTable playlistId={playlistId} spotifyApi={spotifyApi} />
+      </div>
     </section>
   )
 }
