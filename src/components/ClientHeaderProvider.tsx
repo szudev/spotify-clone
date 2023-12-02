@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode, useEffect } from 'react'
+import { ReactNode } from 'react'
 import { Button } from './Button'
 import { BackArrowIcon, ForwardArrowIcon } from './Icons'
 import { cn } from '@/lib/utils'
@@ -18,7 +18,7 @@ export default function ClientHeaderProvider({
   return (
     <header
       className={cn(
-        'hidden z-[999] md:flex md:w-full h-16 md:absolute top-0 justify-between items-center px-6 transition-all duration-300',
+        'hidden z-[998] md:flex md:w-full h-16 md:absolute top-0 justify-between items-center px-6 transition-all duration-300',
         {
           'bg-transparent': !scrollBehaviourValue.isStill,
           [`${backgroundColorValue} bg-opacity-40`]:

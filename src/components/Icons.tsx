@@ -158,3 +158,16 @@ export function DurationIcon({ className }: IconProps) {
     </svg>
   )
 }
+
+export function SongPlayingImage({ className }: IconProps) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      className='absolute'
+      width='14'
+      height='14'
+      alt=''
+      src='https://open.spotifycdn.com/cdn/images/equaliser-green.f8937a92.svg'
+    />
+  )
+}

@@ -29,7 +29,7 @@ export default function UserProfileNav({ user }: Props) {
         <UserAvatar sizes='32px' user={user} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className='bg-[#282828] border-none flex flex-col p-2 gap-2 font-medium'
+        className='bg-[#282828] z-[999] border-none flex flex-col p-2 gap-2 font-medium'
         align='end'
       >
         <DropdownMenuItem

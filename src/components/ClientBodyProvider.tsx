@@ -58,10 +58,13 @@ export default function ClientBodyProvider({
   return (
     <main
       ref={mainRef}
-      className={cn('overflow-y-auto flex-1 to-zinc-900 bg-gradient-to-b', {
-        [backgroundColorValue ? backgroundColorValue : 'from-[#222222]']:
-          pathname.startsWith('/playlist')
-      })}
+      className={cn(
+        'overflow-y-auto flex-1 to-zinc-900 rounded-lg bg-gradient-to-b',
+        {
+          [backgroundColorValue ? backgroundColorValue : 'from-[#222222]']:
+            pathname.startsWith('/playlist')
+        }
+      )}
     >
       {children}
     </main>

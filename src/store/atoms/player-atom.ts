@@ -2,7 +2,7 @@ import { atom } from 'jotai'
 
 interface TPlaylistIdState {
   key: string
-  default: string
+  default: string | null
 }
 
 interface TPlaylistState {
@@ -12,7 +12,7 @@ interface TPlaylistState {
 
 export const playlistIdState = atom<TPlaylistIdState>({
   key: 'playlistIdState',
-  default: ''
+  default: null
 })
 
 export const playlistState = atom<TPlaylistState>({
