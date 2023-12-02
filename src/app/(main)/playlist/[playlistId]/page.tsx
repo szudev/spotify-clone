@@ -2,7 +2,10 @@ import PlaylistHeader from '@/components/PlaylistHeader'
 import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
 import { Suspense } from 'react'
-import { PlaylistHeaderSkeleton } from '@/app/(main)/loading'
+import {
+  PlaylistHeaderSkeleton,
+  PlaylistTableSkeleton
+} from '@/app/(main)/loading'
 import PlaylistTable from '@/components/PlaylistTable'
 
 interface Props {
@@ -23,8 +26,10 @@ export default async function Playlist({ params }: Props) {
       <Suspense fallback={<PlaylistHeaderSkeleton />}>
         <PlaylistHeader playlistId={playlistId} spotifyApi={spotifyApi} />
       </Suspense>
-      <div className='bg-gradient-to-b from-black/10 to-zinc-900 w-full flex-1'>
-        <PlaylistTable playlistId={playlistId} spotifyApi={spotifyApi} />
+      <div className='bg-gradient-to-b from-black/10 to-zinc-900 to-[200px] w-full flex-1'>
+        <Suspense fallback={<PlaylistTableSkeleton />}>
+          <PlaylistTable playlistId={playlistId} spotifyApi={spotifyApi} />
+        </Suspense>
       </div>
     </section>
   )

@@ -3,7 +3,7 @@ import { getUserById } from '@/services/user'
 import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
-import { cn, formatSongDuration } from '@/lib/utils'
+import { cn, formatPlaylistTotalDuration } from '@/lib/utils'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -33,7 +33,7 @@ export default async function PlaylistHeader({
         width={192}
         height={192}
         alt={`Playlist #${playlist.id} cover image.`}
-        className='rounded-md aspect-square'
+        className='rounded-md aspect-square shadow-2xl'
         priority
       />
       <div
@@ -83,7 +83,7 @@ export default async function PlaylistHeader({
             </span>
             <span className='text-zinc-300'>
               about{' '}
-              {formatSongDuration(
+              {formatPlaylistTotalDuration(
                 playlist.tracks.items.reduce((acc, currValue) => {
                   if (currValue.track) {
                     return (acc += currValue.track.duration_ms)

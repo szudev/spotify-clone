@@ -36,3 +36,21 @@ export async function getPlaylistById({
     spotifyWebApiErrorHandler(error)
   }
 }
+
+export async function getPlaylistTracksById({
+  playlistId,
+  spotifyApi
+}: {
+  playlistId: string
+  spotifyApi: SpotifyWebApi
+}) {
+  try {
+    const { body, statusCode } = await spotifyApi.getPlaylistTracks(
+      playlistId
+      //{ limit: 4, offset: 0 }
+    )
+    return { body, statusCode }
+  } catch (error) {
+    spotifyWebApiErrorHandler(error)
+  }
+}

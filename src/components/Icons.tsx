@@ -131,3 +131,30 @@ export function PlayIcon({ className }: IconProps) {
     </svg>
   )
 }
+
+export function PlaylistPlayIcon({ className }: IconProps) {
+  return (
+    <svg
+      role='img'
+      aria-hidden='true'
+      viewBox='0 0 24 24'
+      className={cn('fill-black', className)}
+    >
+      <path d='m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z'></path>
+    </svg>
+  )
+}
+
+export function DurationIcon({ className }: IconProps) {
+  return (
+    <svg
+      role='img'
+      aria-hidden='true'
+      viewBox='0 0 16 16'
+      className={cn('fill-zinc-400', className)}
+    >
+      <path d='M8 1.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13zM0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8z'></path>
+      <path d='M8 3.25a.75.75 0 0 1 .75.75v3.25H11a.75.75 0 0 1 0 1.5H7.25V4A.75.75 0 0 1 8 3.25z'></path>
+    </svg>
+  )
+}
