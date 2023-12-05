@@ -7,7 +7,6 @@ import { PlaylistPauseIcon, PlaylistPlayIcon } from './Icons'
 import { useAtom } from 'jotai'
 import { currentTrackIdAtom, isPlayingAtom } from '@/store/atoms/player-atom'
 import { pauseSong, playSong } from '@/actions/player'
-import SpotifyPlayer from 'react-spotify-web-playback'
 
 interface Props {
   track: SpotifyApi.PlaylistTrackObject
