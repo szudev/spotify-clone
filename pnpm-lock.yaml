@@ -17,6 +17,9 @@ dependencies:
   '@tanstack/react-query':
     specifier: 4.29.11
     version: 4.29.11(react-dom@18.2.0)(react@18.2.0)
+  '@types/spotify-web-playback-sdk':
+    specifier: 0.1.19
+    version: 0.1.19
   '@upstash/redis':
     specifier: 1.25.1
     version: 1.25.1
@@ -960,6 +963,10 @@ packages:
     dependencies:
       '@types/spotify-api': 0.0.25
     dev: true
+
+  /@types/spotify-web-playback-sdk@0.1.19:
+    resolution: {integrity: sha512-Is7x9gMIMoERxE0uvb2SPFQoy5OR7nO1B24CJiaDAUIdq195OLTQedN95XJQtxB2mfm+zi2j3LvEtpPdHKnB3w==}
+    dev: false
 
   /@typescript-eslint/parser@6.11.0(eslint@8.54.0)(typescript@5.2.2):
     resolution: {integrity: sha512-+whEdjk+d5do5nxfxx73oanLL9ghKO3EwM9kBCkUtWMRwWuPaFv9ScuqlYfQ6pAD6ZiJhky7TZ2ZYhrMsfMxVQ==}

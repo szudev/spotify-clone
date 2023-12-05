@@ -1,17 +1,10 @@
 import Image from 'next/image'
-import {
-  EnableRepeatIcon,
-  HeartIcon,
-  HighVolumeIcon,
-  PlayBeforeIcon,
-  PlayIcon,
-  PlayNextIcon,
-  RandomOffModeIcon
-} from './Icons'
+import { HeartIcon, HighVolumeIcon } from './Icons'
 import { Slider } from './ui/slider'
 import Link from 'next/link'
 import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
+import MainPlayer from './MainPlayer'
 
 export default async function FooterContent() {
   const session = await getAuthSession()
@@ -38,15 +31,7 @@ export default async function FooterContent() {
         <HeartIcon className='h-4 w-4 fill-zinc-400' />
       </div>
       <div className='flex flex-col items-center justify-between'>
-        <div className='flex gap-6 items-center justify-center'>
-          <RandomOffModeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
-          <PlayBeforeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
-          <button className='rounded-full bg-white p-2 flex items-center justify-center'>
-            <PlayIcon className='h-4 w-4' />
-          </button>
-          <PlayNextIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
-          <EnableRepeatIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
-        </div>
+        <MainPlayer accessToken={spotifyApi.getAccessToken()} />
         <div className='grid w-full grid-cols-[minmax(20px,auto)_1fr_minmax(20px,auto)] gap-2 items-center justify-center'>
           <div className='flex justify-end items-center text-zinc-400 text-sm'>
             0:00
