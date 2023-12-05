@@ -8,7 +8,9 @@ interface Props {
 }
 
 export default async function RecentlyPlayed({ spotifyApi }: Props) {
-  const { body } = await spotifyApi.getMyRecentlyPlayedTracks({ limit: 4 })
+  const { body } = await spotifyApi.getMyRecentlyPlayedTracks({
+    limit: 4
+  })
   return (
     <section className='flex flex-col gap-4'>
       <div className='flex items-center justify-between'>

@@ -5,6 +5,7 @@ import AsideMenu from '@/components/AsideMenu'
 import MainHeader from '@/components/MainHeader'
 import Providers from '@/components/Providers'
 import MainContent from '@/components/MainContent'
+import FooterContent from '@/components/FooterContent'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -32,7 +33,7 @@ export default function RootLayout({
             <MainContent>{children}</MainContent>
           </div>
           <footer className='[grid-area:footer] md:bg-black bg-[rgba(0,0,0,.8)] md:backdrop-blur-none backdrop-blur-[5px]'>
-            FOOTER
+            <FooterContent />
           </footer>
         </Providers>
       </body>

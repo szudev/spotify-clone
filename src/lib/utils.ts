@@ -63,7 +63,26 @@ export function formatSongAddedAt(added_at: string) {
     (currentDate.getTime() - addedDate.getTime()) / (1000 * 60 * 60 * 24)
   )
 
-  if (differenceInDays < 7) {
+  if (differenceInDays < 1) {
+    // Less than a day
+    const differenceInHours = Math.floor(
+      (currentDate.getTime() - addedDate.getTime()) / (1000 * 60 * 60)
+    )
+    if (differenceInHours < 1) {
+      // Less than an hour
+      const differenceInMinutes = Math.floor(
+        (currentDate.getTime() - addedDate.getTime()) / (1000 * 60)
+      )
+      return `${differenceInMinutes} ${
+        differenceInMinutes === 1 ? 'minute' : 'minutes'
+      } ago`
+    } else {
+      // Less than a day, but more than an hour
+      return `${differenceInHours} ${
+        differenceInHours === 1 ? 'hour' : 'hours'
+      } ago`
+    }
+  } else if (differenceInDays < 7) {
     // Less than a week
     return `${differenceInDays} ${differenceInDays === 1 ? 'day' : 'days'} ago`
   } else if (differenceInDays < 30) {

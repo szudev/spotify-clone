@@ -1,17 +1,39 @@
 'use client'
 
-import { formatSongAddedAt, formatSongDuration } from '@/lib/utils'
+import { cn, formatSongAddedAt, formatSongDuration } from '@/lib/utils'
 import Image from 'next/image'
 import { useState } from 'react'
-import { PlaylistPlayIcon } from './Icons'
+import { PlaylistPauseIcon, PlaylistPlayIcon } from './Icons'
+import { useAtom } from 'jotai'
+import { currentTrackIdAtom, isPlayingAtom } from '@/store/atoms/player-atom'
+import { pauseSong, playSong } from '@/actions/player'
+import SpotifyPlayer from 'react-spotify-web-playback'
 
 interface Props {
   track: SpotifyApi.PlaylistTrackObject
   i: number
+  token: string | undefined
 }
 
-export default function PlaylistTableItem({ track, i }: Props) {
+export default function PlaylistTableItem({ track, i, token }: Props) {
   const [isHovering, setIsHovering] = useState(false)
+  const [currentTrackId, setCurrentTrackId] = useAtom(currentTrackIdAtom)
+  const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
+
+  const handlePlaySong = async () => {
+    if (!track.track) return
+    await playSong(track.track)
+    setCurrentTrackId(track.track.id)
+    setIsPlaying(true)
+  }
+
+  const handlePauseSong = async () => {
+    if (!track.track) return
+    await pauseSong()
+    setIsPlaying(false)
+  }
+
+  if (!track.track) return null
 
   return (
     <article
@@ -19,9 +41,21 @@ export default function PlaylistTableItem({ track, i }: Props) {
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
     >
-      <div className='col-start-1 text-center items-center justify-center group-hover:text-white'>
+      <div
+        className={cn('col-start-1 text-center items-center justify-center', {
+          'text-[#1ed760]': currentTrackId === track.track?.id
+        })}
+      >
         {isHovering ? (
-          <PlaylistPlayIcon className='h-6 w-6 fill-white' />
+          currentTrackId === track.track?.id && isPlaying ? (
+            <button onClick={handlePauseSong}>
+              <PlaylistPauseIcon className='h-6 w-6 fill-white' />
+            </button>
+          ) : (
+            <button onClick={handlePlaySong}>
+              <PlaylistPlayIcon className='h-6 w-6 fill-white' />
+            </button>
+          )
         ) : (
           i + 1
         )}
@@ -46,7 +80,12 @@ export default function PlaylistTableItem({ track, i }: Props) {
         />
         <div className='flex flex-col'>
           <div className='table table-fixed w-full'>
-            <h3 className='text-white block truncate hover:cursor-pointer hover:underline'>
+            <h3
+              className={cn(
+                'text-white block truncate hover:cursor-pointer hover:underline',
+                { 'text-[#1ed760]': currentTrackId === track.track?.id }
+              )}
+            >
               {track.track ? track.track.name : 'Unknown'}
             </h3>
           </div>

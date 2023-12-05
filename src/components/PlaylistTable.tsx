@@ -40,13 +40,14 @@ export default async function PlaylistTable({ playlistId, spotifyApi }: Props) {
         </div>
         {playlist.items.map((track, i) => (
           <PlaylistTableItem
-            i={i}
-            track={track}
             key={
               track.track
                 ? track.track.id
                 : `${i + 1}-${track.added_at}-${track.added_by.id}`
             }
+            token={spotifyApi.getAccessToken()}
+            i={i}
+            track={track}
           />
         ))}
       </div>
