@@ -18,7 +18,6 @@ async function refreshAccessToken(token: JWT) {
       refreshToken: refreshedToken.refresh_token ?? token.refreshToken
     }
   } catch (error) {
-    await signOut({ callbackUrl: '/login' })
     return {
       ...token,
       error: 'RefreshAccessTokenError'
@@ -59,7 +58,7 @@ export const authOptions: NextAuthOptions = {
           return token
         }
       }
-      //Access Token has expired, use the refresh token
+
       return await refreshAccessToken(token)
     },
     async session({ session, token }) {
