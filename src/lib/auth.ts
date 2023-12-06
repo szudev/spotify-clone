@@ -18,7 +18,7 @@ async function refreshAccessToken(token: JWT) {
       refreshToken: refreshedToken.refresh_token ?? token.refreshToken
     }
   } catch (error) {
-    await signOut({ callbackUrl: '/login' })
+    //await signOut({ callbackUrl: '/login' })
     return {
       ...token,
       error: 'RefreshAccessTokenError'
