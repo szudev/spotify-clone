@@ -12,6 +12,16 @@ export default async function FooterContent() {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
 
+  /* const { body, statusCode } = await spotifyApi.getMyCurrentPlaybackState()
+
+  if(statusCode === 204) {
+    //FILL WITH THE DEFAULT STATE
+  }
+  if(statusCode === 200) {
+    //FILL WITH THE PLAYBACK STATUS
+    //CHECK IF THE PLAYBACK IS PLAYING SO WE CAN PAUSE IT IF SO
+  } */
+
   return (
     <section className='grid grid-cols-[30%_40%_30%] px-2 pb-[2px] pt-2 rounded-lg'>
       <div className='flex justify-start items-center gap-3'>
@@ -30,27 +40,7 @@ export default async function FooterContent() {
         </div>
         <HeartIcon className='h-4 w-4 fill-zinc-400' />
       </div>
-      <div className='flex flex-col items-center justify-between'>
-        <MainPlayer accessToken={spotifyApi.getAccessToken()} />
-        <div className='grid w-full grid-cols-[minmax(20px,auto)_1fr_minmax(20px,auto)] gap-2 items-center justify-center'>
-          <div className='flex justify-end items-center text-zinc-400 text-sm'>
-            0:00
-          </div>
-          <div className='w-full flex relative flex-col group'>
-            <p className='invisible text-xs'>Hidden Text</p>
-            <Slider
-              defaultValue={[0]}
-              max={100}
-              min={0}
-              step={1}
-              className='top-1/2 group left-1/2 absolute -translate-y-1/2 -translate-x-1/2'
-            />
-          </div>
-          <div className='flex justify-start items-center text-zinc-400 text-sm'>
-            0:00
-          </div>
-        </div>
-      </div>
+      <MainPlayer accessToken={spotifyApi.getAccessToken()} />
       <div className='flex items-center justify-end gap-2'>
         <HighVolumeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
         <div className='w-full flex relative flex-col max-w-[50%] group'>

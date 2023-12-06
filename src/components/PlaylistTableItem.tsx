@@ -4,8 +4,12 @@ import { cn, formatSongAddedAt, formatSongDuration } from '@/lib/utils'
 import Image from 'next/image'
 import { useState } from 'react'
 import { PlaylistPauseIcon, PlaylistPlayIcon } from './Icons'
-import { useAtom } from 'jotai'
-import { currentTrackIdAtom, isPlayingAtom } from '@/store/atoms/player-atom'
+import { useAtom, useAtomValue } from 'jotai'
+import {
+  currentTrackAtom,
+  deviceIdAtom,
+  isPlayingAtom
+} from '@/store/atoms/player-atom'
 import { pauseSong, playSong } from '@/actions/player'
 
 interface Props {
@@ -14,15 +18,16 @@ interface Props {
   token: string | undefined
 }
 
-export default function PlaylistTableItem({ track, i, token }: Props) {
+export default function PlaylistTableItem({ track, i }: Props) {
   const [isHovering, setIsHovering] = useState(false)
-  const [currentTrackId, setCurrentTrackId] = useAtom(currentTrackIdAtom)
+  const [currentTrack, setCurrentTrackId] = useAtom(currentTrackAtom)
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
+  const deviceId = useAtomValue(deviceIdAtom)
 
   const handlePlaySong = async () => {
-    if (!track.track) return
-    await playSong(track.track)
-    setCurrentTrackId(track.track.id)
+    if (!track.track || !deviceId) return
+    await playSong(track.track, deviceId)
+    setCurrentTrackId(track.track)
     setIsPlaying(true)
   }
 
@@ -42,11 +47,11 @@ export default function PlaylistTableItem({ track, i, token }: Props) {
     >
       <div
         className={cn('col-start-1 text-center items-center justify-center', {
-          'text-[#1ed760]': currentTrackId === track.track?.id
+          'text-[#1ed760]': currentTrack?.id === track.track?.id
         })}
       >
         {isHovering ? (
-          currentTrackId === track.track?.id && isPlaying ? (
+          currentTrack?.id === track.track?.id && isPlaying ? (
             <button onClick={handlePauseSong}>
               <PlaylistPauseIcon className='h-6 w-6 fill-white' />
             </button>
@@ -82,7 +87,7 @@ export default function PlaylistTableItem({ track, i, token }: Props) {
             <h3
               className={cn(
                 'text-white block truncate hover:cursor-pointer hover:underline',
-                { 'text-[#1ed760]': currentTrackId === track.track?.id }
+                { 'text-[#1ed760]': currentTrack?.id === track.track?.id }
               )}
             >
               {track.track ? track.track.name : 'Unknown'}

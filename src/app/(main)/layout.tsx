@@ -6,6 +6,7 @@ import MainHeader from '@/components/MainHeader'
 import Providers from '@/components/Providers'
 import MainContent from '@/components/MainContent'
 import FooterContent from '@/components/FooterContent'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -35,6 +36,7 @@ export default function RootLayout({
           <footer className='[grid-area:footer] md:bg-black bg-[rgba(0,0,0,.8)] md:backdrop-blur-none backdrop-blur-[5px]'>
             <FooterContent />
           </footer>
+          <Toaster />
         </Providers>
       </body>
     </html>
