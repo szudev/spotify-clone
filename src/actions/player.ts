@@ -1,11 +1,13 @@
 'use server'
 
 import { getAuthSession } from '@/lib/auth'
+import { spotifyWebApiErrorHandler } from '@/lib/errors'
 import spotifyApi from '@/lib/spotify'
 
 export const playSong = async (
-  track: SpotifyApi.TrackObjectFull,
-  deviceId: string
+  track: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObject,
+  deviceId: string,
+  position_ms: number
 ) => {
   const session = await getAuthSession()
   if (session?.user && session.user.accessToken) {
@@ -14,27 +16,26 @@ export const playSong = async (
   try {
     const { body } = await spotifyApi.getMyDevices()
     if (body.devices.length === 0) throw new Error('NO DEVICES FOUND.')
-    await spotifyApi.play({
+    return await spotifyApi.play({
       uris: [track.uri],
-      device_id: deviceId
+      device_id: deviceId,
+      position_ms: position_ms
     })
   } catch (error) {
-    if (error instanceof Error) console.log({ MESSAGE: error.message })
+    return { statusCode: spotifyWebApiErrorHandler(error) }
   }
 }
 
-export const pauseSong = async () => {
+export const pauseSong = async (deviceId: string) => {
   const session = await getAuthSession()
   if (session?.user && session.user.accessToken) {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
   try {
-    const { body } = await spotifyApi.getMyDevices()
-    if (body.devices.length === 0) throw new Error('NO DEVICES FOUND.')
-    await spotifyApi.pause({
-      device_id: body.devices.find((device) => device.id !== null)?.id as string
+    return await spotifyApi.pause({
+      device_id: deviceId
     })
   } catch (error) {
-    if (error instanceof Error) console.log({ MESSAGE: error.message })
+    return { statusCode: spotifyWebApiErrorHandler(error) }
   }
 }

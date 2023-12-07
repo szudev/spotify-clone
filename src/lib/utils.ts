@@ -96,3 +96,28 @@ export function formatSongAddedAt(added_at: string) {
     return format(addedDate, 'MMM dd, yyyy')
   }
 }
+
+export function formatCurrentSongProgress(progress: number, duration: number) {
+  if (duration <= 0) {
+    return 0
+  }
+
+  const percentage = (progress / duration) * 100
+  return Math.min(100, Math.max(0, percentage))
+}
+
+export function formatCurrentSongTime(time: number) {
+  if (time < 0) {
+    return '-:--'
+  }
+
+  const seconds = Math.floor(time / 1000) % 60
+  const minutes = Math.floor(time / (1000 * 60)) % 60
+  const hours = Math.floor(time / (1000 * 60 * 60))
+
+  const formattedSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`
+  const formattedMinutes = minutes < 10 ? `${minutes}` : `${minutes}`
+  const formattedHours = hours > 0 ? `${hours}:` : ''
+
+  return `${formattedHours}${formattedMinutes}:${formattedSeconds}`
+}

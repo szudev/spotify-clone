@@ -1,6 +1,6 @@
 'use client'
 
-import { cn, formatSongAddedAt, formatSongDuration } from '@/lib/utils'
+import { formatSongAddedAt, formatSongDuration } from '@/lib/utils'
 import Image from 'next/image'
 import { useState } from 'react'
 import { PlaylistPauseIcon, PlaylistPlayIcon } from './Icons'
@@ -26,14 +26,13 @@ export default function PlaylistTableItem({ track, i }: Props) {
 
   const handlePlaySong = async () => {
     if (!track.track || !deviceId) return
-    await playSong(track.track, deviceId)
-    setCurrentTrackId(track.track)
+    await playSong(track.track, deviceId, 0)
+    setCurrentTrackId({ song: track.track, progress_ms: 0 })
     setIsPlaying(true)
   }
 
   const handlePauseSong = async () => {
     if (!track.track) return
-    await pauseSong()
     setIsPlaying(false)
   }
 
@@ -46,12 +45,12 @@ export default function PlaylistTableItem({ track, i }: Props) {
       onMouseLeave={() => setIsHovering(false)}
     >
       <div
-        className={cn('col-start-1 text-center items-center justify-center', {
-          'text-[#1ed760]': currentTrack?.id === track.track?.id
-        })}
+        className={`${
+          currentTrack?.song?.id === track.track.id && 'text-[#1ed760]'
+        } col-start-1 flex text-center items-center justify-center`}
       >
         {isHovering ? (
-          currentTrack?.id === track.track?.id && isPlaying ? (
+          currentTrack?.song?.id === track.track.id && isPlaying ? (
             <button onClick={handlePauseSong}>
               <PlaylistPauseIcon className='h-6 w-6 fill-white' />
             </button>
@@ -60,6 +59,14 @@ export default function PlaylistTableItem({ track, i }: Props) {
               <PlaylistPlayIcon className='h-6 w-6 fill-white' />
             </button>
           )
+        ) : isPlaying && currentTrack?.song?.id === track.track.id ? (
+          <Image
+            src={'/song-playing.gif'}
+            alt={`playing-song-#${track.track.id}`}
+            className='aspect-square'
+            width={14}
+            height={14}
+          />
         ) : (
           i + 1
         )}
@@ -85,10 +92,10 @@ export default function PlaylistTableItem({ track, i }: Props) {
         <div className='flex flex-col'>
           <div className='table table-fixed w-full'>
             <h3
-              className={cn(
-                'text-white block truncate hover:cursor-pointer hover:underline',
-                { 'text-[#1ed760]': currentTrack?.id === track.track?.id }
-              )}
+              className={`${
+                currentTrack?.song?.id === track.track.id &&
+                'text-[#1ed760_!important]'
+              } text-white block truncate hover:cursor-pointer hover:underline`}
             >
               {track.track ? track.track.name : 'Unknown'}
             </h3>
