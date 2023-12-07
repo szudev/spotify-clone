@@ -11,6 +11,7 @@ import {
   isPlayingAtom
 } from '@/store/atoms/player-atom'
 import { pauseSong, playSong } from '@/actions/player'
+import { toast } from '@/hooks/use-toast'
 
 interface Props {
   track: SpotifyApi.PlaylistTrackObject
@@ -26,14 +27,47 @@ export default function PlaylistTableItem({ track, i }: Props) {
 
   const handlePlaySong = async () => {
     if (!track.track || !deviceId) return
-    await playSong(track.track, deviceId, 0)
-    setCurrentTrackId({ song: track.track, progress_ms: 0 })
-    setIsPlaying(true)
+    const { statusCode } = await playSong(
+      track.track,
+      deviceId,
+      currentTrack &&
+        currentTrack.song &&
+        currentTrack.progress_ms &&
+        currentTrack.song.id === track.track.id
+        ? currentTrack.progress_ms
+        : 0
+    )
+    if (statusCode !== 202) {
+      toast({
+        title: 'There was an error',
+        description: 'Could not play the song.',
+        variant: 'destructive'
+      })
+    } else {
+      setCurrentTrackId({
+        song: track.track,
+        progress_ms:
+          currentTrack &&
+          currentTrack.progress_ms &&
+          currentTrack.song &&
+          currentTrack.song.id === track.track.id
+            ? currentTrack.progress_ms
+            : 0
+      })
+      setIsPlaying(true)
+    }
   }
 
   const handlePauseSong = async () => {
-    if (!track.track) return
-    setIsPlaying(false)
+    if (!track.track || !deviceId) return
+    const { statusCode } = await pauseSong(deviceId)
+    if (statusCode !== 202) {
+      toast({
+        title: 'There was an error',
+        description: 'Could not pause the song, try again later.',
+        variant: 'destructive'
+      })
+    } else setIsPlaying(false)
   }
 
   if (!track.track) return null
@@ -46,7 +80,9 @@ export default function PlaylistTableItem({ track, i }: Props) {
     >
       <div
         className={`${
-          currentTrack?.song?.id === track.track.id && 'text-[#1ed760]'
+          currentTrack?.song?.id === track.track.id
+            ? 'text-[#1ed760]'
+            : 'text-zinc-400'
         } col-start-1 flex text-center items-center justify-center`}
       >
         {isHovering ? (
@@ -93,9 +129,10 @@ export default function PlaylistTableItem({ track, i }: Props) {
           <div className='table table-fixed w-full'>
             <h3
               className={`${
-                currentTrack?.song?.id === track.track.id &&
-                'text-[#1ed760_!important]'
-              } text-white block truncate hover:cursor-pointer hover:underline`}
+                currentTrack?.song?.id === track.track.id
+                  ? 'text-[#1ed760]'
+                  : 'text-white'
+              } block truncate hover:cursor-pointer hover:underline`}
             >
               {track.track ? track.track.name : 'Unknown'}
             </h3>

@@ -5,6 +5,9 @@ import {
   EnableRepeatIcon,
   HeartIcon,
   HighVolumeIcon,
+  LowVolumeIcon,
+  MidVolumeIcon,
+  MuteVolumeIcon,
   PauseIcon,
   PlayBeforeIcon,
   PlayIcon,
@@ -25,7 +28,12 @@ import { toast } from '@/hooks/use-toast'
 import Image from 'next/image'
 import Link from 'next/link'
 import { formatCurrentSongProgress, formatCurrentSongTime } from '@/lib/utils'
-import { getUserPlaybackState, setPlaybackVolume } from '@/services/playback'
+import {
+  getUserPlaybackState,
+  seekToPosition,
+  setPlaybackVolume
+} from '@/services/playback'
+import { debounce } from 'lodash'
 
 interface Props {
   accessToken: string | undefined
@@ -50,7 +58,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
           if (statusCode !== 204)
             toast({
               title: 'There was an error',
-              description: 'Could not pause the song.',
+              description: 'Could not pause the currently playing device.',
               variant: 'destructive'
             })
         }
@@ -101,18 +109,11 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
   }
 
   const handleVolumeChange = async (newVolume: number) => {
-    if (
-      deviceId === undefined ||
-      currentTrack === undefined ||
-      !currentTrack.song ||
-      !body ||
-      !body.device.volume_percent
-    ) {
-      return
-    }
+    if (!deviceId) return
     const { statusCode } = await setPlaybackVolume({
       volume: newVolume,
-      accessToken
+      accessToken,
+      deviceId
     })
     if (statusCode !== 204) {
       toast({
@@ -121,6 +122,25 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
         variant: 'destructive'
       })
     } else setVolumeValue(newVolume)
+  }
+
+  const handleSongPositionChange = async (newPosition: number) => {
+    if (!deviceId) return
+    const { statusCode } = await seekToPosition({
+      deviceId,
+      positionMs: newPosition,
+      accessToken
+    })
+    if (statusCode !== 202) {
+      toast({
+        title: 'There was an error',
+        description:
+          'Could not change the position of the song, try again later.',
+        variant: 'destructive'
+      })
+    } else {
+      setCurrentTrack((prev) => ({ ...prev!, progress_ms: newPosition }))
+    }
   }
 
   useEffect(() => {
@@ -206,8 +226,8 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
         </div>
         <div className='grid w-full grid-cols-[minmax(20px,auto)_1fr_minmax(20px,auto)] gap-2 items-center justify-center'>
           <div className='flex justify-end items-center text-zinc-400 text-sm'>
-            {currentTrack && currentTrack.song && currentTrack.progress_ms
-              ? formatCurrentSongTime(currentTrack.progress_ms)
+            {currentTrack
+              ? formatCurrentSongTime(currentTrack.progress_ms ?? 0)
               : '-:--'}
           </div>
           <div className='w-full flex relative flex-col group'>
@@ -226,34 +246,43 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
                     ]
                   : [0]
               }
+              onValueChange={(value) => {
+                if (!currentTrack?.song) return
+                const [newValue] = value //percent of the song
+                const positionMs =
+                  (currentTrack.song.duration_ms * newValue) / 100
+                handleSongPositionChange(Math.round(positionMs))
+              }}
               defaultValue={[0]}
               max={100}
               min={0}
-              step={1}
               className='top-1/2 group left-1/2 absolute -translate-y-1/2 -translate-x-1/2'
             />
           </div>
           <div className='flex justify-start items-center text-zinc-400 text-sm'>
-            {currentTrack && currentTrack.song && currentTrack.progress_ms
+            {currentTrack && currentTrack.song
               ? formatCurrentSongTime(currentTrack.song.duration_ms)
               : '-:--'}
           </div>
         </div>
       </div>
       <div className='flex items-center justify-end gap-2'>
-        <HighVolumeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
+        {volumeValue <= 100 && volumeValue >= 60 ? (
+          <HighVolumeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
+        ) : volumeValue <= 59 && volumeValue >= 30 ? (
+          <MidVolumeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
+        ) : volumeValue <= 29 && volumeValue > 0 ? (
+          <LowVolumeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
+        ) : (
+          <MuteVolumeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
+        )}
         <div className='w-full flex relative flex-col max-w-[50%] group'>
           <p className='invisible text-xs'>Hidden Text</p>
           <Slider
             defaultValue={[50]}
             max={100}
             min={0}
-            disabled={
-              !currentTrack ||
-              !currentTrack.song ||
-              !body?.device ||
-              !body.device.volume_percent
-            }
+            disabled={!deviceId}
             onValueChange={(value) => {
               const [newVolume] = value
               handleVolumeChange(newVolume)

@@ -6,6 +6,14 @@ interface SetVolumeProps {
   volume: number
   api?: SpotifyWebApi
   accessToken?: string
+  deviceId: string
+}
+
+interface SeekToPositionProps {
+  positionMs: number
+  api?: SpotifyWebApi
+  accessToken?: string
+  deviceId: string
 }
 
 export async function getUserPlaybackState(
@@ -29,15 +37,44 @@ export async function getUserPlaybackState(
 export async function setPlaybackVolume({
   volume,
   api,
-  accessToken
+  accessToken,
+  deviceId
 }: SetVolumeProps) {
   try {
     if (!api && accessToken) {
       spotifyApi.setAccessToken(accessToken)
-      const { statusCode } = await spotifyApi.setVolume(volume)
+      const { statusCode } = await spotifyApi.setVolume(volume, {
+        device_id: deviceId
+      })
       return { statusCode }
     } else if (api) {
-      const { statusCode } = await api.setVolume(volume)
+      const { statusCode } = await api.setVolume(volume, {
+        device_id: deviceId
+      })
+      return { statusCode }
+    } else throw new Error()
+  } catch (error) {
+    return { statusCode: spotifyWebApiErrorHandler(error) }
+  }
+}
+
+export async function seekToPosition({
+  deviceId,
+  positionMs,
+  accessToken,
+  api
+}: SeekToPositionProps) {
+  try {
+    if (!api && accessToken) {
+      spotifyApi.setAccessToken(accessToken)
+      const { statusCode } = await spotifyApi.seek(positionMs, {
+        device_id: deviceId
+      })
+      return { statusCode }
+    } else if (api) {
+      const { statusCode } = await api.seek(positionMs, {
+        device_id: deviceId
+      })
       return { statusCode }
     } else throw new Error()
   } catch (error) {
