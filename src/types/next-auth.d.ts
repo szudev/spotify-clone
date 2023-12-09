@@ -10,6 +10,7 @@ declare module 'next-auth/jwt' {
     refreshToken?: RefreshToken
     accessTokenExpires?: number
     username: string | null
+    error?: boolean
   }
 }
 

@@ -15,13 +15,14 @@ async function refreshAccessToken(token: JWT) {
       ...token,
       accessToken: refreshedToken.access_token,
       accessTokenExpires: Date.now() + refreshedToken.expires_in * 1000,
-      refreshToken: refreshedToken.refresh_token ?? token.refreshToken
+      refreshToken: refreshedToken.refresh_token ?? token.refreshToken,
+      error: false
     }
   } catch (error) {
     //await signOut({ callbackUrl: '/login' })
     return {
       ...token,
-      error: 'RefreshAccessTokenError'
+      error: true
     }
   }
 }
@@ -50,7 +51,8 @@ export const authOptions: NextAuthOptions = {
           accessToken: account.access_token,
           refreshToken: account.refresh_token,
           username: account.providerAccountId,
-          accessTokenExpires: account.expires_at * 1000
+          accessTokenExpires: account.expires_at * 1000,
+          error: false
         }
       }
       //return previous token if the access token has not expired yet
