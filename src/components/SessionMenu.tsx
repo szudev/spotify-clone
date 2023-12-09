@@ -1,9 +1,11 @@
 import { getAuthSession } from '@/lib/auth'
 import Link from 'next/link'
 import UserProfileNav from './UserProfileNav'
+import { redirect } from 'next/navigation'
 
 export default async function SessionMenu() {
   const session = await getAuthSession()
+  if (!session) return redirect('/login')
   return (
     <div className='flex items-center justify-center'>
       {session?.user ? (

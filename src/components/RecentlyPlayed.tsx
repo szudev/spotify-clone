@@ -4,7 +4,7 @@ import { PauseIcon, PlayIcon } from './Icons'
 import Link from 'next/link'
 import { getGreetingTime } from '@/lib/utils'
 import { getUserSavedAlbums } from '@/services/album'
-import { signOut } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -15,7 +15,7 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
     spotifyApi
   })
 
-  if (statusCode === 401) return await signOut({ callbackUrl: `/login` })
+  if (statusCode === 401) return redirect('/login')
 
   return (
     <section className='flex flex-col gap-6'>

@@ -3,14 +3,14 @@ import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
 import { Suspense } from 'react'
 import { RecentlyPlayedSkeleton } from './loading'
-import { signOut } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 export default async function Home() {
   const session = await getAuthSession()
   if (session?.user && session.user.accessToken) {
     spotifyApi.setAccessToken(session.user.accessToken)
   } else {
-    await signOut({ callbackUrl: `/login` })
+    return redirect('/login')
   }
 
   return (
