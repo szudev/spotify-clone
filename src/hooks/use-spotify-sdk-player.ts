@@ -1,5 +1,10 @@
-import { playerSdkAtom, deviceIdAtom } from '@/store/atoms/player-atom'
-import { useAtom, useSetAtom } from 'jotai'
+import {
+  playerSdkAtom,
+  deviceIdAtom,
+  isPlayingAtom,
+  currentTrackAtom
+} from '@/store/atoms/player-atom'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
 
 interface Props {
@@ -8,7 +13,9 @@ interface Props {
 
 export default function useSpotifySdkPlayer({ accessToken }: Props) {
   const [playerSdk, setPlayerSdk] = useAtom(playerSdkAtom)
+  const setIsPlaying = useSetAtom(isPlayingAtom)
   const setDeviceId = useSetAtom(deviceIdAtom)
+  const [currentTrack, setCurrentTrack] = useAtom(currentTrackAtom)
   useEffect(() => {
     const script = document.createElement('script')
     script.src = 'https://sdk.scdn.co/spotify-player.js'
@@ -31,7 +38,14 @@ export default function useSpotifySdkPlayer({ accessToken }: Props) {
         setDeviceId(device_id)
       })
 
-      player.addListener('player_state_changed', async (s) => {})
+      player.addListener('player_state_changed', async (s) => {
+        if (s.paused) {
+          setIsPlaying(false)
+        } else setIsPlaying(true)
+        if (currentTrack && s.timestamp !== currentTrack.progress_ms) {
+          setCurrentTrack((prev) => ({ ...prev!, progress_ms: s.timestamp }))
+        }
+      })
 
       player.addListener('not_ready', ({ device_id }) => {
         player.disconnect()

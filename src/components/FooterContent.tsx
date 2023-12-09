@@ -2,6 +2,8 @@ import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
 import MainPlayer from './MainPlayer'
 import { getUserPlaybackState } from '@/services/playback'
+import AsideMenuItem from './AsideMenuItem'
+import { HomeIcon, LibraryIcon, SearchIcon } from './Icons'
 
 export default async function FooterContent() {
   const session = await getAuthSession()
@@ -12,12 +14,35 @@ export default async function FooterContent() {
   const { body, statusCode } = await getUserPlaybackState(spotifyApi)
 
   return (
-    <section className='grid grid-cols-[30%_40%_30%] px-2 pb-[2px] pt-2 rounded-lg'>
+    <section className='flex flex-col gap-2 md:gap-0 px-2 md:pb-[2px] pb-2 pt-2 rounded-lg'>
       <MainPlayer
         accessToken={spotifyApi.getAccessToken()}
         body={body}
         statusCode={statusCode}
       />
+      <section className='flex justify-evenly items-center md:hidden'>
+        <AsideMenuItem
+          href='/'
+          className='text-white flex flex-col gap-0 font-normal text-sm'
+        >
+          <HomeIcon className='h-6 w-6' />
+          Home
+        </AsideMenuItem>
+        <AsideMenuItem
+          href='/'
+          className='text-white flex-col gap-0 font-normal text-sm'
+        >
+          <SearchIcon className='h-6 w-6' />
+          Search
+        </AsideMenuItem>
+        <AsideMenuItem
+          href='/'
+          className='text-white flex-col gap-0 font-normal text-sm'
+        >
+          <LibraryIcon className='h-6 w-6' />
+          Library
+        </AsideMenuItem>
+      </section>
     </section>
   )
 }

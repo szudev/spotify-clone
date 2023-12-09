@@ -7,6 +7,7 @@ import Providers from '@/components/Providers'
 import MainContent from '@/components/MainContent'
 import FooterContent from '@/components/FooterContent'
 import { Toaster } from '@/components/ui/toaster'
+import HeaderMenu from '@/components/HeaderMenu'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,17 +24,20 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body
-        className={`${inter.className} grid md:[grid-template-areas:'aside_main_main'_'footer_footer_footer'] [grid-template-areas:'aside'_'main'_'footer'] md:grid-cols-[250px_1fr] grid-cols-[1fr] md:grid-rows-[1fr_auto] grid-rows-[auto_1fr_auto] h-[100svh] relative p-2 gap-2 bg-black`}
+        className={`${inter.className} grid md:[grid-template-areas:'aside_main_main'_'footer_footer_footer'] [grid-template-areas:'header'_'main'] md:grid-cols-[250px_1fr] grid-cols-[1fr] md:grid-rows-[1fr_auto] grid-rows-[auto_1fr] h-[100svh] relative p-0 md:p-2 md:gap-2 gap-0 md:bg-black bg-zinc-900`}
       >
         <Providers>
-          <aside className='[grid-area:aside] flex flex-col overflow-y-auto flex-1'>
+          <aside className='[grid-area:aside] hidden md:flex flex-col overflow-y-auto flex-1'>
             <AsideMenu />
           </aside>
-          <div className='flex relative rounded-lg flex-col overflow-y-hidden [grid-area:main]'>
+          <header className='md:hidden [grid-area:header] w-full flex px-4 py-2'>
+            <HeaderMenu />
+          </header>
+          <div className='flex relative md:rounded-lg rounded-none flex-col overflow-y-hidden [grid-area:main]'>
             <MainHeader />
             <MainContent>{children}</MainContent>
           </div>
-          <footer className='[grid-area:footer] md:bg-black bg-[rgba(0,0,0,.8)] md:backdrop-blur-none backdrop-blur-[5px]'>
+          <footer className='md:[grid-area:footer] z-[999] md:z-0 absolute md:static bottom-0 w-full md:bg-black from-transparent to-black/100 bg-gradient-to-b'>
             <FooterContent />
           </footer>
           <Toaster />

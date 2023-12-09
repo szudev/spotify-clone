@@ -27,7 +27,11 @@ import { useEffect } from 'react'
 import { toast } from '@/hooks/use-toast'
 import Image from 'next/image'
 import Link from 'next/link'
-import { formatCurrentSongProgress, formatCurrentSongTime } from '@/lib/utils'
+import {
+  cn,
+  formatCurrentSongProgress,
+  formatCurrentSongTime
+} from '@/lib/utils'
 import {
   getUserPlaybackState,
   seekToPosition,
@@ -160,9 +164,16 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
   }, [isPlaying, accessToken, setCurrentTrack])
 
   return (
-    <>
+    <div
+      className={cn(
+        'grid md:grid-cols-[30%_40%_30%] px-2 pt-2 md:px-0 md:pt-0 grid-cols-[85%_1fr] md:[grid-template-areas:"song_player_sound"] [grid-template-areas:"song_player"_"progress_progress"] grid-rows-[1fr_auto] bg-sky-400 md:rounded-none md:bg-transparent rounded-lg',
+        {
+          'hidden md:grid': !currentTrack
+        }
+      )}
+    >
       {currentTrack && currentTrack.song ? (
-        <div className='flex justify-start items-center gap-3'>
+        <div className='flex justify-start items-center gap-2 md:gap-3 [grid-area:song]'>
           <Image
             src={
               currentTrack?.song
@@ -175,35 +186,42 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
                   : '/404-img.png'
                 : '/404-img.png'
             }
-            className='aspect-square'
+            className='aspect-square rounded-md md:rounded-none'
             height={56}
             width={56}
             alt='Test-player-img'
           />
-          <div className='flex flex-col overflow-hidden max-w-[50%]'>
+          <div className='flex flex-col overflow-hidden md:max-w-[50%] max-w-[90%]'>
             <Link
               href={'#'}
-              className='text-white block truncate text-sm hover:underline'
+              className='text-white font-bold md:font-normal block truncate text-sm hover:underline'
             >
               {currentTrack.song.name}
             </Link>
-            <p className='text-zinc-400 text-[11px] block truncate'>
+            <p className='text-zinc-400 hidden text-[11px] md:block truncate'>
               {currentTrack.song.artists
                 .map((artist) => artist.name)
                 .join(', ')}
             </p>
+            <p className='block truncate md:hidden text-[11px] font-bold text-[#1ed760]'>
+              {body && body.device
+                ? `${body.device.name}`
+                : currentTrack.song.artists
+                    .map((artist) => artist.name)
+                    .join(', ')}
+            </p>
           </div>
-          <HeartIcon className='h-4 w-4 fill-zinc-400' />
+          <HeartIcon className='h-4 w-4 fill-zinc-400 hidden md:inline' />
         </div>
       ) : (
-        <div />
+        <div className='[grid-area:song]' />
       )}
-      <div className='flex flex-col items-center justify-between'>
+      <div className='flex flex-col items-center md:justify-between justify-center [grid-area:player]'>
         <div className='flex gap-6 items-center justify-center'>
-          <button className='group' disabled={true}>
+          <button className='group hidden md:inline' disabled={true}>
             <RandomOffModeIcon className='h-4 w-4 fill-zinc-400 group-disabled:fill-[#4D4D4D] hover:fill-white' />
           </button>
-          <button className='group' disabled={true}>
+          <button className='group hidden md:inline' disabled={true}>
             <PlayBeforeIcon className='h-4 w-4 fill-zinc-400 group-disabled:fill-[#4D4D4D] hover:fill-white' />
           </button>
           <button
@@ -217,14 +235,14 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
               <PlayIcon className='h-4 w-4' />
             )}
           </button>
-          <button className='group' disabled={true}>
+          <button className='group hidden md:inline' disabled={true}>
             <PlayNextIcon className='h-4 w-4 fill-zinc-400 group-disabled:fill-[#4D4D4D] hover:fill-white' />
           </button>
-          <button className='group' disabled={true}>
+          <button className='group hidden md:inline' disabled={true}>
             <EnableRepeatIcon className='h-4 w-4 fill-zinc-400 group-disabled:fill-[#4D4D4D] hover:fill-white' />
           </button>
         </div>
-        <div className='grid w-full grid-cols-[minmax(20px,auto)_1fr_minmax(20px,auto)] gap-2 items-center justify-center'>
+        <div className='hidden md:grid w-full grid-cols-[minmax(20px,auto)_1fr_minmax(20px,auto)] gap-2 items-center justify-center'>
           <div className='flex justify-end items-center text-zinc-400 text-sm'>
             {currentTrack
               ? formatCurrentSongTime(currentTrack.progress_ms ?? 0)
@@ -266,7 +284,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
           </div>
         </div>
       </div>
-      <div className='flex items-center justify-end gap-2'>
+      <div className='md:flex items-center justify-end gap-2 md:[grid-area:sound] hidden'>
         {volumeValue <= 100 && volumeValue >= 60 ? (
           <HighVolumeIcon className='h-4 w-4 fill-zinc-400 hover:fill-white' />
         ) : volumeValue <= 59 && volumeValue >= 30 ? (
@@ -292,6 +310,38 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
           />
         </div>
       </div>
-    </>
+      <div className='md:hidden pt-1 [grid-area:progress] w-full flex items-center justify-between'>
+        <div className='flex items-center justify-center w-full'>
+          <div className='w-full flex group'>
+            <Slider
+              disabled={
+                !currentTrack || !currentTrack.song || !currentTrack.progress_ms
+              }
+              value={
+                currentTrack && currentTrack?.song && currentTrack.progress_ms
+                  ? [
+                      formatCurrentSongProgress(
+                        currentTrack.progress_ms,
+                        currentTrack.song.duration_ms
+                      )
+                    ]
+                  : [0]
+              }
+              onValueChange={(value) => {
+                if (!currentTrack?.song) return
+                const [newValue] = value //percent of the song
+                const positionMs =
+                  (currentTrack.song.duration_ms * newValue) / 100
+                handleSongPositionChange(Math.round(positionMs))
+              }}
+              defaultValue={[0]}
+              max={100}
+              min={0}
+              className='group'
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

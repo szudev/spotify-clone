@@ -59,7 +59,7 @@ export default function ClientBodyProvider({
     <main
       ref={mainRef}
       className={cn(
-        'overflow-y-auto flex-1 to-zinc-900 rounded-lg bg-gradient-to-b',
+        'overflow-y-auto flex-1 to-zinc-900 rounded-none md:rounded-lg bg-gradient-to-b',
         {
           [backgroundColorValue ? backgroundColorValue : 'from-[#222222]']:
             pathname.startsWith('/playlist')

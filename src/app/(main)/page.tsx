@@ -14,7 +14,7 @@ export default async function Home() {
   }
 
   return (
-    <section className='flex flex-col gap-6 to-zinc-900 bg-gradient-to-b from-[#222222] px-6 pb-4 pt-16 min-h-full'>
+    <section className='flex flex-col gap-6 md:to-zinc-900 md:bg-gradient-to-b md:from-[#222222] md:px-6 px-4 pb-4 pt-2 md:pt-16 min-h-full bg-zinc-900'>
       <Suspense fallback={<RecentlyPlayedSkeleton />}>
         <RecentlyPlayed spotifyApi={spotifyApi} />
       </Suspense>
