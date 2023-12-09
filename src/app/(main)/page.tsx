@@ -10,7 +10,7 @@ export default async function Home() {
   if (session?.user && session.user.accessToken) {
     spotifyApi.setAccessToken(session.user.accessToken)
   } else {
-    await signOut({ callbackUrl: `${window.location.origin}/login` })
+    await signOut({ callbackUrl: `/login` })
   }
 
   return (

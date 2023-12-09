@@ -6,7 +6,7 @@ import { signOut } from 'next-auth/react'
 export default async function HeaderMenu() {
   const session = await getAuthSession()
   if (!session?.user || !session)
-    return await signOut({ callbackUrl: `${window.location.origin}/login` })
+    return await signOut({ callbackUrl: `/login` })
 
   return (
     <div className='flex items-center gap-2'>

@@ -15,8 +15,7 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
     spotifyApi
   })
 
-  if (statusCode === 401)
-    return await signOut({ callbackUrl: `${window.location.origin}/login` })
+  if (statusCode === 401) return await signOut({ callbackUrl: `/login` })
 
   return (
     <section className='flex flex-col gap-6'>
