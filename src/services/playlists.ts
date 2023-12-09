@@ -8,6 +8,11 @@ interface Props {
   session: Session | null
 }
 
+interface GetUserPlayListsProps {
+  pageParam?: number
+  spotifyApi: SpotifyWebApi
+}
+
 export async function getUserPlayLists({
   pageParam = 4,
   session
@@ -20,6 +25,21 @@ export async function getUserPlayLists({
     offset: pageParam
   })
   return body
+}
+
+export async function getUserPlayLists2({
+  spotifyApi,
+  pageParam = 0
+}: GetUserPlayListsProps) {
+  try {
+    const { body, statusCode } = await spotifyApi.getUserPlaylists({
+      limit: 4,
+      offset: pageParam
+    })
+    return { body, statusCode }
+  } catch (error) {
+    return { statusCode: spotifyWebApiErrorHandler(error) }
+  }
 }
 
 export async function getPlaylistById({
