@@ -29,12 +29,15 @@ function PlaylistSkeleton() {
 
 export function RecentlyPlayedSkeleton() {
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-6'>
+      <div className='flex items-center'>
+        <div className='h-6 w-[20%] rounded-full bg-zinc-500 animate-pulse' />
+      </div>
       <div className='flex items-center justify-between'>
         <div className='h-6 w-[20%] rounded-full bg-zinc-500 animate-pulse' />
         <div className='h-4 w-1/12 rounded-full bg-zinc-500 animate-pulse' />
       </div>
-      <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4'>
+      <div className='grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2'>
         <RecentlyPlayedItemSkeleton />
         <RecentlyPlayedItemSkeleton />
         <RecentlyPlayedItemSkeleton />
@@ -61,11 +64,13 @@ export function RecentlyPlayedFullListSkeleton() {
 
 function RecentlyPlayedItemSkeleton() {
   return (
-    <div className='flex flex-col p-2 gap-4'>
-      <div className='w-full h-52 rounded-md bg-zinc-500 animate-pulse' />
-      <div className='flex flex-col gap-2'>
+    <div className='md:flex md:flex-col grid grid-cols-[40%_1fr] gap-2 md:gap-4 p-0 md:p-4'>
+      <div className='relative rounded-md'>
+        <div className='rounded-l-md md:rounded-md w-full h-auto aspect-square bg-zinc-500 animate-pulse' />
+      </div>
+      <div className='flex flex-row md:flex-col gap-0 md:gap-2 md:items-start items-center pr-2 py-2 md:pr-0 md:py-0 justify-start'>
         <div className='h-4 w-3/4 rounded-full bg-zinc-500 animate-pulse' />
-        <div className='h-4 w-1/2 rounded-full bg-zinc-500 animate-pulse' />
+        <div className='h-4 w-1/2 rounded-full md:inline hidden bg-zinc-500 animate-pulse' />
       </div>
     </div>
   )
