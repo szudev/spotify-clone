@@ -3,7 +3,6 @@
 import { useAtom, useAtomValue } from 'jotai'
 import {
   EnableRepeatIcon,
-  HeartIcon,
   HighVolumeIcon,
   LowVolumeIcon,
   MidVolumeIcon,
@@ -55,7 +54,11 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
   useEffect(() => {
     const pauseUserDevice = async () => {
       if (body && statusCode === 200 && body.item?.type === 'track') {
-        setCurrentTrack({ song: body.item, progress_ms: body.progress_ms })
+        setCurrentTrack({
+          song: body.item,
+          progress_ms: body.progress_ms,
+          tracks: [body.item] ?? []
+        })
         setVolumeValue(body.device.volume_percent ?? 50)
         if (body.is_playing && body.device.id) {
           const { statusCode } = await pauseSong(body.device.id)
@@ -78,10 +81,20 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
       currentTrack === undefined ||
       !currentTrack.song ||
       !currentTrack.progress_ms
-    )
+    ) {
       return
+    }
+    const index = currentTrack.tracks
+      .filter((track) => track !== null)
+      .findIndex((track) => track!.id === currentTrack.song?.id)
     const { statusCode } = await playSong(
-      currentTrack.song,
+      [
+        ...currentTrack.tracks
+          .filter((track) => track !== null)
+          .slice(index, currentTrack.tracks.length)
+          .map((track) => track!.uri),
+        currentTrack.song.uri
+      ],
       deviceId,
       currentTrack.progress_ms
     )
@@ -155,7 +168,12 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
         accessToken
       )
       if (statusCode === 200 && body && body?.progress_ms)
-        setCurrentTrack((prev) => ({ ...prev!, progress_ms: body.progress_ms }))
+        setCurrentTrack((prev) => ({
+          ...prev!,
+          progress_ms: body.progress_ms,
+          song:
+            body.item?.type === 'track' ? body.item : currentTrack?.song ?? null
+        }))
     }
     const intervalId = isPlaying && setInterval(fetchPlayback, 1000)
 
@@ -173,25 +191,27 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
       )}
     >
       {currentTrack && currentTrack.song ? (
-        <div className='flex justify-start items-center gap-2 md:gap-3 [grid-area:song]'>
-          <Image
-            src={
-              currentTrack?.song
-                ? currentTrack.song.album.images.find(
-                    (img) => img.url !== undefined && img.url !== null
-                  )?.url
-                  ? (currentTrack.song.album.images.find(
+        <div className='grid grid-cols-[15%,1fr] md:grid-cols-[18%_1fr] justify-center items-center gap-2 md:gap-3 [grid-area:song]'>
+          <div className='w-full h-auto'>
+            <Image
+              src={
+                currentTrack?.song
+                  ? currentTrack.song.album.images.find(
                       (img) => img.url !== undefined && img.url !== null
-                    )?.url as string)
+                    )?.url
+                    ? (currentTrack.song.album.images.find(
+                        (img) => img.url !== undefined && img.url !== null
+                      )?.url as string)
+                    : '/404-img.png'
                   : '/404-img.png'
-                : '/404-img.png'
-            }
-            className='aspect-square rounded-md md:rounded-none'
-            height={56}
-            width={56}
-            alt='Test-player-img'
-          />
-          <div className='flex flex-col overflow-hidden md:max-w-[50%] max-w-[90%]'>
+              }
+              className='rounded-md'
+              height={56}
+              width={500}
+              alt='Test-player-img'
+            />
+          </div>
+          <div className='flex flex-col overflow-hidden md:max-w-[85%] max-w-[90%]'>
             <Link
               href={'#'}
               className='text-white font-bold md:font-normal block truncate text-sm hover:underline'
@@ -211,7 +231,6 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
                     .join(', ')}
             </p>
           </div>
-          <HeartIcon className='h-4 w-4 fill-zinc-400 hidden md:inline' />
         </div>
       ) : (
         <div className='[grid-area:song]' />

@@ -3,7 +3,11 @@ import { getUserById } from '@/services/user'
 import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
-import { cn, formatPlaylistTotalDuration } from '@/lib/utils'
+import {
+  cn,
+  formatPlaylistTotalDuration,
+  hasMillisecondProperty
+} from '@/lib/utils'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -27,7 +31,7 @@ export default async function PlaylistHeader({
   const { body: playlistUser } = userResponse
 
   return (
-    <div className='flex pt-8 gap-4 px-6'>
+    <div className='flex lg:flex-row flex-col pt-0 items-center md:pt-8 gap-4 md:px-6 px-4'>
       <Image
         src={playlist.images[0].url}
         width={192}
@@ -37,45 +41,49 @@ export default async function PlaylistHeader({
         priority
       />
       <div
-        className={cn('flex flex-col justify-end', {
+        className={cn('flex flex-col justify-end self-start md:self-center', {
           'gap-6': !playlist.description,
           'gap-2': playlist.description
         })}
       >
         <div className='flex flex-col gap-2'>
-          <p className='text-white text-base'>Playlist</p>
-          <h1 className='font-bold text-6xl text-white'>{playlist.name}</h1>
+          <p className='text-white text-base hidden md:inline'>Playlist</p>
+          <h1 className='font-bold md:text-6xl text-white text-2xl'>
+            {playlist.name}
+          </h1>
           {playlist.description && (
             <span className='text-zinc-300'>
               {playlist.description.replace(/<\/?[^>]+(>|$)/g, '')}
             </span>
           )}
         </div>
-        <div className='text-base flex gap-1 items-center'>
-          {playlistUser.images &&
-            playlistUser.images.find(
-              (img) => img.url !== undefined && img.url !== null
-            )?.url !== undefined && (
-              <Image
-                src={
-                  playlistUser.images.find(
-                    (img) => img.url !== undefined && img.url !== null
-                  )?.url as string
-                }
-                alt={`Profile picture of user #${playlist.owner.id}`}
-                className='rounded-full'
-                width={32}
-                height={32}
-              />
-            )}
-          <strong className='text-white hover:underline cursor-pointer'>
-            {playlist.owner.display_name
-              ? playlist.owner.display_name
-              : playlistUser.display_name
-              ? playlistUser.display_name
-              : 'Unknown'}
-          </strong>
-          <span className='before:content-["•"] before:text-white before:mx-1 '>
+        <div className='text-base flex gap-1 md:flex-row flex-col md:items-center items-start'>
+          <div className='flex items-center gap-1'>
+            {playlistUser.images &&
+              playlistUser.images.find(
+                (img) => img.url !== undefined && img.url !== null
+              )?.url !== undefined && (
+                <Image
+                  src={
+                    playlistUser.images.find(
+                      (img) => img.url !== undefined && img.url !== null
+                    )?.url as string
+                  }
+                  alt={`Profile picture of user #${playlist.owner.id}`}
+                  className='rounded-full'
+                  width={32}
+                  height={32}
+                />
+              )}
+            <strong className='text-white hover:underline cursor-pointer'>
+              {playlist.owner.display_name
+                ? playlist.owner.display_name
+                : playlistUser.display_name
+                ? playlistUser.display_name
+                : 'Unknown'}
+            </strong>
+          </div>
+          <span className='before:content-["•"] hidden md:inline before:text-white before:mx-1 '>
             <span className='text-white'>
               {playlist.tracks.total > 1
                 ? `${playlist.tracks.total} songs, `
@@ -86,12 +94,40 @@ export default async function PlaylistHeader({
               {formatPlaylistTotalDuration(
                 playlist.tracks.items.reduce((acc, currValue) => {
                   if (currValue.track) {
+                    if (typeof currValue.track.duration_ms !== 'number') {
+                      if (hasMillisecondProperty(currValue.track.duration_ms)) {
+                        return (acc += (
+                          currValue.track.duration_ms as {
+                            totalMilliseconds: number
+                          }
+                        ).totalMilliseconds)
+                      } else return acc
+                    }
                     return (acc += currValue.track.duration_ms)
                   }
                   return acc
                 }, 0)
               )}
             </span>
+          </span>
+          <span className='text-zinc-300 inline md:hidden'>
+            {formatPlaylistTotalDuration(
+              playlist.tracks.items.reduce((acc, currValue) => {
+                if (currValue.track) {
+                  if (typeof currValue.track.duration_ms !== 'number') {
+                    if (hasMillisecondProperty(currValue.track.duration_ms)) {
+                      return (acc += (
+                        currValue.track.duration_ms as {
+                          totalMilliseconds: number
+                        }
+                      ).totalMilliseconds)
+                    } else return acc
+                  }
+                  return (acc += currValue.track.duration_ms)
+                }
+                return acc
+              }, 0)
+            )}
           </span>
         </div>
       </div>

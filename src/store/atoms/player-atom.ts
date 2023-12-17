@@ -4,6 +4,7 @@ export const currentTrackAtom = atom<
   | {
       song: SpotifyApi.TrackObjectFull | null
       progress_ms: number | null
+      tracks: (SpotifyApi.TrackObjectFull | null)[]
     }
   | undefined
 >(undefined)

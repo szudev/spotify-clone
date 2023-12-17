@@ -2,6 +2,7 @@ import AlbumsList from '@/components/AlbumsList'
 import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
 import { Suspense } from 'react'
+import { AlbumListSkeleton } from '../../loading'
 
 export default async function Albums() {
   const session = await getAuthSession()
@@ -13,7 +14,7 @@ export default async function Albums() {
       <div className='md:flex hidden items-center justify-start'>
         <p className='text-white text-xl font-semibold'>Albums</p>
       </div>
-      <Suspense>
+      <Suspense fallback={<AlbumListSkeleton />}>
         <AlbumsList spotifyApi={spotifyApi} />
       </Suspense>
     </section>

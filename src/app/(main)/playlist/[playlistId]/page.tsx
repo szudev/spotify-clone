@@ -26,7 +26,7 @@ export default async function Playlist({ params }: Props) {
       <Suspense fallback={<PlaylistHeaderSkeleton />}>
         <PlaylistHeader playlistId={playlistId} spotifyApi={spotifyApi} />
       </Suspense>
-      <div className='bg-gradient-to-b from-black/10 to-zinc-900 to-[200px] w-full flex-1'>
+      <div className='bg-gradient-to-b md:from-black/10 from-transparent md:to-zinc-900 to-zinc-900 to-[100px] md:to-[200px] w-full flex-1'>
         <Suspense fallback={<PlaylistTableSkeleton />}>
           <PlaylistTable playlistId={playlistId} spotifyApi={spotifyApi} />
         </Suspense>

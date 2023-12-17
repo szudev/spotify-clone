@@ -5,7 +5,7 @@ import { spotifyWebApiErrorHandler } from '@/lib/errors'
 import spotifyApi from '@/lib/spotify'
 
 export const playSong = async (
-  track: SpotifyApi.TrackObjectFull | SpotifyApi.EpisodeObject,
+  uris: string[] | string,
   deviceId: string,
   position_ms: number
 ) => {
@@ -17,7 +17,7 @@ export const playSong = async (
     const { body } = await spotifyApi.getMyDevices()
     if (body.devices.length === 0) throw new Error('NO DEVICES FOUND.')
     return await spotifyApi.play({
-      uris: [track.uri],
+      uris: typeof uris === 'string' ? [uris] : uris,
       device_id: deviceId,
       position_ms: position_ms
     })

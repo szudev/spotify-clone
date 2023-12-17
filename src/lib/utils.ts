@@ -6,12 +6,18 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function formatPlaylistTotalDuration(duration: number): string {
-  // Ensure the input is a positive number
-  if (typeof duration !== 'number' || duration < 0) {
-    throw new Error('Invalid input. Duration must be a non-negative number.')
-  }
+export function hasMillisecondProperty(
+  value: any
+): value is { totalMilliseconds: number } {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'totalMilliseconds' in value &&
+    typeof value.totalMilliseconds === 'number'
+  )
+}
 
+export function formatPlaylistTotalDuration(duration: number): string {
   // Calculate hours, minutes, and seconds
   const hours = Math.floor(duration / 3600000)
   const minutes = Math.floor((duration % 3600000) / 60000)
@@ -34,9 +40,9 @@ export function formatPlaylistTotalDuration(duration: number): string {
 
 export function formatSongDuration(duration: number): string {
   // Ensure the input is a positive number
-  if (typeof duration !== 'number' || duration < 0) {
+  /* if (typeof duration !== 'number' || duration < 0) {
     throw new Error('Invalid input. Duration must be a non-negative number.')
-  }
+  } */
 
   // Calculate hours, minutes, and seconds
   const hours = Math.floor(duration / 3600000)
