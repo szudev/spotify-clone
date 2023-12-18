@@ -22,7 +22,7 @@ export default async function Playlist({ params }: Props) {
   }
 
   return (
-    <section className='flex flex-col gap-6 pt-16 min-h-full'>
+    <section className='flex flex-col gap-6 pt-16 min-h-full flex-1'>
       <Suspense fallback={<PlaylistHeaderSkeleton />}>
         <PlaylistHeader playlistId={playlistId} spotifyApi={spotifyApi} />
       </Suspense>

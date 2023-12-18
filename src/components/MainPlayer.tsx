@@ -191,7 +191,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
       )}
     >
       {currentTrack && currentTrack.song ? (
-        <div className='grid grid-cols-[15%,1fr] md:grid-cols-[18%_1fr] justify-center items-center gap-2 md:gap-3 [grid-area:song]'>
+        <div className='grid grid-cols-[15%,1fr] md:grid-cols-[auto_1fr] justify-center items-center gap-2 md:gap-3 [grid-area:song]'>
           <div className='w-full h-auto'>
             <Image
               src={
@@ -207,7 +207,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
               }
               className='rounded-md'
               height={56}
-              width={500}
+              width={56}
               alt='Test-player-img'
             />
           </div>
