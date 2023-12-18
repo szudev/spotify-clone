@@ -22,7 +22,7 @@ import {
 } from '@/store/atoms/player-atom'
 import { pauseSong, playSong } from '@/actions/player'
 import { Slider } from './ui/slider'
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from '@/hooks/use-toast'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -36,7 +36,7 @@ import {
   seekToPosition,
   setPlaybackVolume
 } from '@/services/playback'
-import { debounce } from 'lodash'
+import debounce from 'lodash/debounce'
 
 interface Props {
   accessToken: string | undefined
@@ -50,6 +50,44 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
   const [volumeValue, setVolumeValue] = useAtom(volumeAtom)
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
   const [currentTrack, setCurrentTrack] = useAtom(currentTrackAtom)
+  const [isChangingSongPosition, setIsChangingSongPosition] = useState(false)
+
+  const debounceVolumeChange = useCallback(
+    (newVolume: number, targetDevice: string | undefined) => {
+      const initialValue = volumeValue
+      debouncedVolumeChangeRequest(newVolume, initialValue, targetDevice)
+    },
+    []
+  )
+
+  const debounceSongPositionChange = useCallback(
+    (newPosition: number, targetDevice: string | undefined) => {
+      const initialValue = currentTrack?.progress_ms ?? 0
+      debouncedSongPositionChange(newPosition, initialValue, targetDevice)
+    },
+    []
+  )
+
+  const debouncedVolumeChangeRequest = debounce(
+    async (
+      newVolume: number,
+      initialValue: number,
+      targetDevice: string | undefined
+    ) => {
+      await handleVolumeChange(newVolume, initialValue, targetDevice)
+    },
+    500
+  )
+
+  const debouncedSongPositionChange = debounce(
+    async (
+      newPosition: number,
+      initialValue: number,
+      targetDevice: string | undefined
+    ) =>
+      await handleSongPositionChange(newPosition, initialValue, targetDevice),
+    500
+  )
 
   useEffect(() => {
     const pauseUserDevice = async () => {
@@ -59,7 +97,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
           progress_ms: body.progress_ms,
           tracks: [body.item] ?? []
         })
-        setVolumeValue(body.device.volume_percent ?? 50)
+        setVolumeValue(50)
         if (body.is_playing && body.device.id) {
           const { statusCode } = await pauseSong(body.device.id)
           if (statusCode !== 204)
@@ -125,14 +163,19 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
     } else setIsPlaying(false)
   }
 
-  const handleVolumeChange = async (newVolume: number) => {
-    if (!deviceId) return
+  const handleVolumeChange = async (
+    newVolume: number,
+    initialValue: number,
+    targetDevice: string | undefined
+  ) => {
+    if (!targetDevice) return
     const { statusCode } = await setPlaybackVolume({
       volume: newVolume,
       accessToken,
-      deviceId
+      deviceId: targetDevice
     })
     if (statusCode !== 204) {
+      setVolumeValue(initialValue)
       toast({
         title: 'There was an error',
         description: 'Could not change the volume, try again later.',
@@ -141,24 +184,34 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
     } else setVolumeValue(newVolume)
   }
 
-  const handleSongPositionChange = async (newPosition: number) => {
-    if (!deviceId) return
-    const { statusCode } = await seekToPosition({
-      deviceId,
-      positionMs: newPosition,
-      accessToken
-    })
-    if (statusCode !== 202) {
-      toast({
-        title: 'There was an error',
-        description:
-          'Could not change the position of the song, try again later.',
-        variant: 'destructive'
+  const handleSongPositionChange = debounce(
+    async (
+      newPosition: number,
+      initialValue: number,
+      targetDevice: string | undefined
+    ) => {
+      if (!targetDevice) return
+      const { statusCode } = await seekToPosition({
+        deviceId: targetDevice,
+        positionMs: newPosition,
+        accessToken
       })
-    } else {
-      setCurrentTrack((prev) => ({ ...prev!, progress_ms: newPosition }))
-    }
-  }
+      if (statusCode !== 202) {
+        setCurrentTrack((prev) => ({ ...prev!, progress_ms: initialValue }))
+        setIsChangingSongPosition(false)
+        toast({
+          title: 'There was an error',
+          description:
+            'Could not change the position of the song, try again later.',
+          variant: 'destructive'
+        })
+      } else {
+        setIsChangingSongPosition(false)
+        setCurrentTrack((prev) => ({ ...prev!, progress_ms: newPosition }))
+      }
+    },
+    500
+  )
 
   useEffect(() => {
     if (!accessToken) return
@@ -167,7 +220,12 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
         undefined,
         accessToken
       )
-      if (statusCode === 200 && body && body?.progress_ms)
+      if (
+        statusCode === 200 &&
+        body &&
+        body?.progress_ms &&
+        !isChangingSongPosition
+      )
         setCurrentTrack((prev) => ({
           ...prev!,
           progress_ms: body.progress_ms,
@@ -288,7 +346,14 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
                 const [newValue] = value //percent of the song
                 const positionMs =
                   (currentTrack.song.duration_ms * newValue) / 100
-                handleSongPositionChange(Math.round(positionMs))
+                const newPosition = Math.round(positionMs)
+                setCurrentTrack((prev) => ({
+                  ...prev!,
+                  progress_ms: newPosition
+                }))
+                setIsChangingSongPosition(true)
+                const targetDevice = deviceId
+                debounceSongPositionChange(newPosition, targetDevice)
               }}
               defaultValue={[0]}
               max={100}
@@ -322,7 +387,9 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
             disabled={!deviceId}
             onValueChange={(value) => {
               const [newVolume] = value
-              handleVolumeChange(newVolume)
+              setVolumeValue(newVolume)
+              const targetDevice = deviceId
+              debounceVolumeChange(newVolume, targetDevice)
             }}
             value={[volumeValue]}
             className='top-1/2 left-1/2 absolute -translate-y-1/2 -translate-x-1/2'
@@ -351,7 +418,14 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
                 const [newValue] = value //percent of the song
                 const positionMs =
                   (currentTrack.song.duration_ms * newValue) / 100
-                handleSongPositionChange(Math.round(positionMs))
+                const newPosition = Math.round(positionMs)
+                setCurrentTrack((prev) => ({
+                  ...prev!,
+                  progress_ms: newPosition
+                }))
+                setIsChangingSongPosition(true)
+                const targetDevice = deviceId
+                debounceSongPositionChange(newPosition, targetDevice)
               }}
               defaultValue={[0]}
               max={100}
