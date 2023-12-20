@@ -7,10 +7,27 @@ import {
   PlaylistTableSkeleton
 } from '@/app/(main)/loading'
 import PlaylistTable from '@/components/PlaylistTable'
+import { getPlaylistById } from '@/services/playlists'
+import { notFound } from 'next/navigation'
 
 interface Props {
   params: {
     playlistId: string
+  }
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { playlistId } = params
+  const session = await getAuthSession()
+  if (session?.user && session.user.accessToken) {
+    spotifyApi.setAccessToken(session.user.accessToken)
+  }
+  const playlistResponse = await getPlaylistById({ playlistId, spotifyApi })
+  if (!playlistResponse || playlistResponse.statusCode !== 200)
+    return notFound()
+
+  return {
+    title: `${playlistResponse.body.name} | Spotify ${playlistResponse.body.type}`
   }
 }
 

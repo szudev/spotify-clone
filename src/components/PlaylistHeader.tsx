@@ -8,6 +8,7 @@ import {
   formatPlaylistTotalDuration,
   hasMillisecondProperty
 } from '@/lib/utils'
+import PlaylistName from './PlaylistName'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -48,9 +49,7 @@ export default async function PlaylistHeader({
       >
         <div className='flex flex-col gap-2'>
           <p className='text-white text-base hidden md:inline'>Playlist</p>
-          <h1 className='font-bold md:text-6xl text-white text-2xl'>
-            {playlist.name}
-          </h1>
+          <PlaylistName playlistName={playlist.name} />
           {playlist.description && (
             <span className='text-zinc-300'>
               {playlist.description.replace(/<\/?[^>]+(>|$)/g, '')}
