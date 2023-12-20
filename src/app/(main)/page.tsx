@@ -2,7 +2,7 @@ import RecentlyPlayed from '@/components/RecentlyPlayed'
 import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
 import { Suspense } from 'react'
-import { RecentlyPlayedSkeleton } from './loading'
+import { RecentlyPlayedSkeleton } from '@/components/ui/Skeletons'
 import { redirect } from 'next/navigation'
 
 export default async function Home() {

@@ -1,7 +1,7 @@
 import AsideMenuItem from './AsideMenuItem'
 import { HomeIcon, LibraryIcon, PlusIcon, SearchIcon } from './Icons'
 import { Suspense } from 'react'
-import { AsideUserPlaylistSkeleton } from '@/app/(main)/loading'
+import { AsideUserPlaylistSkeleton } from './ui/Skeletons'
 import UserPlaylistsStream from './UserPlaylistsStream'
 
 export default async function AsideMenu() {

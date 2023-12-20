@@ -3,12 +3,12 @@ import { getUserById } from '@/services/user'
 import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
+import dynamic from 'next/dynamic'
 import {
   cn,
   formatPlaylistTotalDuration,
   hasMillisecondProperty
 } from '@/lib/utils'
-import PlaylistName from './PlaylistName'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -27,6 +27,8 @@ export default async function PlaylistHeader({
     spotifyApi
   })
   if (!userResponse || userResponse.statusCode !== 200) return notFound()
+
+  const PlaylistName = dynamic(() => import('./PlaylistName'), { ssr: false })
 
   const { body: playlist } = playlistResponse
   const { body: playlistUser } = userResponse

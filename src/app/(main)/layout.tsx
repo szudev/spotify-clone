@@ -2,12 +2,14 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../globals.css'
 import AsideMenu from '@/components/AsideMenu'
-import MainHeader from '@/components/MainHeader'
+//import MainHeader from '@/components/MainHeader'
 import Providers from '@/components/Providers'
 import MainContent from '@/components/MainContent'
 import FooterContent from '@/components/FooterContent'
 import { Toaster } from '@/components/ui/toaster'
 import HeaderMenu from '@/components/HeaderMenu'
+import dynamic from 'next/dynamic'
+import { MainHeaderSkeleton } from '@/components/ui/Skeletons'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +23,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const MainHeader = dynamic(() => import('@/components/MainHeader'), {
+    ssr: false,
+    loading: () => <MainHeaderSkeleton />
+  })
+
   return (
     <html lang='en'>
       <body

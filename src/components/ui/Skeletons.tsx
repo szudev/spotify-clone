@@ -1,9 +1,3 @@
-export default function SessionMenuLoader() {
-  return (
-    <div className='w-full h-full to-zinc-900 bg-gradient-to-b from-[#222222] rounded-lg' />
-  )
-}
-
 export function AsideUserPlaylistSkeleton() {
   return (
     <div className='flex flex-col gap-2 flex-1 overflow-y-auto p-2'>
@@ -11,6 +5,18 @@ export function AsideUserPlaylistSkeleton() {
       <PlaylistSkeleton />
       <PlaylistSkeleton />
       <PlaylistSkeleton />
+    </div>
+  )
+}
+
+export function MainHeaderSkeleton() {
+  return (
+    <div className='z-[998] flex gap-2 w-full h-16 absolute top-0 justify-between items-center px-6'>
+      <div className='flex items-center justify-center gap-2'>
+        <div className='rounded-full h-8 w-8 p-2 bg-zinc-500 animate-pulse' />
+        <div className='rounded-full h-8 w-8 p-2 bg-zinc-500 animate-pulse' />
+      </div>
+      <div className='rounded-full h-10 w-10 animate-pulse bg-zinc-500' />
     </div>
   )
 }

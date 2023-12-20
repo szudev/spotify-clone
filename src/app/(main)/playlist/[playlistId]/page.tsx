@@ -5,7 +5,7 @@ import { Suspense } from 'react'
 import {
   PlaylistHeaderSkeleton,
   PlaylistTableSkeleton
-} from '@/app/(main)/loading'
+} from '@/components/ui/Skeletons'
 import PlaylistTable from '@/components/PlaylistTable'
 import { getPlaylistById } from '@/services/playlists'
 import { notFound } from 'next/navigation'

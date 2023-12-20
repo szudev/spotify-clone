@@ -2,7 +2,7 @@ import AlbumsList from '@/components/AlbumsList'
 import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
 import { Suspense } from 'react'
-import { AlbumListSkeleton } from '../../loading'
+import { AlbumListSkeleton } from '@/components/ui/Skeletons'
 
 export default async function Albums() {
   const session = await getAuthSession()
