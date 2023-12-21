@@ -38,6 +38,11 @@ export default async function PlaylistHeader({
   const { body: playlist } = playlistResponse
   const { body: playlistUser } = userResponse
 
+  const filteredPlaylist = playlist.tracks.items.filter(
+    (item) => item.track !== null && item.track.id
+  )
+  const playlistTracksCount = filteredPlaylist.length
+
   return (
     <div className='flex lg:flex-row flex-col pt-0 items-center md:pt-8 gap-4 md:px-6 px-4'>
       <Image
@@ -91,14 +96,14 @@ export default async function PlaylistHeader({
           </div>
           <span className='before:content-["•"] hidden md:inline before:text-white before:mx-1 '>
             <span className='text-white'>
-              {playlist.tracks.total > 1
-                ? `${playlist.tracks.total} songs, `
-                : `${playlist.tracks.total} song, `}
+              {playlistTracksCount > 1
+                ? `${playlistTracksCount} songs, `
+                : `${playlistTracksCount} song, `}
             </span>
             <span className='text-zinc-300'>
               about{' '}
               {formatPlaylistTotalDuration(
-                playlist.tracks.items.reduce((acc, currValue) => {
+                filteredPlaylist.reduce((acc, currValue) => {
                   if (currValue.track) {
                     if (typeof currValue.track.duration_ms !== 'number') {
                       if (hasMillisecondProperty(currValue.track.duration_ms)) {
@@ -118,7 +123,7 @@ export default async function PlaylistHeader({
           </span>
           <span className='text-zinc-300 inline md:hidden'>
             {formatPlaylistTotalDuration(
-              playlist.tracks.items.reduce((acc, currValue) => {
+              filteredPlaylist.reduce((acc, currValue) => {
                 if (currValue.track) {
                   if (typeof currValue.track.duration_ms !== 'number') {
                     if (hasMillisecondProperty(currValue.track.duration_ms)) {

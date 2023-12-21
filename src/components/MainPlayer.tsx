@@ -242,7 +242,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
   return (
     <div
       className={cn(
-        'grid md:grid-cols-[30%_40%_30%] px-2 pt-2 md:px-0 md:pt-0 grid-cols-[85%_1fr] md:[grid-template-areas:"song_player_sound"] [grid-template-areas:"song_player"_"progress_progress"] grid-rows-[1fr_auto] bg-sky-400 md:rounded-none md:bg-transparent rounded-lg',
+        'grid md:grid-cols-[30%_40%_30%] px-2 pt-2 md:px-0 md:pt-0 grid-cols-[85%_1fr] md:[grid-template-areas:"song_player_sound"] [grid-template-areas:"song_player"_"progress_progress"] grid-rows-[1fr_auto] bg-blue-950 md:rounded-none md:bg-transparent rounded-lg',
         {
           'hidden md:grid': !currentTrack
         }
@@ -304,12 +304,12 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
           <button
             onClick={isPlaying ? handlePause : handlePlay}
             disabled={!currentTrack || !currentTrack.song}
-            className='rounded-full disabled:bg-[#4D4D4D] bg-white p-2 flex items-center justify-center'
+            className='rounded-full disabled:bg-[#4D4D4D] md:bg-white bg-transparent p-2 flex items-center justify-center'
           >
             {isPlaying ? (
-              <PauseIcon className='h-4 w-4' />
+              <PauseIcon className='md:h-4 md:w-4 h-auto w-6 fill-white md:fill-black' />
             ) : (
-              <PlayIcon className='h-4 w-4' />
+              <PlayIcon className='md:h-4 md:w-4 h-auto w-6 fill-white md:fill-black' />
             )}
           </button>
           <button className='group hidden md:inline' disabled={true}>

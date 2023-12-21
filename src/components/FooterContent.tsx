@@ -2,9 +2,8 @@ import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
 import MainPlayer from './MainPlayer'
 import { getUserPlaybackState } from '@/services/playback'
-import AsideMenuItem from './AsideMenuItem'
-import { HomeIcon, LibraryIcon, SearchIcon } from './Icons'
 import { redirect } from 'next/navigation'
+import MobileMenu from './MobileMenu'
 
 export default async function FooterContent() {
   const session = await getAuthSession()
@@ -23,29 +22,7 @@ export default async function FooterContent() {
         body={body}
         statusCode={statusCode}
       />
-      <section className='flex justify-evenly items-center md:hidden'>
-        <AsideMenuItem
-          href='/'
-          className='text-white flex flex-col gap-0 font-normal text-sm'
-        >
-          <HomeIcon className='h-6 w-6' />
-          Home
-        </AsideMenuItem>
-        <AsideMenuItem
-          href='/'
-          className='text-white flex-col gap-0 font-normal text-sm'
-        >
-          <SearchIcon className='h-6 w-6' />
-          Search
-        </AsideMenuItem>
-        <AsideMenuItem
-          href='/'
-          className='text-white flex-col gap-0 font-normal text-sm'
-        >
-          <LibraryIcon className='h-6 w-6' />
-          Library
-        </AsideMenuItem>
-      </section>
+      <MobileMenu />
     </section>
   )
 }
