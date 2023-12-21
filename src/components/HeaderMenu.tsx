@@ -1,7 +1,7 @@
 import { getAuthSession } from '@/lib/auth'
-import UserAvatar from './UserAvatar'
 import HeaderClientTitle from './HeaderClientTitle'
 import { redirect } from 'next/navigation'
+import HeaderClientAvatar from './HeaderClientAvatar'
 
 export default async function HeaderMenu() {
   const session = await getAuthSession()
@@ -9,7 +9,7 @@ export default async function HeaderMenu() {
 
   return (
     <div className='flex items-center gap-2'>
-      <UserAvatar sizes='32px' user={session.user} />
+      <HeaderClientAvatar user={session.user} />
       <HeaderClientTitle />
     </div>
   )

@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../globals.css'
 import AsideMenu from '@/components/AsideMenu'
-//import MainHeader from '@/components/MainHeader'
 import Providers from '@/components/Providers'
 import MainContent from '@/components/MainContent'
 import FooterContent from '@/components/FooterContent'
@@ -10,6 +9,7 @@ import { Toaster } from '@/components/ui/toaster'
 import HeaderMenu from '@/components/HeaderMenu'
 import dynamic from 'next/dynamic'
 import { MainHeaderSkeleton } from '@/components/ui/Skeletons'
+import ServerMobileModal from '@/components/ServerMobileModal'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -47,6 +47,7 @@ export default function RootLayout({
           <footer className='md:[grid-area:footer] z-[999] md:z-0 absolute md:static bottom-0 w-full md:bg-black from-transparent to-black/100 bg-gradient-to-b'>
             <FooterContent />
           </footer>
+          <ServerMobileModal />
           <Toaster />
         </Providers>
       </body>

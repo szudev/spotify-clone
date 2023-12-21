@@ -23,8 +23,6 @@ export default function ClientHeaderProvider({
   const headerTitle = useAtomValue(headerTitleState)
   const scrollState = useAtomValue(scrollBehaviourState)
 
-  console.log(router)
-
   return (
     <header
       className={cn(
