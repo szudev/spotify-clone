@@ -25,7 +25,7 @@ export default function ClientHeaderProvider({
   return (
     <header
       className={cn(
-        'hidden z-[998] md:flex gap-2 md:w-full h-16 md:absolute top-0 justify-between items-center px-6 transition-all duration-300',
+        'hidden z-[998] md:flex rounded-t-lg gap-2 md:w-full h-16 md:absolute top-0 justify-between items-center px-6 transition-all duration-300',
         {
           'bg-transparent': !scrollBehaviourValue.isStill,
           [`${backgroundColorValue} bg-opacity-40`]:
@@ -34,7 +34,7 @@ export default function ClientHeaderProvider({
         }
       )}
     >
-      <div className='flex items-center justify-center gap-2 overflow-x-hidden'>
+      <div className='flex items-center justify-center gap-2 overflow-x-hidden rounded-t-lg'>
         <Button className='rounded-full bg-[#171717] p-2 text-zinc-400 hover:text-zinc-100'>
           <BackArrowIcon className='h-4 w-4' />
         </Button>

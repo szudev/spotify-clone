@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 
 export default function PlaylistLayout({ children }: { children: ReactNode }) {
   return (
-    <main className='flex flex-col bg-transparent min-h-full'>
+    <main className='flex flex-col bg-transparent min-h-full rounded-lg'>
       {children}
       <section className='py-8 bg-zinc-900 md:px-6 px-4'>
         <div className='[border-top:1px_solid_rgba(255,255,255,.15)] gap-4 pt-8 text-sm text-zinc-400 flex items-center flex-wrap md:justify-between justify-center'>

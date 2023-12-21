@@ -19,7 +19,7 @@ export default async function PlaylistTable({ playlistId, spotifyApi }: Props) {
 
   const { body: playlist } = playlistResponse
   const uris = playlist.items
-    .filter((item) => item.track !== null)
+    .filter((item) => item.track !== null && item.track.id)
     .map((track) => track.track!.uri)
   const tracks = playlist.items
     .filter((item) => item.track !== null)

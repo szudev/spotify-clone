@@ -11,7 +11,7 @@ export function AsideUserPlaylistSkeleton() {
 
 export function MainHeaderSkeleton() {
   return (
-    <div className='z-[998] flex gap-2 w-full h-16 absolute top-0 justify-between items-center px-6'>
+    <div className='z-[998] hidden md:flex gap-2 w-full h-16 absolute top-0 justify-between items-center px-6'>
       <div className='flex items-center justify-center gap-2'>
         <div className='rounded-full h-8 w-8 p-2 bg-zinc-500 animate-pulse' />
         <div className='rounded-full h-8 w-8 p-2 bg-zinc-500 animate-pulse' />

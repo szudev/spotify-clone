@@ -7,7 +7,7 @@ export default async function SessionMenu() {
   const session = await getAuthSession()
   if (!session) return redirect('/login')
   return (
-    <div className='flex items-center justify-center'>
+    <div className='flex items-center justify-center rounded-t-lg'>
       {session?.user ? (
         <UserProfileNav user={session.user} />
       ) : (

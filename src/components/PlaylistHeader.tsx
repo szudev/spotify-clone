@@ -28,7 +28,12 @@ export default async function PlaylistHeader({
   })
   if (!userResponse || userResponse.statusCode !== 200) return notFound()
 
-  const PlaylistName = dynamic(() => import('./PlaylistName'), { ssr: false })
+  const PlaylistName = dynamic(() => import('./PlaylistName'), {
+    ssr: false,
+    loading: () => (
+      <div className='bg-zinc-500 animate-pulse rounded-full h-6 md:h-[60px] w-3/5' />
+    )
+  })
 
   const { body: playlist } = playlistResponse
   const { body: playlistUser } = userResponse
