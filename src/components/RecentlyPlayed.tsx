@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { getGreetingTime } from '@/lib/utils'
 import { getUserSavedAlbums } from '@/services/album'
 import { redirect } from 'next/navigation'
+import dynamic from 'next/dynamic'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -17,12 +18,19 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
 
   if (statusCode === 401) return redirect('/login')
 
+  const GreetingTime = dynamic(() => import('@/components/GreetingTime'), {
+    ssr: false,
+    loading: () => (
+      <div className='flex items-center w-full'>
+        <div className='h-6 w-[20%] rounded-full bg-zinc-500 animate-pulse' />
+      </div>
+    )
+  })
+
   return (
     <section className='flex flex-col gap-6'>
       <div className='flex items-center'>
-        <h1 className='text-white text-xl font-semibold'>
-          {getGreetingTime()}
-        </h1>
+        <GreetingTime />
       </div>
       <div className='flex flex-col gap-4'>
         <div className='flex items-center justify-between'>
