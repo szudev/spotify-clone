@@ -129,8 +129,11 @@ export function formatCurrentSongTime(time: number) {
 }
 
 export function getGreetingTime(): string {
-  const currentTime = new Date()
-  const currentHour = currentTime.getHours()
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const currentTime = new Date().toLocaleString('en-US', {
+    timeZone: userTimeZone
+  })
+  const currentHour = new Date(currentTime).getHours()
 
   if (currentHour >= 5 && currentHour < 12) {
     return 'Good morning'
