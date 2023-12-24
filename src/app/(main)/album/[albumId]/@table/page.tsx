@@ -1,11 +1,9 @@
 import AlbumTableItem from '@/components/AlbumTableItem'
 import { DurationIcon } from '@/components/Icons'
-// import { AlbumTableItemSkeleton } from '@/components/ui/Skeletons'
 import { getAuthSession } from '@/lib/auth'
 import spotifyApi from '@/lib/spotify'
 import { getAlbumById } from '@/services/album'
 import { AlbumTrackMergeType } from '@/types/spotify-web-api-node'
-// import dynamic from 'next/dynamic'
 import { notFound } from 'next/navigation'
 
 interface Props {
@@ -35,11 +33,6 @@ export default async function AlbumTable({ params }: Props) {
     })
 
   const uris = filteredTracks.map((track) => track.uri)
-
-  /* const AlbumTableItem = dynamic(() => import('@/components/AlbumTableItem'), {
-    ssr: false,
-    loading: () => <AlbumTableItemSkeleton />
-  }) */
 
   return (
     <div className='bg-gradient-to-b md:from-black/10 from-transparent md:to-zinc-900 to-zinc-900 to-[100px] md:to-[200px] w-full flex-1'>

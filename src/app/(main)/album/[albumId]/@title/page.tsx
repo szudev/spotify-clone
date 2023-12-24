@@ -9,7 +9,6 @@ import {
   formatPlaylistTotalDuration,
   hasMillisecondProperty
 } from '@/lib/utils'
-import { AlbumTableSkeleton } from '@/components/ui/Skeletons'
 
 interface Props {
   params: {
