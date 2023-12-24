@@ -227,7 +227,7 @@ export function PlaylistTableItemSkeleton() {
 export function AlbumTableItemSkeleton() {
   return (
     <div className='text-zinc-400 gap-x-4 py-2 md:pl-5 pl-0 items-center grid grid-cols-[25%_1fr] md:grid-cols-[minmax(30px,auto)_1fr_auto] md:col-span-3 w-full'>
-      <div className='col-start-1 hidden md:inline text-center'>
+      <div className='col-start-1 hidden md:flex text-center pl-3'>
         <div className='h-4 w-4 rounded-full bg-zinc-500 animate-pulse ' />
       </div>
       <div className='flex md:gap-4 gap-2 md:col-start-2 col-start-1 col-span-2 md:col-span-1 items-center'>
