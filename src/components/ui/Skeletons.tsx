@@ -170,19 +170,13 @@ export function AlbumTableSkeleton() {
   return (
     <section className='bg-gradient-to-b md:from-black/10 from-transparent md:to-zinc-900 to-zinc-900 to-[100px] md:to-[200px] w-full flex-1'>
       <div className='flex flex-col pb-4 md:px-6 px-4 flex-1 md:pt-6 pt-0'>
-        <div className='grid md:grid-cols-[minmax(30px,auto)_1fr_1fr_1fr_1fr] grid-cols-1 gap-x-4 w-full'>
-          <div className='grid-cols-[minmax(30px,auto)_1fr_1fr_1fr_1fr] pl-6 gap-x-4 hidden md:grid col-span-5 mb-3 [border-bottom:1px_solid_rgba(255,255,255,.15)] pb-3 w-full'>
+        <div className='grid md:grid-cols-[minmax(30px,auto)_1fr_auto] grid-cols-1 gap-x-4 w-full'>
+          <div className='grid-cols-[minmax(30px,auto)_1fr_auto] px-6 gap-x-4 hidden md:grid col-span-3 mb-3 [border-bottom:1px_solid_rgba(255,255,255,.15)] pb-3 w-full'>
             <div className='flex items-center justify-center text-zinc-400'>
               <div className='h-4 w-4 rounded-full bg-zinc-500 animate-pulse ' />
             </div>
             <div className='flex items-center justify-start'>
-              <div className='h-4 w-1/4 rounded-full bg-zinc-500 animate-pulse ' />
-            </div>
-            <div className='flex items-center justify-start'>
-              <div className='h-4 w-1/4 rounded-full bg-zinc-500 animate-pulse ' />
-            </div>
-            <div className='flex items-center justify-start text-zinc-400'>
-              <div className='h-4 w-1/4 rounded-full bg-zinc-500 animate-pulse ' />
+              <div className='h-4 w-[13%] rounded-full bg-zinc-500 animate-pulse ' />
             </div>
             <div className='flex items-center justify-center'>
               <div className='h-4 w-4 rounded-full bg-zinc-500 animate-pulse ' />

@@ -54,7 +54,7 @@ export default async function AlbumTitle({ params }: Props) {
         artistBody.images.find((image) => image.url)?.url
 
   return (
-    <div className='flex lg:flex-row flex-col pt-0 items-center md:pt-8 gap-4 md:px-6 px-4'>
+    <div className='flex lg:flex-row flex-col pt-0 items-center rounded-t-lg md:pt-8 gap-4 md:px-6 px-4'>
       <Image
         src={
           albumBody.images[0].url ??
