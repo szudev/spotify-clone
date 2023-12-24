@@ -53,7 +53,7 @@ export default function ClientBodyProvider({
     if (pathname.endsWith('/') || pathname.startsWith('/genre')) {
       backgroundColorSetter('bg-[#222222] from-[#222222]')
     }
-    if (pathname.startsWith('/playlist')) {
+    if (pathname.startsWith('/playlist/') || pathname.startsWith('/album/')) {
       backgroundColorSetter(shuffle(ListofColors).pop())
     }
   }, [pathname, backgroundColorSetter])
@@ -65,7 +65,7 @@ export default function ClientBodyProvider({
         'overflow-y-auto flex flex-col flex-1 to-zinc-900 rounded-none md:rounded-lg bg-gradient-to-b',
         {
           [backgroundColorValue ? backgroundColorValue : 'from-[#222222]']:
-            pathname.startsWith('/playlist')
+            pathname.startsWith('/playlist/') || pathname.startsWith('/album/')
         }
       )}
     >

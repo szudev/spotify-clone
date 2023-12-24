@@ -266,7 +266,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
               className='rounded-md'
               height={56}
               width={56}
-              alt='Test-player-img'
+              alt='Current track cover'
             />
           </div>
           <div className='flex flex-col overflow-hidden md:max-w-[85%] max-w-[90%]'>

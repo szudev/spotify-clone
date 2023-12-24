@@ -110,6 +110,30 @@ export function PlaylistHeaderSkeleton() {
   )
 }
 
+export function AlbumHeaderSkeleton() {
+  return (
+    <div className='flex lg:flex-row flex-col pt-0 items-center md:pt-8 gap-4 md:px-6 px-4'>
+      <div className='bg-zinc-500 animate-pulse rounded-md aspect-square w-48 h-48' />
+      <div className='flex flex-col justify-end self-start md:self-center gap-6 w-full'>
+        <div className='flex flex-col gap-3'>
+          <div className='bg-zinc-500 animate-pulse rounded-full hidden md:inline h-5 w-14' />
+          <div className='bg-zinc-500 animate-pulse rounded-full h-6 md:h-[60px] w-3/5' />
+        </div>
+        <div className='flex gap-1 items-center w-full'>
+          <div className='gap-1 items-center flex'>
+            <div className='h-8 w-8 rounded-full animate-pulse bg-zinc-500' />
+            <div className='rounded-full animate-pulse bg-zinc-500 h-3 w-16' />
+            <div className='before:content-["•"] hidden md:flex items-center before:text-zinc-500 before:mr-1 before:animate-pulse'>
+              <div className='bg-zinc-500 animate-pulse h-3 w-32 rounded-full' />
+            </div>
+          </div>
+        </div>
+        <div className='bg-zinc-500 inline md:hidden animate-pulse rounded-full h-3 w-24' />
+      </div>
+    </div>
+  )
+}
+
 export function PlaylistTableSkeleton() {
   return (
     <section className='flex flex-col pb-4 md:px-6 px-4 flex-1 md:pt-6 pt-0'>
@@ -142,7 +166,41 @@ export function PlaylistTableSkeleton() {
   )
 }
 
-function PlaylistTableItemSkeleton() {
+export function AlbumTableSkeleton() {
+  return (
+    <section className='bg-gradient-to-b md:from-black/10 from-transparent md:to-zinc-900 to-zinc-900 to-[100px] md:to-[200px] w-full flex-1'>
+      <div className='flex flex-col pb-4 md:px-6 px-4 flex-1 md:pt-6 pt-0'>
+        <div className='grid md:grid-cols-[minmax(30px,auto)_1fr_1fr_1fr_1fr] grid-cols-1 gap-x-4 w-full'>
+          <div className='grid-cols-[minmax(30px,auto)_1fr_1fr_1fr_1fr] pl-6 gap-x-4 hidden md:grid col-span-5 mb-3 [border-bottom:1px_solid_rgba(255,255,255,.15)] pb-3 w-full'>
+            <div className='flex items-center justify-center text-zinc-400'>
+              <div className='h-4 w-4 rounded-full bg-zinc-500 animate-pulse ' />
+            </div>
+            <div className='flex items-center justify-start'>
+              <div className='h-4 w-1/4 rounded-full bg-zinc-500 animate-pulse ' />
+            </div>
+            <div className='flex items-center justify-start'>
+              <div className='h-4 w-1/4 rounded-full bg-zinc-500 animate-pulse ' />
+            </div>
+            <div className='flex items-center justify-start text-zinc-400'>
+              <div className='h-4 w-1/4 rounded-full bg-zinc-500 animate-pulse ' />
+            </div>
+            <div className='flex items-center justify-center'>
+              <div className='h-4 w-4 rounded-full bg-zinc-500 animate-pulse ' />
+            </div>
+          </div>
+          <AlbumTableItemSkeleton />
+          <AlbumTableItemSkeleton />
+          <AlbumTableItemSkeleton />
+          <AlbumTableItemSkeleton />
+          <AlbumTableItemSkeleton />
+          <AlbumTableItemSkeleton />
+        </div>
+      </div>
+    </section>
+  )
+}
+
+export function PlaylistTableItemSkeleton() {
   return (
     <div className='text-zinc-400 gap-x-4 py-2 md:pl-5 pl-0 items-center grid grid-cols-[25%_1fr] md:grid-cols-[minmax(30px,auto)_1fr_1fr_1fr_1fr] md:col-span-5 w-full'>
       <div className='col-start-1 hidden md:inline text-center'>
@@ -167,6 +225,29 @@ function PlaylistTableItemSkeleton() {
       </div>
       <div className='col-start-5 flex justify-center'>
         <div className='h-4 w-2/5 rounded-full bg-zinc-500 animate-pulse ' />
+      </div>
+    </div>
+  )
+}
+
+export function AlbumTableItemSkeleton() {
+  return (
+    <div className='text-zinc-400 gap-x-4 py-2 md:pl-5 pl-0 items-center grid grid-cols-[25%_1fr] md:grid-cols-[minmax(30px,auto)_1fr_auto] md:col-span-3 w-full'>
+      <div className='col-start-1 hidden md:inline text-center'>
+        <div className='h-4 w-4 rounded-full bg-zinc-500 animate-pulse ' />
+      </div>
+      <div className='flex md:gap-4 gap-2 md:col-start-2 col-start-1 col-span-2 md:col-span-1 items-center'>
+        <div className='flex flex-col gap-2'>
+          <div className='table table-fixed w-full'>
+            <div className='h-4 md:w-[25%] w-full rounded-full bg-zinc-500 animate-pulse ' />
+          </div>
+          <div className='table table-fixed w-full'>
+            <div className='h-4 md:w-[15%] w-1/2 rounded-full bg-zinc-500 animate-pulse ' />
+          </div>
+        </div>
+      </div>
+      <div className='col-start-5 flex justify-center pr-3'>
+        <div className='h-4 md:w-8 w-0 rounded-full bg-zinc-500 animate-pulse' />
       </div>
     </div>
   )

@@ -1,10 +1,11 @@
+import { AlbumTrackMergeType } from '@/types/spotify-web-api-node'
 import { atom } from 'jotai'
 
 export const currentTrackAtom = atom<
   | {
-      song: SpotifyApi.TrackObjectFull | null
+      song: SpotifyApi.TrackObjectFull | AlbumTrackMergeType | null
       progress_ms: number | null
-      tracks: (SpotifyApi.TrackObjectFull | null)[]
+      tracks: (SpotifyApi.TrackObjectFull | AlbumTrackMergeType | null)[]
     }
   | undefined
 >(undefined)
