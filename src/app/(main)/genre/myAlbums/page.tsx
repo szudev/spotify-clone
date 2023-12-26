@@ -12,7 +12,7 @@ export default async function Albums() {
   return (
     <section className='flex from-[#222222] to-zinc-900 bg-gradient-to-b flex-col md:px-6 px-4 flex-1 gap-4 md:pt-16 pt-4'>
       <div className='md:flex hidden items-center justify-start'>
-        <p className='text-white text-xl font-semibold'>Albums</p>
+        <p className='text-white text-xl font-semibold'>My albums</p>
       </div>
       <Suspense fallback={<AlbumListSkeleton />}>
         <AlbumsList spotifyApi={spotifyApi} />

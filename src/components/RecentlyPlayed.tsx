@@ -35,14 +35,14 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
       <div className='flex flex-col gap-4'>
         <div className='flex items-center justify-between'>
           <Link
-            href={'/genre/albums'}
+            href={'/genre/myAlbums'}
             className='text-white text-xl font-semibold'
           >
             Albums
           </Link>
           {savedAlbums?.next ? (
             <Link
-              href={'/genre/albums'}
+              href={'/genre/myAlbums'}
               className='text-zinc-400 text-sm hover:underline'
             >
               Show all

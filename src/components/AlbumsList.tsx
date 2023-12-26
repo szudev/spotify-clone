@@ -30,9 +30,9 @@ export default async function AlbumsList({ spotifyApi }: Props) {
           <div className='relative rounded-md'>
             <Image
               src={album.album.images[0].url}
-              width={album.album.images[0].width}
-              height={album.album.images[0].height}
-              className='rounded-md aspect-square'
+              width={album.album.images[0].width ?? 56}
+              height={album.album.images[0].height ?? 56}
+              className='rounded-md aspect-square w-full h-auto'
               alt={album.album.name}
               priority
               sizes='(min-width: 980px) calc(25vw - 124px), (min-width: 820px) calc(33.57vw - 152px), (min-width: 780px) calc(50vw - 201px), (min-width: 720px) calc(25vw - 60px), (min-width: 560px) calc(32.86vw - 61px), (min-width: 380px) calc(50vw - 72px), calc(100vw - 96px)'

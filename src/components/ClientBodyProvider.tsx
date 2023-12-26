@@ -50,6 +50,9 @@ export default function ClientBodyProvider({
   }, [scrollSetter])
 
   useEffect(() => {
+    if (pathname.endsWith('search')) {
+      backgroundColorSetter('bg-zinc-900')
+    }
     if (pathname.endsWith('/') || pathname.startsWith('/genre')) {
       backgroundColorSetter('bg-[#222222] from-[#222222]')
     }

@@ -13,7 +13,7 @@ export default async function AsideMenu() {
             <HomeIcon className='h-6 w-6' />
             Home
           </AsideMenuItem>
-          <AsideMenuItem href='#'>
+          <AsideMenuItem href='/search'>
             <SearchIcon className='h-6 w-6' />
             Search
           </AsideMenuItem>

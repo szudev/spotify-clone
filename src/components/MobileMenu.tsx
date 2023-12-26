@@ -1,7 +1,13 @@
 'use client'
 
-import { HomeIcon } from 'lucide-react'
-import { LibraryIcon, SearchIcon } from './Icons'
+import {
+  HomeFocusIcon,
+  HomeIcon,
+  LibraryActiveIcon,
+  LibraryIcon,
+  SearchActiveIcon,
+  SearchIcon
+} from './Icons'
 import AsideMenuItem from './AsideMenuItem'
 import { usePathname } from 'next/navigation'
 
@@ -13,29 +19,33 @@ export default function MobileMenu() {
         href='/'
         className='text-white flex flex-col gap-0 font-normal text-sm'
       >
-        <HomeIcon
-          className={`${pathname === '/' ? 'fill-white' : 'fill-none'} h-6 w-6`}
-        />
+        {pathname === '/' ? (
+          <HomeFocusIcon className='h-6 w-6' />
+        ) : (
+          <HomeIcon className='h-6 w-6' />
+        )}
         Home
       </AsideMenuItem>
       <AsideMenuItem
-        href='/'
+        href='/search'
         className='text-white flex-col gap-0 font-normal text-sm'
       >
-        <SearchIcon className='h-6 w-6' />
+        {pathname.startsWith('/search') ? (
+          <SearchActiveIcon className='h-6 w-6' />
+        ) : (
+          <SearchIcon className='h-6 w-6' />
+        )}
         Search
       </AsideMenuItem>
       <AsideMenuItem
         href='/'
         className='text-white flex-col gap-0 font-normal text-sm'
       >
-        <LibraryIcon
-          className={`${
-            pathname.startsWith('/search')
-              ? 'fill-white'
-              : 'stroke-2 stroke-white fill-none'
-          } h-6 w-6 `}
-        />
+        {pathname.startsWith('/library/') ? (
+          <LibraryActiveIcon className='h-6 w-6' />
+        ) : (
+          <LibraryIcon className='h-6 w-6' />
+        )}
         Library
       </AsideMenuItem>
     </section>

@@ -99,13 +99,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
         })
         setVolumeValue(50)
         if (body.is_playing && body.device.id) {
-          const { statusCode } = await pauseSong(body.device.id)
-          if (statusCode !== 204)
-            toast({
-              title: 'There was an error',
-              description: 'Could not pause the currently playing device.',
-              variant: 'destructive'
-            })
+          await pauseSong(body.device.id)
         }
       }
     }

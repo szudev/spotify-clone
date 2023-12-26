@@ -166,6 +166,44 @@ export function PlaylistTableSkeleton() {
   )
 }
 
+export function GenreListSkeleton() {
+  return (
+    <section className='grid md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] [grid-auto-rows:80px] grid-cols-[repeat(auto-fit,minmax(100px,1fr))] gap-3'>
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+      <GenreListItem />
+    </section>
+  )
+}
+
+export function GenreListItem() {
+  return (
+    <div className='rounded-lg p-3 bg-zinc-500 animate-pulse items-center justify-center w-full h-auto' />
+  )
+}
+
 export function AlbumTableSkeleton() {
   return (
     <section className='bg-gradient-to-b md:from-black/10 from-transparent md:to-zinc-900 to-zinc-900 to-[100px] md:to-[200px] w-full flex-1'>
@@ -269,6 +307,44 @@ function AlbumListItemSkeleton() {
       <div className='flex flex-col gap-1 md:gap-1 justify-center md:justify-start'>
         <div className='bg-zinc-400 animate-pulse rounded-full h-5 w-[75%]' />
         <div className='bg-zinc-400 animate-pulse rounded-full h-4 w-[55%]' />
+      </div>
+    </div>
+  )
+}
+
+export function GenreSearchResultSkeleton() {
+  return (
+    <div className='flex flex-col flex-1 w-full'>
+      <div className='flex justify-start items-end py-7 break-all w-full'>
+        <div className='md:h-20 w-1/2 bg-zinc-500 animate-pulse rounded-full' />
+      </div>
+      <div className='pt-7 w-full flex flex-col gap-7 flex-1'>
+        <div className='flex flex-col gap-3'>
+          <div className='flex items-center w-full justify-between'>
+            <div className='h-6 md:w-1/5 w-1/3 bg-zinc-500 animate-pulse rounded-full' />
+            <div className='h-[0.875rem] md:w-[10%] w-1/5 bg-zinc-500 animate-pulse rounded-full' />
+          </div>
+          <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3'>
+            <AlbumListItemSkeleton />
+            <AlbumListItemSkeleton />
+            <AlbumListItemSkeleton />
+            <AlbumListItemSkeleton />
+            <AlbumListItemSkeleton />
+          </div>
+        </div>
+        <div className='flex flex-col gap-3'>
+          <div className='flex items-center w-full justify-between'>
+            <div className='h-6 md:w-1/5 w-1/3 bg-zinc-500 animate-pulse rounded-full' />
+            <div className='h-[0.875rem] md:w-[10%] w-1/5 bg-zinc-500 animate-pulse rounded-full' />
+          </div>
+          <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3'>
+            <AlbumListItemSkeleton />
+            <AlbumListItemSkeleton />
+            <AlbumListItemSkeleton />
+            <AlbumListItemSkeleton />
+            <AlbumListItemSkeleton />
+          </div>
+        </div>
       </div>
     </div>
   )
