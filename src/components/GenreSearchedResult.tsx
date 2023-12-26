@@ -47,7 +47,7 @@ export default async function GenreSearchedResult({
                 </Link>
               ) : null}
             </div>
-            <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3'>
+            <div className='grid md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] grid-cols-1 gap-3'>
               {body.playlists.items.map((item) => (
                 <Link
                   key={item.id}
@@ -95,7 +95,7 @@ export default async function GenreSearchedResult({
                 </Link>
               ) : null}
             </div>
-            <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3'>
+            <div className='grid md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] grid-cols-1 gap-3'>
               {body.albums.items.map((item) => (
                 <Link
                   key={item.id}

@@ -316,7 +316,7 @@ export function GenreSearchResultSkeleton() {
   return (
     <div className='flex flex-col flex-1 w-full'>
       <div className='flex justify-start items-end py-7 break-all w-full'>
-        <div className='md:h-20 w-1/2 bg-zinc-500 animate-pulse rounded-full' />
+        <div className='md:h-20 h-12 w-1/2 bg-zinc-500 animate-pulse rounded-full' />
       </div>
       <div className='pt-7 w-full flex flex-col gap-7 flex-1'>
         <div className='flex flex-col gap-3'>
@@ -324,7 +324,7 @@ export function GenreSearchResultSkeleton() {
             <div className='h-6 md:w-1/5 w-1/3 bg-zinc-500 animate-pulse rounded-full' />
             <div className='h-[0.875rem] md:w-[10%] w-1/5 bg-zinc-500 animate-pulse rounded-full' />
           </div>
-          <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3'>
+          <div className='grid md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] grid-cols-1 gap-3'>
             <AlbumListItemSkeleton />
             <AlbumListItemSkeleton />
             <AlbumListItemSkeleton />
@@ -337,7 +337,7 @@ export function GenreSearchResultSkeleton() {
             <div className='h-6 md:w-1/5 w-1/3 bg-zinc-500 animate-pulse rounded-full' />
             <div className='h-[0.875rem] md:w-[10%] w-1/5 bg-zinc-500 animate-pulse rounded-full' />
           </div>
-          <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-3'>
+          <div className='grid md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] grid-cols-1 gap-3'>
             <AlbumListItemSkeleton />
             <AlbumListItemSkeleton />
             <AlbumListItemSkeleton />
