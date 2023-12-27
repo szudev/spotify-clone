@@ -10,8 +10,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useAtomValue } from 'jotai'
 import { headerTitleState } from '@/store/atoms/header-title-atom'
 import { scrollBehaviourState } from '@/store/atoms/main-scroll-atom'
-import { X } from 'lucide-react'
-import debounce from 'lodash/debounce'
+import SearchBar from './ui/SearchBar'
+import { genres } from '@/lib/constants'
 
 export default function ClientHeaderProvider({
   children
@@ -25,16 +25,6 @@ export default function ClientHeaderProvider({
   const router = useRouter()
   const headerTitle = useAtomValue(headerTitleState)
   const scrollState = useAtomValue(scrollBehaviourState)
-  const [input, SetInput] = useState<string>('')
-
-  const searchRequest = debounce((queryParam: string) => {
-    if (queryParam === '') return
-    router.push(`?q=${queryParam.toLowerCase()}`)
-  }, 500)
-
-  const debounceSearchRequests = useCallback((queryParam: string) => {
-    searchRequest(queryParam)
-  }, [])
 
   return (
     <header
@@ -70,22 +60,14 @@ export default function ClientHeaderProvider({
           </strong>
         ) : null}
         {pathname.startsWith('/search') &&
-        (!searchParams.has('q') || searchParams.get('q') === '') ? (
-          <div className='h-full flex items-center py-2 w-full'>
-            <div className='rounded-full h-full items-center bg-[#2A2A2A] px-3 flex lg:w-1/2 md:w-[85%] hover:[outline:1px_solid_rgba(255,255,255,.15)] focus-within:outline-white focus-within:outline focus-within:hover:outline-white focus-within:outline-2 focus-within:hover:outline focus-within:hover:outline-2'>
-              <SearchIcon className='w-5 h-5 text-white' />
-              <input
-                className='flex text-sm text-white w-full px-2 flex-1 h-full bg-transparent py-3 rounded-full outline-none'
-                placeholder='What do you want to listen to?'
-                value={input}
-                onChange={(text) => {
-                  SetInput(text.currentTarget.value)
-                  debounceSearchRequests(text.currentTarget.value)
-                }}
-              />
-              <X className='text-white w-5 h-5' />
-            </div>
-          </div>
+        (!searchParams.has('q') ||
+          searchParams.get('q') === '' ||
+          !genres.includes(searchParams.get('q') ?? '')) ? (
+          <SearchBar
+            router={router}
+            pathname={pathname}
+            searchParams={searchParams}
+          />
         ) : null}
       </div>
       {children}
