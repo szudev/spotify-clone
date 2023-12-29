@@ -143,3 +143,18 @@ export function getGreetingTime(): string {
     return 'Good evening'
   }
 }
+
+export function removeSpecialCharacters(inputString: string) {
+  // Define a regular expression to match special characters
+  var specialCharacterRegex = /[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/g
+
+  // Use the replace method to remove special characters from the input string
+  var stringWithoutSpecialChars = inputString.replace(specialCharacterRegex, '')
+
+  return stringWithoutSpecialChars
+}
+
+export function formatAlbumReleaseDateToYear(releaseDate: string) {
+  const date = new Date(releaseDate)
+  return date.getFullYear()
+}

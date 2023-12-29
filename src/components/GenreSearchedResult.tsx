@@ -62,7 +62,7 @@ export default async function GenreSearchedResult({
                       className='rounded-md aspect-square w-full h-auto'
                       alt={item.name}
                       priority
-                      sizes='(min-width: 980px) calc(25vw - 124px), (min-width: 820px) calc(33.57vw - 152px), (min-width: 780px) calc(50vw - 201px), (min-width: 720px) calc(25vw - 60px), (min-width: 560px) calc(32.86vw - 61px), (min-width: 380px) calc(50vw - 72px), calc(100vw - 96px)'
+                      sizes='(min-width: 1120px) calc(20vw - 106px), (min-width: 960px) calc(25vw - 121px), (min-width: 800px) calc(33.57vw - 150px), calc(25.83vw - 11px)'
                     />
                     <div className='absolute z-10 bottom-0 hover:scale-105 hover:duration-100 group-hover:opacity-100 ease-in duration-200 group-hover:-translate-y-2 opacity-0 transition-all hidden md:flex items-center justify-center right-0 mx-2 rounded-full w-[30%] h-[30%] bg-green-500'>
                       {/*<PlayIcon className='h-1/2 w-1/2' />*/}
@@ -70,7 +70,7 @@ export default async function GenreSearchedResult({
                     </div>
                   </div>
                   <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
-                    <strong className='text-white md:text-xl text-lg block truncate'>
+                    <strong className='text-white text-base block truncate'>
                       {item.name}
                     </strong>
                     <p className='text-zinc-400 text-sm truncate'>
@@ -110,7 +110,7 @@ export default async function GenreSearchedResult({
                       className='rounded-md aspect-square w-full h-auto'
                       alt={item.name}
                       priority
-                      sizes='(min-width: 980px) calc(25vw - 124px), (min-width: 820px) calc(33.57vw - 152px), (min-width: 780px) calc(50vw - 201px), (min-width: 720px) calc(25vw - 60px), (min-width: 560px) calc(32.86vw - 61px), (min-width: 380px) calc(50vw - 72px), calc(100vw - 96px)'
+                      sizes='(min-width: 1120px) calc(20vw - 106px), (min-width: 960px) calc(25vw - 121px), (min-width: 800px) calc(33.57vw - 150px), calc(25.83vw - 11px)'
                     />
                     <div className='absolute z-10 bottom-0 hover:scale-105 hover:duration-100 group-hover:opacity-100 ease-in duration-200 group-hover:-translate-y-2 opacity-0 transition-all hidden md:flex items-center justify-center right-0 mx-2 rounded-full w-[30%] h-[30%] bg-green-500'>
                       {/*<PlayIcon className='h-1/2 w-1/2' />*/}
@@ -118,7 +118,7 @@ export default async function GenreSearchedResult({
                     </div>
                   </div>
                   <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
-                    <strong className='text-white md:text-xl text-lg block truncate'>
+                    <strong className='text-white text-base block truncate'>
                       {item.name}
                     </strong>
                     <p className='text-zinc-400 text-sm truncate'>

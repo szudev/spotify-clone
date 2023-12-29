@@ -2,7 +2,6 @@ import Image from 'next/image'
 import SpotifyWebApi from 'spotify-web-api-node'
 import { PauseIcon, PlayIcon } from './Icons'
 import Link from 'next/link'
-import { getGreetingTime } from '@/lib/utils'
 import { getUserSavedAlbums } from '@/services/album'
 import { redirect } from 'next/navigation'
 import dynamic from 'next/dynamic'
@@ -50,12 +49,12 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
           ) : null}
         </div>
         {savedAlbums && (
-          <div className='grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-2'>
+          <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2'>
             {savedAlbums.items.map((album) => (
               <Link
                 key={album.album.id}
                 href={`/album/${album.album.id}`}
-                className='md:flex md:flex-col grid grid-cols-[40%_1fr] md:bg-[#171717] bg-[#222222] md:bg-hover-effect group gap-2 md:gap-4 p-0 md:p-4 rounded-md'
+                className='md:bg-hover-effect grid grid-cols-[25%_1fr] md:flex md:flex-col md:p-4 p-0 group md:gap-4 gap-2 bg-transparent md:bg-black/30 rounded-md'
               >
                 <div className='relative rounded-md'>
                   <Image
@@ -71,11 +70,11 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
                     <PauseIcon className='h-1/2 w-1/2' />
                   </div>
                 </div>
-                <div className='flex flex-row md:flex-col gap-0 md:gap-1 md:items-start items-center pr-2 py-2 md:pr-0 md:py-0 justify-start'>
-                  <strong className='text-white text-xs md:text-xl'>
+                <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
+                  <strong className='text-white text-xs block md:text-xl truncate'>
                     {album.album.name}
                   </strong>
-                  <p className='text-zinc-400 md:inline hidden text-sm'>
+                  <p className='text-zinc-400 md:inline hidden text-sm truncate'>
                     {album.album.artists
                       .map((artist) => artist.name)
                       .join(', ')}

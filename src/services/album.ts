@@ -14,7 +14,7 @@ interface AlbumByIdProps {
 
 export async function getUserSavedAlbums({
   spotifyApi,
-  limit = 4,
+  limit = 5,
   pageParam = 0
 }: UserSavedAlbumProps) {
   try {
