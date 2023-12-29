@@ -7,3 +7,25 @@
     @apply bg-zinc-50 bg-opacity-5;
   }
 }
+
+/* width */
+::-webkit-scrollbar {
+  width: 100%;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: rgb(24 24 27 / 1);
+  border-radius: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
