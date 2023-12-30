@@ -315,7 +315,7 @@ function AlbumListItemSkeleton() {
 
 export function GenreSearchResultSkeleton() {
   return (
-    <div className='flex flex-col flex-1 w-full'>
+    <section className='flex flex-col flex-1 w-full'>
       <div className='flex justify-start items-end py-7 break-all w-full'>
         <div className='md:h-20 h-12 w-1/2 bg-zinc-500 animate-pulse rounded-full' />
       </div>
@@ -346,6 +346,128 @@ export function GenreSearchResultSkeleton() {
             <AlbumListItemSkeleton />
           </div>
         </div>
+      </div>
+    </section>
+  )
+}
+
+export function CustomSearchedResultSkeleton() {
+  return (
+    <section className='flex flex-col flex-1'>
+      <section className='grid lg:grid-cols-[40%_1fr] md:grid-cols-2 gap-4 grid-rows-[1fr] items-end md:py-7 pb-7 pt-0'>
+        <div className='flex flex-col min-w-0 justify-start h-full gap-4'>
+          <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/3' />
+          <div className='flex md:flex-col flex-row md:p-5 p-0 gap-3 rounded-md md:bg-zinc-700 bg-transparent md:animate-pulse'>
+            <div className='bg-zinc-500 animate-pulse aspect-square h-[92px] w-[92px] rounded-full' />
+            <div className='flex gap-1 flex-col items-start justify-center overflow-hidden w-full'>
+              <div className='bg-zinc-500 animate-pulse md:h-8 h-4 md:w-1/2 w-3/4 rounded-full' />
+              <div className='bg-zinc-500 animate-pulse h-[14px] rounded-full md:py-1 md:px-2 p-0 md:w-[15%] w-1/2' />
+            </div>
+          </div>
+        </div>
+        <div className='flex flex-col justify-start h-full gap-4'>
+          <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/5' />
+          <section className='grid grid-cols-1 w-full grid-rows-[1fr] rounded-md gap-2 md:gap-0 flex-1'>
+            <CustomSearchedResultSongSkeleton />
+            <CustomSearchedResultSongSkeleton />
+            <CustomSearchedResultSongSkeleton />
+            <CustomSearchedResultSongSkeleton />
+          </section>
+        </div>
+      </section>
+      <section className='flex flex-col justify-start h-full gap-4 pb-7'>
+        <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/5' />
+        <div className='grid md:grid-cols-5 grid-cols-1 grid-rows-[1fr] gap-4'>
+          <CustomSearchedResultArtistSekelton />
+          <CustomSearchedResultArtistSekelton />
+          <CustomSearchedResultArtistSekelton />
+          <CustomSearchedResultArtistSekelton />
+          <CustomSearchedResultArtistSekelton />
+        </div>
+      </section>
+      <section className='flex flex-col justify-start h-full gap-4 pb-7'>
+        <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/5' />
+        <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
+          <CustomSearchedResultAlbumSkeleton />
+          <CustomSearchedResultAlbumSkeleton />
+          <CustomSearchedResultAlbumSkeleton />
+          <CustomSearchedResultAlbumSkeleton />
+          <CustomSearchedResultAlbumSkeleton />
+        </div>
+      </section>
+      <section className='flex flex-col justify-start h-full gap-4 pb-7'>
+        <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/5' />
+        <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
+          <CustomSearchedResultPlaylistSkeleton />
+          <CustomSearchedResultPlaylistSkeleton />
+          <CustomSearchedResultPlaylistSkeleton />
+          <CustomSearchedResultPlaylistSkeleton />
+          <CustomSearchedResultPlaylistSkeleton />
+        </div>
+      </section>
+    </section>
+  )
+}
+
+function CustomSearchedResultSongSkeleton() {
+  return (
+    <div className='grid grid-cols-[1fr_minmax(30px,auto)] rounded-md md:p-2 p-0 items-center'>
+      <div className='grid md:grid-cols-[40px_1fr] grid-cols-[25%_1fr] md:gap-4 gap-2'>
+        <div className='rounded-md relative'>
+          <div className='bg-zinc-500 animate-pulse rounded-md h-auto w-full aspect-square' />
+        </div>
+        <div className='flex flex-col justify-center p-1 gap-1'>
+          <div className='table table-fixed w-full'>
+            <div className='bg-zinc-500 animate-pulse rounded-full block md:h-[14px] h-4 w-1/3' />
+          </div>
+          <div className='table table-fixed w-full'>
+            <div className='bg-zinc-500 animate-pulse rounded-full block h-3 w-1/4' />
+          </div>
+        </div>
+      </div>
+      <div className='md:flex h-[14px] w-full justify-center bg-zinc-500 rounded-full animate-pulse hidden' />
+    </div>
+  )
+}
+
+function CustomSearchedResultArtistSekelton() {
+  return (
+    <div className='grid md:grid-cols-1 grid-cols-[25%_1fr] grid-rows-[1fr] md:grid-rows-[1fr_auto] md:p-4 p-0 md:gap-5 gap-2 rounded-md bg-transparent'>
+      <div className='relative rounded-full'>
+        <div className='aspect-square rounded-full bg-zinc-500 animate-pulse w-full h-auto' />
+      </div>
+      <div className='flex flex-col items-start gap-1 justify-center overflow-x-hidden'>
+        <div className='h-4 bg-zinc-500 animate-pulse rounded-full w-[75%]' />
+        <div className='md:h-[14px] h-3 bg-zinc-500 animate-pulse hidden md:inline rounded-full w-2/5' />
+      </div>
+    </div>
+  )
+}
+
+function CustomSearchedResultAlbumSkeleton() {
+  return (
+    <div className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 bg-transparent md:gap-5 gap-2'>
+      <div className='relative rounded-md'>
+        <div className='aspect-square rounded-md bg-zinc-500 animate-pulse w-full h-auto' />
+      </div>
+      <div className='flex flex-col items-start overflow-x-hidden gap-1'>
+        <div className='h-4 w-[60%] animate-pulse bg-zinc-500 rounded-full' />
+        <div className='h-[14px] w-1/2 animate-pulse bg-zinc-500 rounded-full' />
+        <div className='h-[14px] w-1/2 md:hidden inline animate-pulse bg-zinc-500 rounded-full' />
+      </div>
+    </div>
+  )
+}
+
+function CustomSearchedResultPlaylistSkeleton() {
+  return (
+    <div className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 bg-transparent md:gap-5 gap-2'>
+      <div className='relative rounded-md'>
+        <div className='aspect-square rounded-md bg-zinc-500 animate-pulse w-full h-auto' />
+      </div>
+      <div className='flex flex-col items-start overflow-x-hidden gap-1'>
+        <div className='h-4 w-[60%] animate-pulse bg-zinc-500 rounded-full' />
+        <div className='h-[14px] w-1/2 animate-pulse bg-zinc-500 rounded-full' />
       </div>
     </div>
   )

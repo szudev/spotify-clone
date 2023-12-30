@@ -1,7 +1,10 @@
 import CustomSearchedResult from '@/components/CustomSearchedResult'
 import GenreSearchedResult from '@/components/GenreSearchedResult'
 import SearchRoot from '@/components/SearchRoot'
-import { GenreSearchResultSkeleton } from '@/components/ui/Skeletons'
+import {
+  CustomSearchedResultSkeleton,
+  GenreSearchResultSkeleton
+} from '@/components/ui/Skeletons'
 import { getAuthSession } from '@/lib/auth'
 import { genres } from '@/lib/constants'
 import spotifyApi from '@/lib/spotify'
@@ -30,10 +33,12 @@ export default async function Page({ searchParams }: Props) {
             />
           </Suspense>
         ) : (
-          <CustomSearchedResult
-            queryParam={queryParam}
-            spotifyApi={spotifyApi}
-          />
+          <Suspense fallback={<CustomSearchedResultSkeleton />}>
+            <CustomSearchedResult
+              queryParam={queryParam}
+              spotifyApi={spotifyApi}
+            />
+          </Suspense>
         )
       ) : (
         <SearchRoot />

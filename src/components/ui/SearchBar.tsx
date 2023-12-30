@@ -7,11 +7,7 @@ import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.share
 import { useAtom } from 'jotai'
 import { searchBarAtom } from '@/store/atoms/search-bar-atom'
 import { X } from 'lucide-react'
-import {
-  ReadonlyURLSearchParams,
-  usePathname,
-  useSearchParams
-} from 'next/navigation'
+import { ReadonlyURLSearchParams } from 'next/navigation'
 
 interface Props {
   router: AppRouterInstance
@@ -33,7 +29,7 @@ export default function SearchBar({ router, pathname, searchParams }: Props) {
           return
         return router.replace('/search')
       }
-      return router.push(`?q=${queryParam.toLowerCase()}`)
+      return router.replace(`?q=${queryParam.toLowerCase()}`)
     },
     500
   )

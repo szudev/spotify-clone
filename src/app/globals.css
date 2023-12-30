@@ -10,7 +10,7 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 100%;
+  display: none;
 }
 
 /* Track */
