@@ -57,6 +57,7 @@ export default async function PlaylistTable({ playlistId, spotifyApi }: Props) {
               track={track}
               uris={uris}
               tracks={tracks}
+              playlistId={playlistId}
             />
           )
         })}

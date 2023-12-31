@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils'
 
 type SongProps = {
   playerType: 'song'
-  song: SpotifyApi.PlaylistTrackObject
+  song: SpotifyApi.TrackObjectFull
 }
 
 type AlbumProps = {
@@ -29,6 +29,7 @@ type PlaylistProps = {
 type Props = {
   buttonStyles: React.ComponentProps<'div'>['className']
   iconStyles: React.ComponentProps<'div'>['className']
+  onPlayStyle: React.ComponentProps<'div'>['className']
   uris: string | string[]
   tracks: (SpotifyApi.TrackObjectFull | null)[]
 } & (SongProps | AlbumProps | PlaylistProps)
@@ -46,7 +47,7 @@ export default function ClientCoverPlayer(props: Props) {
 
   const track =
     playerType === 'song'
-      ? props.song.track
+      ? props.song
       : tracks.find(
           (trackToFind) => trackToFind?.id === currentTrack?.song?.id
         ) ?? tracks[0]
@@ -79,7 +80,7 @@ export default function ClientCoverPlayer(props: Props) {
     (playerType === 'album' && props.albumId === currentTrack?.albumId) ||
     (playerType === 'playlist' &&
       props.playlistId === currentTrack?.playlistId) ||
-    (playerType === 'song' && props.song?.track?.id === currentTrack?.song?.id)
+    (playerType === 'song' && props.song.id === currentTrack?.song?.id)
 
   const handlePlay = async () => {
     if (!track || !deviceId) return
@@ -133,13 +134,13 @@ export default function ClientCoverPlayer(props: Props) {
   return (
     <button
       className={cn(buttonStyles, {
-        'opacity-100 -translate-y-2':
+        [`${props.onPlayStyle}`]:
           (props.playerType === 'playlist' &&
             props.playlistId === currentTrack?.playlistId) ||
           (props.playerType === 'album' &&
             props.albumId === currentTrack?.albumId) ||
           (props.playerType === 'song' &&
-            props.song.track?.id === currentTrack?.song?.id)
+            props.song.id === currentTrack?.song?.id)
       })}
       onClick={(e) => {
         e.preventDefault()

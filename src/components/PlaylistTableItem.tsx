@@ -19,9 +19,16 @@ interface Props {
   token: string | undefined
   uris: string[]
   tracks: (SpotifyApi.TrackObjectFull | null)[]
+  playlistId: string
 }
 
-export default function PlaylistTableItem({ track, i, uris, tracks }: Props) {
+export default function PlaylistTableItem({
+  track,
+  i,
+  uris,
+  tracks,
+  playlistId
+}: Props) {
   const [isHovering, setIsHovering] = useState(false)
   const [currentTrack, setCurrentTrackId] = useAtom(currentTrackAtom)
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
@@ -55,7 +62,8 @@ export default function PlaylistTableItem({ track, i, uris, tracks }: Props) {
           currentTrack.song.id === track.track.id
             ? currentTrack.progress_ms
             : 0,
-        tracks: tracks.slice(i, tracks.length)
+        tracks: tracks.slice(i, tracks.length),
+        playlistId: playlistId
       })
       setIsPlaying(true)
     }

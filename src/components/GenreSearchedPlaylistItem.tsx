@@ -49,6 +49,7 @@ export default async function GenreSearchedPlaylistItem({
           uris={uris}
           buttonStyles='absolute z-10 bottom-0 hover:scale-105 hover:duration-100 group-hover:opacity-100 ease-in duration-200 group-hover:-translate-y-2 opacity-0 transition-all hidden md:flex items-center justify-center right-0 mx-2 rounded-full w-[30%] h-[30%] bg-green-500'
           iconStyles='h-1/2 w-1/2'
+          onPlayStyle='opacity-100 -translate-y-2'
         />
       </div>
       <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>

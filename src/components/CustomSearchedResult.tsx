@@ -5,6 +5,9 @@ import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import { PauseIcon } from './Icons'
 import Link from 'next/link'
+import ClientCoverPlayer from './ClientCoverPlayer'
+import CustomSearchedSongName from './CustomSearchedSongName'
+import CustomSearchedSongDuration from './CustomSearchedSongDuration'
 
 interface Props {
   queryParam: string
@@ -90,21 +93,19 @@ export default async function CustomSearchedResult({
                       }
                       alt={`Cover image of song #${track ? track.id : i + 1}`}
                     />
-                    <div className='w-full h-full absolute z-10 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 group-hover:opacity-100 opacity-0 hidden md:flex items-center justify-center'>
-                      {/*<PlayIcon className='h-1/2 w-1/2' />*/}
-                      <PauseIcon className='h-1/2 w-1/2 fill-white' />
-                    </div>
+                    <ClientCoverPlayer
+                      playerType='song'
+                      song={track}
+                      uris={track.uri}
+                      tracks={[track]}
+                      iconStyles='h-1/2 w-1/2 fill-white'
+                      buttonStyles='w-full h-full absolute z-10 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 group-hover:opacity-100 opacity-0 hidden md:flex items-center justify-center'
+                      onPlayStyle=''
+                    />
                   </div>
                   <div className='flex flex-col justify-center'>
                     <div className='table table-fixed w-full'>
-                      <h3
-                        className={`${
-                          /* currentTrack?.song?.id === track.id */
-                          true ? 'text-[#1ed760]' : 'text-white'
-                        } block truncate md:text-sm text-base hover:cursor-pointer hover:underline`}
-                      >
-                        {track ? track.name : 'Unknown'}
-                      </h3>
+                      <CustomSearchedSongName track={track} />
                     </div>
                     {track ? (
                       <div className='table table-fixed w-full'>
@@ -117,9 +118,7 @@ export default async function CustomSearchedResult({
                     ) : null}
                   </div>
                 </div>
-                <div className='col-start-5 md:flex text-sm justify-center text-zinc-400 hidden'>
-                  {track ? formatSongDuration(track.duration_ms) : '-:--'}
-                </div>
+                <CustomSearchedSongDuration track={track} />
               </article>
             ))}
           </section>

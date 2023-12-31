@@ -59,6 +59,7 @@ export default async function AlbumTable({ params }: Props) {
                 track={track}
                 uris={uris}
                 tracks={filteredTracks}
+                albumId={body.id}
               />
             )
           })}

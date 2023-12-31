@@ -20,9 +20,16 @@ interface Props {
   token: string | undefined
   uris: string[]
   tracks: AlbumTrackMergeType[]
+  albumId: string
 }
 
-export default function AlbumTableItem({ track, i, tracks, uris }: Props) {
+export default function AlbumTableItem({
+  track,
+  i,
+  tracks,
+  uris,
+  albumId
+}: Props) {
   const [isHovering, setIsHovering] = useState(false)
   const [currentTrack, setCurrentTrackId] = useAtom(currentTrackAtom)
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
@@ -56,7 +63,8 @@ export default function AlbumTableItem({ track, i, tracks, uris }: Props) {
           currentTrack.song.id === track.id
             ? currentTrack.progress_ms
             : 0,
-        tracks: tracks.slice(i, tracks.length)
+        tracks: tracks.slice(i, tracks.length),
+        albumId: albumId
       })
       setIsPlaying(true)
     }
