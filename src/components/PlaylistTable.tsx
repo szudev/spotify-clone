@@ -14,7 +14,7 @@ export default async function PlaylistTable({ playlistId, spotifyApi }: Props) {
     playlistId,
     spotifyApi
   })
-  if (!playlistResponse || playlistResponse.statusCode !== 200)
+  if (!playlistResponse.body || playlistResponse.statusCode !== 200)
     return notFound()
 
   const { body: playlist } = playlistResponse
