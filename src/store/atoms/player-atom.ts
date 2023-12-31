@@ -6,6 +6,9 @@ export const currentTrackAtom = atom<
       song: SpotifyApi.TrackObjectFull | AlbumTrackMergeType | null
       progress_ms: number | null
       tracks: (SpotifyApi.TrackObjectFull | AlbumTrackMergeType | null)[]
+      playlistId?: string
+      albumId?: string
+      songObject?: SpotifyApi.PlaylistTrackObject
     }
   | undefined
 >(undefined)
