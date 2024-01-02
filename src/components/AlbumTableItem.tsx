@@ -63,7 +63,7 @@ export default function AlbumTableItem({
           currentTrack.song.id === track.id
             ? currentTrack.progress_ms
             : 0,
-        tracks: tracks.slice(i, tracks.length),
+        tracks: tracks,
         albumId: albumId
       })
       setIsPlaying(true)

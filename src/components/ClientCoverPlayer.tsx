@@ -71,11 +71,6 @@ export default function ClientCoverPlayer(props: Props) {
         : 0
       : 0
 
-  const tracksToSet =
-    playerType === 'playlist' || playerType === 'album'
-      ? tracks.slice(index, tracks.length)
-      : []
-
   const isPlayingForType =
     (playerType === 'album' && props.albumId === currentTrack?.albumId) ||
     (playerType === 'playlist' &&
@@ -110,7 +105,7 @@ export default function ClientCoverPlayer(props: Props) {
           currentTrack.song.id === track.id
             ? currentTrack.progress_ms
             : 0,
-        tracks: tracksToSet,
+        tracks: tracks,
         albumId: albumIdSetter,
         playlistId: playlistIdSetter,
         songObject: songObjectSetter

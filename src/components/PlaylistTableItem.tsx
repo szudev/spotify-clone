@@ -62,7 +62,7 @@ export default function PlaylistTableItem({
           currentTrack.song.id === track.track.id
             ? currentTrack.progress_ms
             : 0,
-        tracks: tracks.slice(i, tracks.length),
+        tracks: tracks,
         playlistId: playlistId
       })
       setIsPlaying(true)
