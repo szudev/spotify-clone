@@ -1,4 +1,4 @@
-import { formatAlbumReleaseDateToYear, formatSongDuration } from '@/lib/utils'
+import { formatAlbumReleaseDateToYear } from '@/lib/utils'
 import { SearchResults } from '@/services/search'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
@@ -8,6 +8,10 @@ import Link from 'next/link'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import CustomSearchedSongName from './CustomSearchedSongName'
 import CustomSearchedSongDuration from './CustomSearchedSongDuration'
+import { Suspense } from 'react'
+import StreamCustomSearchAlbumPlayer from './StreamCustomSearchAlbumPlayer'
+import StreamCustomSearchPlaylistPlayer from './StreamCustomSearchPlaylistPlayer'
+import CustomSearchArtistSection from './CustomSearchArtistSection'
 
 interface Props {
   queryParam: string
@@ -33,38 +37,11 @@ export default async function CustomSearchedResult({
 
   return (
     <section className='flex flex-col flex-1'>
-      <section className='grid lg:grid-cols-[40%_1fr] md:grid-cols-2 gap-4 grid-rows-[1fr] items-end md:py-7 pb-7 pt-0'>
-        <div className='flex flex-col min-w-0 justify-start h-full gap-4'>
-          <h1 className='text-white text-2xl font-bold md:inline hidden'>
-            Top result
-          </h1>
-          <article className='flex md:flex-col flex-row group md:p-5 p-0 relative md:hover:cursor-pointer gap-3 rounded-md md:bg-black/30 bg-transparent md:bg-hover-effect'>
-            <Image
-              src={topResultImageSrc}
-              alt={
-                body && body.artists && topResultArtist
-                  ? `Artist ${topResultArtist.name} profile image`
-                  : `Unkown artist profile picture`
-              }
-              className='rounded-full aspect-square'
-              height={92}
-              width={92}
-              priority
-            />
-            <div className='flex gap-1 flex-col items-start justify-center overflow-hidden'>
-              <p className='text-white md:text-[2rem] text-base font-bold capitalize truncate block w-full'>
-                {topResultArtist?.name ?? 'unkown'}
-              </p>
-              <p className='md:text-white text-zinc-400 text-sm capitalize font-medium rounded-full md:py-1 md:px-2 p-0 md:bg-black bg-transparent'>
-                {topResultArtist?.type ?? 'unkown'}
-              </p>
-            </div>
-            <div className='absolute z-10 bottom-0 hover:scale-105 hover:duration-100 group-hover:opacity-100 ease-in duration-200 group-hover:-translate-y-5 opacity-0 transition-all hidden md:flex items-center justify-center right-0 mx-5 rounded-full w-12 h-12 bg-green-500'>
-              {/*<PlayIcon className='h-1/2 w-1/2' />*/}
-              <PauseIcon className='h-1/2 w-1/2' />
-            </div>
-          </article>
-        </div>
+      <CustomSearchArtistSection
+        body={body}
+        spotifyApi={spotifyApi}
+        topResultArtist={topResultArtist}
+      >
         <div className='flex flex-col justify-start h-full gap-4'>
           <h1 className='text-white text-2xl font-bold'>Songs</h1>
           <section className='grid grid-cols-1 w-full grid-rows-[1fr] rounded-md gap-2 md:gap-0 flex-1'>
@@ -123,44 +100,7 @@ export default async function CustomSearchedResult({
             ))}
           </section>
         </div>
-      </section>
-      <section className='flex flex-col justify-start h-full gap-4 pb-7'>
-        <h1 className='text-white text-2xl font-bold'>Artists</h1>
-        <div className='grid md:grid-cols-5 grid-cols-1 grid-rows-[1fr] gap-4'>
-          {body?.artists?.items.map((artist) => (
-            <Link
-              href={`/artist/${artist.id}`}
-              key={artist.id}
-              className='grid md:grid-cols-1 grid-cols-[25%_1fr] grid-rows-[1fr] md:grid-rows-[1fr_auto] md:p-4 p-0 md:gap-5 gap-2 rounded-md group md:bg-black/30 bg-transparent md:bg-hover-effect'
-            >
-              <div className='relative rounded-full'>
-                <Image
-                  src={
-                    artist.images.find((image) => image.url)?.url ??
-                    '/404-img.png'
-                  }
-                  alt={`Artist ${artist.name} profile image`}
-                  height={172}
-                  width={172}
-                  className='aspect-square rounded-full w-full h-auto'
-                />
-                <div className='absolute z-10 bottom-0 hover:scale-105 hover:duration-100 group-hover:opacity-100 ease-in duration-200 group-hover:-translate-y-1 opacity-0 transition-all hidden md:flex items-center justify-center right-0 mx-1 rounded-full w-12 h-12 bg-green-500'>
-                  {/*<PlayIcon className='h-1/2 w-1/2' />*/}
-                  <PauseIcon className='h-1/2 w-1/2' />
-                </div>
-              </div>
-              <div className='flex flex-col items-start justify-center overflow-x-hidden'>
-                <p className='text-white font-bold capitalize text-base truncate w-full'>
-                  {artist.name ?? 'unkown'}
-                </p>
-                <p className='text-zinc-400 hidden md:flex md:text-sm text-xs capitalize truncate rounded-full'>
-                  {artist.type ?? 'unkown'}
-                </p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+      </CustomSearchArtistSection>
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
         <h1 className='text-white text-2xl font-bold'>Albums</h1>
         <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
@@ -181,10 +121,16 @@ export default async function CustomSearchedResult({
                   width={172}
                   className='aspect-square rounded-md w-full h-auto'
                 />
-                <div className='absolute z-10 bottom-0 hover:scale-105 hover:duration-100 group-hover:opacity-100 ease-in duration-200 group-hover:-translate-y-1 opacity-0 transition-all hidden md:flex items-center justify-center right-0 mx-1 rounded-full w-12 h-12 bg-green-500'>
-                  {/*<PlayIcon className='h-1/2 w-1/2' />*/}
-                  <PauseIcon className='h-1/2 w-1/2' />
-                </div>
+                <Suspense
+                  fallback={
+                    <div className='absolute z-10 bottom-0 -translate-y-1 opacity-100 transition-all hidden md:flex items-center justify-center right-0 mx-1 rounded-full w-12 h-12 bg-zinc-700 animate-pulse' />
+                  }
+                >
+                  <StreamCustomSearchAlbumPlayer
+                    album={album}
+                    spotifyApi={spotifyApi}
+                  />
+                </Suspense>
               </div>
               <div className='flex flex-col items-start overflow-x-hidden'>
                 <p className='text-white font-bold capitalize truncate w-full'>
@@ -201,6 +147,7 @@ export default async function CustomSearchedResult({
             </Link>
           ))}
         </div>
+        C
       </section>
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
         <h1 className='text-white text-2xl font-bold'>Playlists</h1>
@@ -222,10 +169,16 @@ export default async function CustomSearchedResult({
                   width={172}
                   className='aspect-square rounded-md w-full h-auto'
                 />
-                <div className='absolute z-10 bottom-0 hover:scale-105 hover:duration-100 group-hover:opacity-100 ease-in duration-200 group-hover:-translate-y-1 opacity-0 transition-all hidden md:flex items-center justify-center right-0 mx-1 rounded-full w-12 h-12 bg-green-500'>
-                  {/*<PlayIcon className='h-1/2 w-1/2' />*/}
-                  <PauseIcon className='h-1/2 w-1/2' />
-                </div>
+                <Suspense
+                  fallback={
+                    <div className='absolute z-10 bottom-0 -translate-y-1 opacity-100 transition-all hidden md:flex items-center justify-center right-0 mx-1 rounded-full w-12 h-12 bg-zinc-700 animate-pulse' />
+                  }
+                >
+                  <StreamCustomSearchPlaylistPlayer
+                    playlist={playlist}
+                    spotifyApi={spotifyApi}
+                  />
+                </Suspense>
               </div>
               <div className='flex flex-col items-start overflow-x-hidden'>
                 <p className='text-white font-bold capitalize truncate w-full'>

@@ -14,3 +14,21 @@ export async function getArtistById({ artistId, spotifyApi }: ArtistByIdProps) {
     return { statusCode: spotifyWebApiErrorHandler(error) }
   }
 }
+
+export async function getArtistTopTracks({
+  artistId,
+  spotifyApi
+}: ArtistByIdProps) {
+  try {
+    const { body: userInfo, statusCode: userInfoStatusCode } =
+      await spotifyApi.getMe()
+    if (!userInfo || userInfoStatusCode !== 200) throw new Error()
+    const { body, statusCode } = await spotifyApi.getArtistTopTracks(
+      artistId,
+      userInfo.country
+    )
+    return { body, statusCode }
+  } catch (error) {
+    return { statusCode: spotifyWebApiErrorHandler(error) }
+  }
+}

@@ -11,6 +11,11 @@ import { pauseSong, playSong } from '@/actions/player'
 import { toast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
+type ArtistProps = {
+  playerType: 'artist'
+  artistId: string
+}
+
 type SongProps = {
   playerType: 'song'
   song: SpotifyApi.TrackObjectFull
@@ -32,7 +37,7 @@ type Props = {
   onPlayStyle: React.ComponentProps<'div'>['className']
   uris: string | string[]
   tracks: (SpotifyApi.TrackObjectFull | null)[]
-} & (SongProps | AlbumProps | PlaylistProps)
+} & (SongProps | AlbumProps | PlaylistProps | ArtistProps)
 
 export default function ClientCoverPlayer(props: Props) {
   const [currentTrack, setCurrentTrack] = useAtom(currentTrackAtom)
@@ -44,6 +49,7 @@ export default function ClientCoverPlayer(props: Props) {
   const playlistIdSetter =
     playerType === 'playlist' ? props.playlistId : undefined
   const songObjectSetter = playerType === 'song' ? props.song : undefined
+  const artistIdSetter = playerType === 'artist' ? props.artistId : undefined
 
   const track =
     playerType === 'song'
@@ -69,13 +75,22 @@ export default function ClientCoverPlayer(props: Props) {
             ) ?? 0
           : 0
         : 0
+      : playerType === 'artist'
+      ? currentTrack?.tracks
+        ? props.artistId === currentTrack.artistId
+          ? currentTrack.tracks.findIndex(
+              (trackToFind) => trackToFind?.id === track?.id
+            )
+          : 0
+        : 0
       : 0
 
   const isPlayingForType =
     (playerType === 'album' && props.albumId === currentTrack?.albumId) ||
     (playerType === 'playlist' &&
       props.playlistId === currentTrack?.playlistId) ||
-    (playerType === 'song' && props.song.id === currentTrack?.song?.id)
+    (playerType === 'song' && props.song.id === currentTrack?.song?.id) ||
+    (playerType === 'artist' && props.artistId === currentTrack?.artistId)
 
   const handlePlay = async () => {
     if (!track || !deviceId) return
@@ -108,7 +123,8 @@ export default function ClientCoverPlayer(props: Props) {
         tracks: tracks,
         albumId: albumIdSetter,
         playlistId: playlistIdSetter,
-        songObject: songObjectSetter
+        songObject: songObjectSetter,
+        artistId: artistIdSetter
       })
       setIsPlaying(true)
     }
@@ -135,7 +151,9 @@ export default function ClientCoverPlayer(props: Props) {
           (props.playerType === 'album' &&
             props.albumId === currentTrack?.albumId) ||
           (props.playerType === 'song' &&
-            props.song.id === currentTrack?.song?.id)
+            props.song.id === currentTrack?.song?.id) ||
+          (props.playerType === 'artist' &&
+            props.artistId === currentTrack?.artistId)
       })}
       onClick={(e) => {
         e.preventDefault()
