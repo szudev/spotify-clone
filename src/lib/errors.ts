@@ -1,4 +1,4 @@
-type ApiStatusCodes =
+export type ApiStatusCodes =
   | 200
   | 201
   | 204

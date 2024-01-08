@@ -1,14 +1,15 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn, getCurrentYear } from '@/lib/utils'
 import { usePathname } from 'next/navigation'
 import { ReactNode, useEffect, useRef } from 'react'
 import { shuffle } from 'lodash'
 import { ListofColors } from '@/lib/background-colors'
 import useBgColor from '@/hooks/use-bg-color'
 import useScrollBehaviour from '@/hooks/use-scroll-behaviour'
-import { useAtomValue } from 'jotai'
+import { useAtomValue, useSetAtom } from 'jotai'
 import { currentTrackAtom } from '@/store/atoms/player-atom'
+import { navigationRouteAtom } from '@/store/atoms/navigation.atom'
 
 export default function ClientBodyProvider({
   children
@@ -20,31 +21,30 @@ export default function ClientBodyProvider({
   const mainRef = useRef<HTMLDivElement>(null)
   const { backgroundColorValue, backgroundColorSetter } = useBgColor()
   const { scrollSetter } = useScrollBehaviour()
+  const setNavigation = useSetAtom(navigationRouteAtom)
 
   useEffect(() => {
     if (!mainRef.current) return
+    const refConst = mainRef.current
     const handleScroll = () => {
-      if (!mainRef.current) return
-      if (mainRef.current.scrollTop === 0) {
+      if (!refConst) return
+      if (refConst.scrollTop === 0) {
         scrollSetter({ still: true })
-      } else if (
-        mainRef.current.scrollTop > 0 &&
-        mainRef.current.scrollTop < 50
-      ) {
+      } else if (refConst.scrollTop > 0 && refConst.scrollTop < 50) {
         scrollSetter({ scrolling: true })
-      } else if (mainRef.current.scrollTop >= 50) {
+      } else if (refConst.scrollTop >= 50) {
         scrollSetter({ scrolled: true })
       }
     }
 
     // Attach the event listener to the main element
 
-    mainRef.current.addEventListener('scroll', handleScroll)
+    refConst.addEventListener('scroll', handleScroll)
 
     // Clean up the event listener on component unmount
     return () => {
-      if (mainRef.current) {
-        mainRef.current.removeEventListener('scroll', handleScroll)
+      if (refConst) {
+        refConst.removeEventListener('scroll', handleScroll)
       }
     }
   }, [scrollSetter])
@@ -60,6 +60,22 @@ export default function ClientBodyProvider({
       backgroundColorSetter(shuffle(ListofColors).pop())
     }
   }, [pathname, backgroundColorSetter])
+
+  useEffect(() => {
+    if (pathname === '/') setNavigation('home')
+    else if (
+      pathname.endsWith('albums') ||
+      pathname.endsWith('playlists') ||
+      pathname.endsWith('myAlbums')
+    )
+      setNavigation('library')
+    else if (
+      pathname.startsWith('/search') ||
+      pathname.startsWith('/genre/playlists') ||
+      pathname.startsWith('/genre/albums')
+    )
+      setNavigation('search')
+  }, [pathname, setNavigation])
 
   return (
     <main
@@ -87,7 +103,7 @@ export default function ClientBodyProvider({
             <p className='cursor-pointer hover:text-white'>About Ads</p>
             <p className='cursor-pointer hover:text-white'>Accessibility</p>
           </div>
-          <p>© 2023 Fake-Spotify</p>
+          <p>© {getCurrentYear()} Fake-Spotify</p>
         </div>
       </section>
     </main>

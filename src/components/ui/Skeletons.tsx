@@ -472,3 +472,56 @@ function CustomSearchedResultPlaylistSkeleton() {
     </div>
   )
 }
+
+export function SearchGenrePaginationSkeleton({
+  withCoverPlayer
+}: {
+  withCoverPlayer: boolean
+}) {
+  return (
+    <div className='grid md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] grid-cols-1 gap-3'>
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+    </div>
+  )
+}
+
+export function SearchGenrePaginationLoadMoreSkeleton({
+  withCoverPlayer
+}: {
+  withCoverPlayer: boolean
+}) {
+  return (
+    <>
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+      <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
+    </>
+  )
+}
+
+function SearchPlaylistPaginationItemSkeleton({
+  withCoverPlayer
+}: {
+  withCoverPlayer: boolean
+}) {
+  return (
+    <div className='grid grid-cols-[25%_1fr] md:flex md:flex-col md:p-4 p-0 md:gap-4 gap-2 bg-transparent rounded-md'>
+      <div className='relative rounded-md'>
+        <div className='rounded-md aspect-square w-full h-auto bg-zinc-400 animate-pulse' />
+        {withCoverPlayer ? (
+          <div className='absolute z-10 bottom-0 -translate-y-2 opacity-100 transition-all hidden md:flex items-center justify-center right-0 mx-1 rounded-full w-12 h-12 bg-zinc-700 animate-pulse' />
+        ) : null}
+      </div>
+      <div className='flex flex-col gap-1 justify-center md:justify-start'>
+        <div className='md:h-5 h-[18px] w-3/4 block bg-zinc-400 rounded-full animate-pulse' />
+        <div className='h-[14px] w-2/4 block bg-zinc-400 rounded-full animate-pulse' />
+      </div>
+    </div>
+  )
+}

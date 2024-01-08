@@ -6,13 +6,15 @@ interface Props {
 }
 
 export default function AsideUserPlayList({ playlist }: Props) {
+  const imageUrl =
+    playlist.images.find((image) => image.url)?.url ?? '/404-img-png'
   return (
     <Link
       href={`/playlist/${playlist.id}`}
       className='flex gap-2 text-white bg-hover-effect py-2 px-1 rounded-md'
     >
       <Image
-        src={playlist.images[0].url}
+        src={imageUrl}
         alt={playlist.name}
         width={56}
         height={56}

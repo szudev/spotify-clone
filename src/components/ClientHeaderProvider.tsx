@@ -1,8 +1,8 @@
 'use client'
 
-import { ReactNode, useCallback, useState } from 'react'
+import { ReactNode } from 'react'
 import { Button } from './Button'
-import { BackArrowIcon, ForwardArrowIcon, SearchIcon } from './Icons'
+import { BackArrowIcon, ForwardArrowIcon } from './Icons'
 import { cn } from '@/lib/utils'
 import useScrollBehaviour from '@/hooks/use-scroll-behaviour'
 import useBgColor from '@/hooks/use-bg-color'

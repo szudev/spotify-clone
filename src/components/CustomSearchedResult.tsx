@@ -3,7 +3,6 @@ import { SearchResults } from '@/services/search'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
-import { PauseIcon } from './Icons'
 import Link from 'next/link'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import CustomSearchedSongName from './CustomSearchedSongName'
@@ -31,9 +30,6 @@ export default async function CustomSearchedResult({
   })
   if (statusCode !== 200) return notFound()
   const topResultArtist = body?.artists?.items[0]
-
-  const topResultImageSrc =
-    topResultArtist?.images.find((image) => image.url)?.url ?? '/404-img.png'
 
   return (
     <section className='flex flex-col flex-1'>
@@ -147,7 +143,6 @@ export default async function CustomSearchedResult({
             </Link>
           ))}
         </div>
-        C
       </section>
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
         <h1 className='text-white text-2xl font-bold'>Playlists</h1>

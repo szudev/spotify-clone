@@ -6,6 +6,16 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function getCurrentYear() {
+  const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const currentTime = new Date().toLocaleString('en-US', {
+    timeZone: userTimeZone
+  })
+  const currentYear = new Date(currentTime).getFullYear()
+
+  return currentYear
+}
+
 export function hasMillisecondProperty(
   value: any
 ): value is { totalMilliseconds: number } {
