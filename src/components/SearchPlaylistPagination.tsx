@@ -6,10 +6,7 @@ import Image from 'next/image'
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { SearchPlaylists, SearchPlaylistsReturnType } from '@/services/search'
 import { Session } from 'next-auth'
-import {
-  SearchGenrePaginationLoadMoreSkeleton,
-  SearchPlaylistPaginationSkeleton
-} from './ui/Skeletons'
+import { SearchGenrePaginationLoadMoreSkeleton } from './ui/Skeletons'
 import { notFound } from 'next/navigation'
 import ClientCoverPlayer from './ClientCoverPlayer'
 

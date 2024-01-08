@@ -2,7 +2,6 @@ import { getServerSession, NextAuthOptions } from 'next-auth'
 import SpotifyProvider from 'next-auth/providers/spotify'
 import spotifyApi, { LOGIN_URL } from './spotify'
 import { JWT } from 'next-auth/jwt'
-import { signOut } from 'next-auth/react'
 
 async function refreshAccessToken(token: JWT) {
   try {
