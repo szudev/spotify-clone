@@ -9,6 +9,7 @@ import { Session } from 'next-auth'
 import { SearchGenrePaginationLoadMoreSkeleton } from './ui/Skeletons'
 import { notFound } from 'next/navigation'
 import ClientCoverPlayer from './ClientCoverPlayer'
+import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 
 interface Props {
   queryParam: string
@@ -95,9 +96,10 @@ export default function SearchPlaylistPagination({
                 />
               </div>
               <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
-                <strong className='text-white md:text-xl text-lg block truncate'>
-                  {playlist.name}
-                </strong>
+                <ClientCurrentOnPlayCoverName
+                  name={playlist.name}
+                  onPlay={{ playerType: 'playlist', playlistId: playlist.id }}
+                />
                 <p className='text-zinc-400 text-sm truncate'>
                   {playlist.owner.display_name ?? 'Unknown'}
                 </p>

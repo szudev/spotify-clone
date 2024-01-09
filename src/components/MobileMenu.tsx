@@ -9,18 +9,19 @@ import {
   SearchIcon
 } from './Icons'
 import AsideMenuItem from './AsideMenuItem'
-import { usePathname } from 'next/navigation'
+import { useAtomValue } from 'jotai'
+import { navigationRouteAtom } from '@/store/atoms/navigation.atom'
 
 export default function MobileMenu() {
-  const pathname = usePathname()
+  const navigationValue = useAtomValue(navigationRouteAtom)
   return (
     <section className='flex justify-evenly items-center md:hidden'>
       <AsideMenuItem
         href='/'
         className='text-white flex flex-col gap-0 font-normal text-sm'
       >
-        {pathname === '/' ? (
-          <HomeFocusIcon className='h-6 w-6' />
+        {navigationValue === 'home' ? (
+          <HomeFocusIcon className='h-6 w-6 text-white' />
         ) : (
           <HomeIcon className='h-6 w-6' />
         )}
@@ -30,8 +31,8 @@ export default function MobileMenu() {
         href='/search'
         className='text-white flex-col gap-0 font-normal text-sm'
       >
-        {pathname.startsWith('/search') ? (
-          <SearchActiveIcon className='h-6 w-6' />
+        {navigationValue === 'search' ? (
+          <SearchActiveIcon className='h-6 w-6 text-white' />
         ) : (
           <SearchIcon className='h-6 w-6' />
         )}
@@ -41,8 +42,8 @@ export default function MobileMenu() {
         href='/'
         className='text-white flex-col gap-0 font-normal text-sm'
       >
-        {pathname.startsWith('/library/') ? (
-          <LibraryActiveIcon className='h-6 w-6' />
+        {navigationValue === 'library' ? (
+          <LibraryActiveIcon className='text-white h-6 w-6' />
         ) : (
           <LibraryIcon className='h-6 w-6' />
         )}

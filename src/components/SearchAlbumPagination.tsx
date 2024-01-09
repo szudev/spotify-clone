@@ -9,6 +9,7 @@ import Image from 'next/image'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import { Button } from './Button'
 import { SearchGenrePaginationLoadMoreSkeleton } from './ui/Skeletons'
+import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 
 interface Props {
   queryParam: string
@@ -95,9 +96,10 @@ export default function SearchAlbumPagination({
                 />
               </div>
               <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
-                <strong className='text-white md:text-xl text-lg block truncate'>
-                  {album.name}
-                </strong>
+                <ClientCurrentOnPlayCoverName
+                  name={album.name}
+                  onPlay={{ playerType: 'album', albumId: album.id }}
+                />
                 <p className='text-zinc-400 text-sm truncate'>
                   {album.artists.map((artist) => artist.name).join(', ') ??
                     'Unknown'}

@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
 import ClientCoverPlayer from './ClientCoverPlayer'
+import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -59,9 +60,13 @@ export default async function AlbumsList({ spotifyApi }: Props) {
               />
             </div>
             <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
-              <strong className='text-white md:text-xl text-lg block truncate'>
+              <ClientCurrentOnPlayCoverName
+                name={album.album.name}
+                onPlay={{ playerType: 'album', albumId: album.album.id }}
+              />
+              {/* <strong className='text-white md:text-xl text-lg block truncate'>
                 {album.album.name}
-              </strong>
+              </strong> */}
               <p className='text-zinc-400 text-sm truncate'>
                 {album.album.artists.map((artist) => artist.name).join(', ')}
               </p>

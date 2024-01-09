@@ -1,11 +1,11 @@
 import Image from 'next/image'
 import SpotifyWebApi from 'spotify-web-api-node'
-import { PauseIcon, PlayIcon } from './Icons'
 import Link from 'next/link'
 import { getUserSavedAlbums } from '@/services/album'
 import { redirect } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import ClientCoverPlayer from './ClientCoverPlayer'
+import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -88,9 +88,10 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
                     />
                   </div>
                   <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
-                    <strong className='text-white text-xs block md:text-xl truncate'>
-                      {album.album.name}
-                    </strong>
+                    <ClientCurrentOnPlayCoverName
+                      name={album.album.name}
+                      onPlay={{ playerType: 'album', albumId: album.album.id }}
+                    />
                     <p className='text-zinc-400 md:inline hidden text-sm truncate'>
                       {album.album.artists
                         .map((artist) => artist.name)

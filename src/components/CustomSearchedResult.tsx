@@ -11,6 +11,7 @@ import { Suspense } from 'react'
 import StreamCustomSearchAlbumPlayer from './StreamCustomSearchAlbumPlayer'
 import StreamCustomSearchPlaylistPlayer from './StreamCustomSearchPlaylistPlayer'
 import CustomSearchArtistSection from './CustomSearchArtistSection'
+import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 
 interface Props {
   queryParam: string
@@ -129,9 +130,10 @@ export default async function CustomSearchedResult({
                 </Suspense>
               </div>
               <div className='flex flex-col items-start overflow-x-hidden'>
-                <p className='text-white font-bold capitalize truncate w-full'>
-                  {album.name ?? 'unkown'}
-                </p>
+                <ClientCurrentOnPlayCoverName
+                  name={album.name}
+                  onPlay={{ playerType: 'album', albumId: album.id }}
+                />
                 <p className='text-zinc-400 text-sm capitalize truncate rounded-full w-full'>
                   {album.artists.map((artist) => artist.name).join(', ') ??
                     'unkown'}
@@ -176,9 +178,10 @@ export default async function CustomSearchedResult({
                 </Suspense>
               </div>
               <div className='flex flex-col items-start overflow-x-hidden'>
-                <p className='text-white font-bold capitalize truncate w-full'>
-                  {playlist.name ?? 'unkown'}
-                </p>
+                <ClientCurrentOnPlayCoverName
+                  name={playlist.name}
+                  onPlay={{ playerType: 'playlist', playlistId: playlist.id }}
+                />
                 <p className='text-zinc-400 text-sm capitalize truncate rounded-full w-full'>
                   {playlist.owner.display_name ?? 'unkown'}
                 </p>

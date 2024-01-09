@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { getPlaylistTracksById } from '@/services/playlists'
 import SpotifyWebApi from 'spotify-web-api-node'
 import ClientCoverPlayer from './ClientCoverPlayer'
+import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 
 interface Props {
   playlistItem: SpotifyApi.PlaylistObjectSimplified
@@ -53,9 +54,10 @@ export default async function GenreSearchedPlaylistItem({
         />
       </div>
       <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
-        <strong className='text-white text-base block truncate'>
-          {playlistItem.name}
-        </strong>
+        <ClientCurrentOnPlayCoverName
+          name={playlistItem.name}
+          onPlay={{ playerType: 'playlist', playlistId: playlistItem.id }}
+        />
         <p className='text-zinc-400 text-sm truncate'>
           {playlistItem.owner.display_name}
         </p>

@@ -4,6 +4,7 @@ import Image from 'next/image'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import { getAlbumById } from '@/services/album'
 import { AlbumTrackMergeType } from '@/types/spotify-web-api-node'
+import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 
 interface Props {
   albumItem: SpotifyApi.AlbumObjectSimplified
@@ -62,9 +63,10 @@ export default async function GenreSearchedAlbumItem({
         />
       </div>
       <div className='flex flex-col gap-0 md:gap-1 justify-center overflow-hidden md:justify-start'>
-        <strong className='text-white text-base block truncate'>
-          {albumItem.name}
-        </strong>
+        <ClientCurrentOnPlayCoverName
+          name={albumItem.name}
+          onPlay={{ playerType: 'album', albumId: albumItem.id }}
+        />
         <p className='text-zinc-400 text-sm truncate'>
           {albumItem.artists.map((artist) => artist.name).join(', ')}
         </p>

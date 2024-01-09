@@ -31,6 +31,8 @@ type PlaylistProps = {
   playlistId: string
 }
 
+export type OnPlayTypes = SongProps | AlbumProps | PlaylistProps | ArtistProps
+
 type Props = {
   buttonStyles: React.ComponentProps<'div'>['className']
   iconStyles: React.ComponentProps<'div'>['className']
