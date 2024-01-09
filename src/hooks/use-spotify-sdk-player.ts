@@ -38,23 +38,21 @@ export default function useSpotifySdkPlayer({ accessToken }: Props) {
         setDeviceId(device_id)
       })
 
-      player.addListener(
-        'player_state_changed',
-        async ({ timestamp, paused }) => {
-          if (paused) {
-            setIsPlaying(false)
-          } else setIsPlaying(true)
-          if (currentTrack && timestamp !== currentTrack.progress_ms) {
-            setCurrentTrack((prev) => ({
-              ...prev!,
-              progress_ms: timestamp
-            }))
-          }
+      player.addListener('player_state_changed', ({ timestamp, paused }) => {
+        if (paused) {
+          setIsPlaying(false)
+        } else setIsPlaying(true)
+        if (currentTrack && timestamp !== currentTrack.progress_ms) {
+          setCurrentTrack((prev) => ({
+            ...prev!,
+            progress_ms: timestamp
+          }))
         }
-      )
+      })
 
       player.addListener('not_ready', ({ device_id }) => {
         player.disconnect()
+        console.log({ location: 'not_ready Listener.' })
         setPlayerSdk(undefined)
       })
 

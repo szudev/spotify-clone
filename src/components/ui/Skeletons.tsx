@@ -1,3 +1,6 @@
+import AsideMenuItem from '../AsideMenuItem'
+import { HomeIcon, LibraryIcon, SearchIcon } from '../Icons'
+
 export function AsideUserPlaylistSkeleton() {
   return (
     <div className='flex flex-col gap-2 flex-1 overflow-y-auto p-2'>
@@ -30,6 +33,30 @@ function PlaylistSkeleton() {
         <div className='h-3 w-full rounded-full bg-zinc-500 animate-pulse' />
       </div>
     </div>
+  )
+}
+
+export function AsideMenuLinksSkeleton() {
+  return (
+    <div className='flex flex-col gap-5 p-4'>
+      <AsideMenuItem href='/'>
+        <HomeIcon className='h-6 w-6' />
+        Home
+      </AsideMenuItem>
+      <AsideMenuItem href='/search'>
+        <SearchIcon className='h-6 w-6' />
+        Search
+      </AsideMenuItem>
+    </div>
+  )
+}
+
+export function AsideMenuLibraryLinkSkeleton() {
+  return (
+    <AsideMenuItem href='#'>
+      <LibraryIcon className='h-6 w-6' />
+      Your Library
+    </AsideMenuItem>
   )
 }
 

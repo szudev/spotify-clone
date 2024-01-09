@@ -1,11 +1,28 @@
 import { PlusIcon } from './Icons'
 import { Suspense } from 'react'
-import { AsideUserPlaylistSkeleton } from './ui/Skeletons'
+import {
+  AsideMenuLibraryLinkSkeleton,
+  AsideMenuLinksSkeleton,
+  AsideUserPlaylistSkeleton
+} from './ui/Skeletons'
 import UserPlaylistsStream from './UserPlaylistsStream'
-import AsideMenuClientLinks from './AsideMenuClientLinks'
-import AsideMenuClientLibraryLink from './AsideMenuClientLibraryLink'
+import dynamic from 'next/dynamic'
 
 export default async function AsideMenu() {
+  const AsideMenuClientLinks = dynamic(
+    () => import('@/components/AsideMenuClientLinks'),
+    {
+      ssr: false,
+      loading: () => <AsideMenuLinksSkeleton />
+    }
+  )
+  const AsideMenuClientLibraryLink = dynamic(
+    () => import('@/components/AsideMenuClientLibraryLink'),
+    {
+      ssr: false,
+      loading: () => <AsideMenuLibraryLinkSkeleton />
+    }
+  )
   return (
     <nav className='flex flex-col gap-2 overflow-y-auto flex-1'>
       <div className='bg-zinc-900 rounded-lg p-2'>
