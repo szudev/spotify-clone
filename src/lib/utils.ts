@@ -168,3 +168,7 @@ export function formatAlbumReleaseDateToYear(releaseDate: string) {
   const date = new Date(releaseDate)
   return date.getFullYear()
 }
+
+export function formatArtistFollowersCount(followers: number) {
+  return followers.toLocaleString()
+}

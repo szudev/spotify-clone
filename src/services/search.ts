@@ -3,7 +3,7 @@ import spotifyApiImported from '@/lib/spotify'
 import { Session } from 'next-auth'
 import SpotifyWebApi from 'spotify-web-api-node'
 import { getPlaylistTracksById } from './playlists'
-import { getAlbumById, getAlbumTracksById } from './album'
+import { getAlbumTracksById } from './album'
 import { getTrackById } from './track'
 
 class SpotifyApiError extends Error {

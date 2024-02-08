@@ -32,3 +32,17 @@ export async function getArtistTopTracks({
     return { statusCode: spotifyWebApiErrorHandler(error) }
   }
 }
+
+export async function getArtistAlbums({
+  artistId,
+  spotifyApi
+}: ArtistByIdProps) {
+  try {
+    const { body, statusCode } = await spotifyApi.getArtistAlbums(artistId, {
+      limit: 5
+    })
+    return { body, statusCode }
+  } catch (error) {
+    return { statusCode: spotifyWebApiErrorHandler(error) }
+  }
+}

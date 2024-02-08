@@ -64,9 +64,6 @@ export default async function AlbumsList({ spotifyApi }: Props) {
                 name={album.album.name}
                 onPlay={{ playerType: 'album', albumId: album.album.id }}
               />
-              {/* <strong className='text-white md:text-xl text-lg block truncate'>
-                {album.album.name}
-              </strong> */}
               <p className='text-zinc-400 text-sm truncate'>
                 {album.album.artists.map((artist) => artist.name).join(', ')}
               </p>

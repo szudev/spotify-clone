@@ -393,7 +393,7 @@ export function CustomSearchedResultSkeleton() {
           </div>
         </div>
         <div className='flex flex-col justify-start h-full gap-4'>
-          <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/5' />
+          <div className='bg-zinc-500 animate-pulse rounded-full h-6 inline md:w-1/5 w-1/4' />
           <section className='grid grid-cols-1 w-full grid-rows-[1fr] rounded-md gap-2 md:gap-0 flex-1'>
             <CustomSearchedResultSongSkeleton />
             <CustomSearchedResultSongSkeleton />
@@ -403,7 +403,7 @@ export function CustomSearchedResultSkeleton() {
         </div>
       </section>
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
-        <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/5' />
+        <div className='bg-zinc-500 animate-pulse rounded-full h-6 inline md:w-1/5 w-1/4' />
         <div className='grid md:grid-cols-5 grid-cols-1 grid-rows-[1fr] gap-4'>
           <CustomSearchedResultArtistSekelton />
           <CustomSearchedResultArtistSekelton />
@@ -413,7 +413,7 @@ export function CustomSearchedResultSkeleton() {
         </div>
       </section>
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
-        <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/5' />
+        <div className='bg-zinc-500 animate-pulse rounded-full h-6 inline md:w-1/5 w-1/4' />
         <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
           <CustomSearchedResultAlbumSkeleton />
           <CustomSearchedResultAlbumSkeleton />
@@ -423,7 +423,7 @@ export function CustomSearchedResultSkeleton() {
         </div>
       </section>
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
-        <div className='bg-zinc-500 animate-pulse rounded-full h-6 hidden md:inline w-1/5' />
+        <div className='bg-zinc-500 animate-pulse rounded-full h-6 inline md:w-1/5 w-1/4' />
         <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
           <CustomSearchedResultPlaylistSkeleton />
           <CustomSearchedResultPlaylistSkeleton />
@@ -445,10 +445,10 @@ function CustomSearchedResultSongSkeleton() {
         </div>
         <div className='flex flex-col justify-center p-1 gap-1'>
           <div className='table table-fixed w-full'>
-            <div className='bg-zinc-500 animate-pulse rounded-full block md:h-[14px] h-4 w-1/3' />
+            <div className='bg-zinc-500 animate-pulse rounded-full block md:h-[14px] h-4 md:w-1/3 w-full' />
           </div>
           <div className='table table-fixed w-full'>
-            <div className='bg-zinc-500 animate-pulse rounded-full block h-3 w-1/4' />
+            <div className='bg-zinc-500 animate-pulse rounded-full block h-3 md:w-1/4 w-2/3' />
           </div>
         </div>
       </div>
@@ -550,5 +550,103 @@ function SearchPlaylistPaginationItemSkeleton({
         <div className='h-[14px] w-2/4 block bg-zinc-400 rounded-full animate-pulse' />
       </div>
     </div>
+  )
+}
+
+export function ArtitstHeaderSkeleton() {
+  return (
+    <div className='flex lg:flex-row flex-col pt-0 items-center md:pt-8 gap-4 md:px-6 px-4'>
+      <div className='bg-zinc-400 animate-pulse rounded-full aspect-square h-48 w-48 shadow-2xl' />
+      <div className='flex flex-col justify-end self-start md:self-center gap-2 w-full'>
+        <div className='flex flex-col gap-4'>
+          <div className='rounded-full bg-zinc-400 animate-pulse h-4 w-[10%] hidden md:inline' />
+          <div className='bg-zinc-500 animate-pulse rounded-full h-6 md:h-[60px] w-3/5' />
+          <div className='flex gap-2'>
+            <div className='rounded-full bg-zinc-400 animate-pulse h-4 w-20' />
+            <div className='rounded-full bg-zinc-400 animate-pulse h-4 w-16' />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ClientTopArtistTrackItemSkeleton() {
+  return (
+    <article className='grid gap-2 text-sm md:grid-cols-[minmax(30px,auto)_1fr_1fr_minmax(30px,auto)] grid-cols-[minmax(30px,auto)_1fr] rounded-md group md:bg-hover-effect md:p-2 p-0 items-center'>
+      <div className='md:col-start-1 hidden md:flex text-center items-center place-self-center justify-center bg-zinc-400 rounded-full w-4 h-4' />
+      <div className='grid md:grid-cols-[45px_1fr] grid-cols-[25%_1fr] gap-3'>
+        <div className='rounded-md relative'>
+          <div className='aspect-square w-full h-auto rounded-md bg-zinc-400' />
+        </div>
+        <div className='flex items-center flex-col md:flex-row justify-center gap-1'>
+          <div className='table table-fixed w-full'>
+            <div className='block truncate bg-zinc-400 animate-pulse h-4 w-full md:w-2/3 rounded-full' />
+          </div>
+          <div className='table table-fixed w-full md:hidden'>
+            <div className='bg-zinc-400 animate-pulse rounded-full h-[12px] w-2/3 md:w-1/2' />
+          </div>
+        </div>
+      </div>
+      <div className='col-start-3 hidden md:flex items-center'>
+        <div className='table table-fixed w-full'>
+          <div className='h-4 rounded-full animate-pulse bg-zinc-400 w-2/3' />
+        </div>
+      </div>
+      <div className='hidden md:flex md:col-start-4'>
+        <div className='bg-zinc-400 h-4 w-full animate-pulse rounded-full' />
+      </div>
+    </article>
+  )
+}
+
+export function PopularArtistSongsSectionSkeleton() {
+  return (
+    <section className='flex flex-col justify-start h-full gap-4 md:py-7 pb-7 pt-0 md:px-6 px-4'>
+      <div className='bg-zinc-400 animate-pulse rounded-full w-1/4 md:w-1/5 h-6' />
+      <div className='flex flex-col items-start gap-4'>
+        <section className='grid grid-cols-1 w-full grid-rows-[1fr] rounded-md gap-2 items-end'>
+          <ClientTopArtistTrackItemSkeleton />
+          <ClientTopArtistTrackItemSkeleton />
+          <ClientTopArtistTrackItemSkeleton />
+          <ClientTopArtistTrackItemSkeleton />
+          <ClientTopArtistTrackItemSkeleton />
+        </section>
+        <div className='bg-zinc-400 animate-pulse rounded-full h-[14px] w-1/4 md:w-[10%]' />
+      </div>
+    </section>
+  )
+}
+
+function ArtistAlbumsSectionItemSkeleton() {
+  return (
+    <article className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 bg-transparent md:bg-hover-effect md:gap-5 gap-2 group'>
+      <div className='relative rounded-md'>
+        <div className='aspect-square rounded-md w-full h-auto bg-zinc-400 animate-pulse' />
+      </div>
+      <div className='flex flex-col items-start overflow-x-hidden gap-2'>
+        <div className='h-4 block bg-zinc-400 animate-pulse rounded-full truncate w-full' />
+        <div className='h-[14px] truncate rounded-full w-full md:w-2/3 bg-zinc-400 animate-pulse' />
+        <div className='md:hidden inline h-[14px] truncate rounded-full bg-zinc-400 animate-pulse w-1/4' />
+      </div>
+    </article>
+  )
+}
+
+export function ArtistAlbumsSectionSkeleton() {
+  return (
+    <section className='flex flex-col justify-start h-full gap-4 md:pb-7 pb-7 pt-0 md:px-6 px-4'>
+      <div className='flex justify-between items-center'>
+        <div className='h-6 rounded-full animate-pulse bg-zinc-400 w-1/4 md:w-1/5' />
+        <div className='h-[14px] bg-zinc-400 animate-pulse rounded-full md:w-[10%] w-1/5' />
+      </div>
+      <div className='grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-4'>
+        <ArtistAlbumsSectionItemSkeleton />
+        <ArtistAlbumsSectionItemSkeleton />
+        <ArtistAlbumsSectionItemSkeleton />
+        <ArtistAlbumsSectionItemSkeleton />
+        <ArtistAlbumsSectionItemSkeleton />
+      </div>
+    </section>
   )
 }

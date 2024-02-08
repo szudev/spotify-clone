@@ -22,45 +22,50 @@ export default async function CustomSearchArtistSection({
   return (
     <>
       <section className='grid lg:grid-cols-[40%_1fr] md:grid-cols-2 gap-4 grid-rows-[1fr] items-end md:py-7 pb-7 pt-0'>
-        <div className='flex flex-col min-w-0 justify-start h-full gap-4'>
-          <h1 className='text-white text-2xl font-bold md:inline hidden'>
-            Top result
-          </h1>
-          <article className='flex md:flex-col flex-row group md:p-5 p-0 relative md:hover:cursor-pointer gap-3 rounded-md md:bg-black/30 bg-transparent md:bg-hover-effect'>
-            <Image
-              src={topResultImageSrc}
-              alt={
-                body && body.artists && topResultArtist
-                  ? `Artist ${topResultArtist.name} profile image`
-                  : `Unkown artist profile picture`
-              }
-              className='rounded-full aspect-square'
-              height={92}
-              width={92}
-              priority
-            />
-            <div className='flex gap-1 flex-col items-start justify-center overflow-hidden'>
-              <p className='text-white md:text-[2rem] text-base font-bold capitalize truncate block w-full'>
-                {topResultArtist?.name ?? 'unkown'}
-              </p>
-              <p className='md:text-white text-zinc-400 text-sm capitalize font-medium rounded-full md:py-1 md:px-2 p-0 md:bg-black bg-transparent'>
-                {topResultArtist?.type ?? 'unkown'}
-              </p>
-            </div>
-            {topResultArtist ? (
-              <Suspense
-                fallback={
-                  <div className='absolute z-10 bottom-0 opacity-100 -translate-y-5 hidden md:flex items-center justify-center right-0 mx-5 rounded-full w-12 h-12 bg-zinc-700 animate-pulse' />
+        {topResultArtist ? (
+          <div className='flex flex-col min-w-0 justify-start h-full gap-4'>
+            <h1 className='text-white text-2xl font-bold md:inline hidden'>
+              Top result
+            </h1>
+            <Link
+              href={`/artist/${topResultArtist.id}`}
+              className='flex md:flex-col flex-row group md:p-5 p-0 relative md:hover:cursor-pointer gap-3 rounded-md md:bg-black/30 bg-transparent md:bg-hover-effect'
+            >
+              <Image
+                src={topResultImageSrc}
+                alt={
+                  body && body.artists && topResultArtist
+                    ? `Artist ${topResultArtist.name} profile image`
+                    : `Unkown artist profile picture`
                 }
-              >
-                <StreamCustomSearchArtistPlayer
-                  spotifyApi={spotifyApi}
-                  artist={topResultArtist}
-                />
-              </Suspense>
-            ) : null}
-          </article>
-        </div>
+                className='rounded-full aspect-square'
+                height={92}
+                width={92}
+                priority
+              />
+              <div className='flex gap-1 flex-col items-start justify-center overflow-hidden'>
+                <p className='text-white md:text-[2rem] text-base font-bold capitalize truncate block w-full'>
+                  {topResultArtist.name ?? 'unkown'}
+                </p>
+                <p className='md:text-white text-zinc-400 text-sm capitalize font-medium rounded-full md:py-1 md:px-2 p-0 md:bg-black bg-transparent'>
+                  {topResultArtist.type ?? 'unkown'}
+                </p>
+              </div>
+              {topResultArtist ? (
+                <Suspense
+                  fallback={
+                    <div className='absolute z-10 bottom-0 opacity-100 -translate-y-5 hidden md:flex items-center justify-center right-0 mx-5 rounded-full w-12 h-12 bg-zinc-700 animate-pulse' />
+                  }
+                >
+                  <StreamCustomSearchArtistPlayer
+                    spotifyApi={spotifyApi}
+                    artist={topResultArtist}
+                  />
+                </Suspense>
+              ) : null}
+            </Link>
+          </div>
+        ) : null}
         {children}
       </section>
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
