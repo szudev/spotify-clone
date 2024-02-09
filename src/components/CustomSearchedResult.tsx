@@ -12,6 +12,7 @@ import StreamCustomSearchAlbumPlayer from './StreamCustomSearchAlbumPlayer'
 import StreamCustomSearchPlaylistPlayer from './StreamCustomSearchPlaylistPlayer'
 import CustomSearchArtistSection from './CustomSearchArtistSection'
 import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
+import CustomSearchedSongItem from './CustomSearchedSongItem'
 
 interface Props {
   queryParam: string
@@ -43,57 +44,7 @@ export default async function CustomSearchedResult({
           <h1 className='text-white text-2xl font-bold'>Songs</h1>
           <section className='grid grid-cols-1 w-full grid-rows-[1fr] rounded-md gap-2 md:gap-0 flex-1'>
             {body?.tracks?.items.slice(0, 4).map((track, i) => (
-              <article
-                key={track.id}
-                className='grid grid-cols-[1fr_minmax(30px,auto)] rounded-md group md:bg-hover-effect md:p-2 p-0 items-center'
-              >
-                <div className='grid md:grid-cols-[40px_1fr] grid-cols-[25%_1fr] md:gap-4 gap-2'>
-                  <div className='rounded-md relative'>
-                    <Image
-                      width={40}
-                      height={40}
-                      className='aspect-square md:group-hover:brightness-[.35] w-full h-auto rounded-md'
-                      src={
-                        track
-                          ? track.album.images.find(
-                              (img) => img.url !== undefined && img.url !== null
-                            )?.url
-                            ? (track.album.images.find(
-                                (img) =>
-                                  img.url !== undefined && img.url !== null
-                              )?.url as string)
-                            : '/404-img.png'
-                          : '/404-img.png'
-                      }
-                      alt={`Cover image of song #${track ? track.id : i + 1}`}
-                    />
-                    <ClientCoverPlayer
-                      playerType='song'
-                      song={track}
-                      uris={track.uri}
-                      tracks={[track]}
-                      iconStyles='h-1/2 w-1/2 fill-white'
-                      buttonStyles='w-full h-full absolute z-10 -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 group-hover:opacity-100 opacity-0 hidden md:flex items-center justify-center'
-                      onPlayStyle=''
-                    />
-                  </div>
-                  <div className='flex flex-col justify-center'>
-                    <div className='table table-fixed w-full'>
-                      <CustomSearchedSongName track={track} />
-                    </div>
-                    {track ? (
-                      <div className='table table-fixed w-full'>
-                        <span className='block text-xs truncate text-zinc-400'>
-                          {track.artists
-                            .map((artist) => artist.name)
-                            .join(', ') ?? 'Unknown'}
-                        </span>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-                <CustomSearchedSongDuration track={track} />
-              </article>
+              <CustomSearchedSongItem key={track.id} track={track} i={i} />
             ))}
           </section>
         </div>

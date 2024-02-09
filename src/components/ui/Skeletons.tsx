@@ -620,7 +620,7 @@ export function PopularArtistSongsSectionSkeleton() {
 
 function ArtistAlbumsSectionItemSkeleton() {
   return (
-    <article className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 bg-transparent md:bg-hover-effect md:gap-5 gap-2 group'>
+    <div className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 bg-transparent md:bg-hover-effect md:gap-5 gap-2 group'>
       <div className='relative rounded-md'>
         <div className='aspect-square rounded-md w-full h-auto bg-zinc-400 animate-pulse' />
       </div>
@@ -629,7 +629,7 @@ function ArtistAlbumsSectionItemSkeleton() {
         <div className='h-[14px] truncate rounded-full w-full md:w-2/3 bg-zinc-400 animate-pulse' />
         <div className='md:hidden inline h-[14px] truncate rounded-full bg-zinc-400 animate-pulse w-1/4' />
       </div>
-    </article>
+    </div>
   )
 }
 

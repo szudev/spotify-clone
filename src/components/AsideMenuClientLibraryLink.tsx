@@ -8,7 +8,10 @@ import { LibraryActiveIcon, LibraryIcon } from './Icons'
 export default function AsideMenuClientLibraryLink() {
   const navigationValue = useAtomValue(navigationRouteAtom)
   return (
-    <AsideMenuItem href='#'>
+    <AsideMenuItem
+      href='#'
+      className={`${navigationValue === 'library' ? 'text-white' : ''}`}
+    >
       {navigationValue === 'library' ? (
         <LibraryActiveIcon className='text-white h-6 w-6' />
       ) : (

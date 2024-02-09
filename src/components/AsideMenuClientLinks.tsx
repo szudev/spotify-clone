@@ -9,7 +9,10 @@ export default function AsideMenuClientLinks() {
   const navigationValue = useAtomValue(navigationRouteAtom)
   return (
     <ul className='flex flex-col gap-5 p-4'>
-      <AsideMenuItem href='/'>
+      <AsideMenuItem
+        href='/'
+        className={`${navigationValue === 'home' ? 'text-white' : ''}`}
+      >
         {navigationValue === 'home' ? (
           <HomeFocusIcon className='h-6 w-6 text-white' />
         ) : (
@@ -17,7 +20,10 @@ export default function AsideMenuClientLinks() {
         )}
         Home
       </AsideMenuItem>
-      <AsideMenuItem href='/search'>
+      <AsideMenuItem
+        href='/search'
+        className={`${navigationValue === 'search' ? 'text-white' : ''}`}
+      >
         {navigationValue === 'search' ? (
           <SearchActiveIcon className='h-6 w-6 text-white' />
         ) : (
