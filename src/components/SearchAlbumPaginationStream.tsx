@@ -23,6 +23,7 @@ export default async function SearchAlbumPaginationStream({
   })
 
   if (statusCode !== 200) return notFound()
+
   return (
     <SearchAlbumPagination
       queryParam={queryParam}

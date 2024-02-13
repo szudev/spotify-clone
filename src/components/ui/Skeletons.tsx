@@ -650,3 +650,33 @@ export function ArtistAlbumsSectionSkeleton() {
     </section>
   )
 }
+
+function ArtistAlbumPaginatedItem() {
+  return (
+    <article className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 bg-transparent md:bg-hover-effect md:gap-5 gap-2 group'>
+      <div className='relative rounded-md'>
+        <div className='bg-zinc-400 aspect-square rounded-md w-full h-auto animate-pulse' />
+      </div>
+      <div className='flex flex-col items-start overflow-x-hidden gap-2'>
+        <div className='h-4 w-full block text-white truncate bg-zinc-400 rounded-full animate-pulse' />
+        <div className='h-[14px] capitalize truncate rounded-full w-2/3 animate-pulse bg-zinc-400' />
+        <div className='md:hidden inline h-[14px] capitalize truncate rounded-full bg-zinc-400 animate-pulse w-1/3' />
+      </div>
+    </article>
+  )
+}
+
+export function ArtistAlbumPaginationSkeleton() {
+  return (
+    <div className='flex flex-col flex-1 gap-4'>
+      <div className='bg-zinc-400 animate-pulse rounded-full h-6 w-2/4 md:w-1/5' />
+      <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
+        <ArtistAlbumPaginatedItem />
+        <ArtistAlbumPaginatedItem />
+        <ArtistAlbumPaginatedItem />
+        <ArtistAlbumPaginatedItem />
+        <ArtistAlbumPaginatedItem />
+      </div>
+    </div>
+  )
+}
