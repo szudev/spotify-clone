@@ -13,7 +13,7 @@ import { Suspense } from 'react'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 import { formatAlbumReleaseDateToYear } from '@/lib/utils'
-import { SearchGenrePaginationLoadMoreSkeleton } from './ui/Skeletons'
+import { ArtistAlbumPaginatedLoadingSkeleton } from './ui/Skeletons'
 import { Button } from './Button'
 
 interface Props {
@@ -122,9 +122,7 @@ export default function ArtistAlbumsPagination({
             </Link>
           )
         })}
-        {isFetchingNextPage ? (
-          <SearchGenrePaginationLoadMoreSkeleton withCoverPlayer={false} />
-        ) : null}
+        {isFetchingNextPage ? <ArtistAlbumPaginatedLoadingSkeleton /> : null}
       </div>
       {hasNextPage && !isFetchingNextPage ? (
         <Button

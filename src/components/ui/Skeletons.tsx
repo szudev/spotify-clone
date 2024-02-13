@@ -666,6 +666,18 @@ function ArtistAlbumPaginatedItem() {
   )
 }
 
+export function ArtistAlbumPaginatedLoadingSkeleton() {
+  return (
+    <>
+      <ArtistAlbumPaginatedItem />
+      <ArtistAlbumPaginatedItem />
+      <ArtistAlbumPaginatedItem />
+      <ArtistAlbumPaginatedItem />
+      <ArtistAlbumPaginatedItem />
+    </>
+  )
+}
+
 export function ArtistAlbumPaginationSkeleton() {
   return (
     <div className='flex flex-col flex-1 gap-4'>
