@@ -1,9 +1,14 @@
 import { getArtistById } from '@/services/artist'
-import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { formatArtistFollowersCount } from '@/lib/utils'
+import {
+  ApiStatusCodes,
+  CustomErrorExceptionType,
+  isCustomApiErrorObject
+} from '@/lib/errors'
+import { notFound } from 'next/navigation'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -11,8 +16,32 @@ interface Props {
 }
 
 export default async function ArtistHeader({ artistId, spotifyApi }: Props) {
-  const { body, statusCode } = await getArtistById({ artistId, spotifyApi })
-  if (!body || statusCode !== 200) return notFound()
+  const { body, statusCode, error } = await getArtistById({
+    artistId,
+    spotifyApi
+  })
+  if (!body || statusCode !== 200) {
+    if (statusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        throw new CustomErrorExceptionType({
+          statusCode: statusCode as ApiStatusCodes,
+          retryAfter: error.headers['retry-after']
+            ? parseInt(error.headers['retry-after'], 10)
+            : undefined
+        })
+      } else {
+        throw new CustomErrorExceptionType({
+          statusCode: statusCode as ApiStatusCodes
+        })
+      }
+    }
+    if (!body || statusCode === 404) {
+      notFound()
+    }
+    throw new CustomErrorExceptionType({
+      statusCode: statusCode as ApiStatusCodes
+    })
+  }
 
   const artistImageSrc =
     body.images.find((image) => image.url)?.url ?? '/404-img.png'

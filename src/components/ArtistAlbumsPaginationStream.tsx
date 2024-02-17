@@ -15,7 +15,7 @@ export default async function ArtistAlbumsPaginationStream({
   spotifyApi,
   session
 }: Props) {
-  const { body, statusCode } = await getArtistAlbumsPaginated({
+  const { body, statusCode, error } = await getArtistAlbumsPaginated({
     artistId,
     spotifyApi,
     limit: 5,

@@ -172,3 +172,29 @@ export function formatAlbumReleaseDateToYear(releaseDate: string) {
 export function formatArtistFollowersCount(followers: number) {
   return followers.toLocaleString()
 }
+
+export function formatTimeRemaining(remaining: number) {
+  if (remaining <= 0) {
+    return 'Reload now'
+  }
+
+  const seconds = Math.ceil(remaining % 60)
+  const minutes = Math.floor((remaining / 60) % 60)
+  const hours = Math.floor(remaining / 3600)
+
+  let formattedTime = ''
+
+  if (hours > 0) {
+    formattedTime += `${hours}:${minutes.toString().padStart(2, '0')} hour${
+      hours > 1 ? 's' : ''
+    }`
+  } else if (minutes > 0) {
+    formattedTime += `${minutes}:${seconds.toString().padStart(2, '0')} minute${
+      minutes > 1 ? 's' : ''
+    }`
+  } else {
+    formattedTime += `${seconds} second${seconds > 1 ? 's' : ''}`
+  }
+
+  return `Reload in ${formattedTime}`
+}

@@ -35,17 +35,27 @@ type CustomAlbumObject = SpotifyApi.AlbumObjectSimplified & {
   tracks: (SpotifyApi.TrackObjectFull | null)[]
 }
 
-export type ArtistAlbumsReturnType = {
-  body?: CustomPagingArtistAlbumObject
-  statusCode: ApiStatusCodes
-}
+export type ArtistAlbumsReturnType =
+  | {
+      body?: CustomPagingArtistAlbumObject
+      statusCode: ApiStatusCodes
+      error?: undefined
+    }
+  | {
+      statusCode: ApiStatusCodes
+      error: unknown
+      body?: undefined
+    }
 
 export async function getArtistById({ artistId, spotifyApi }: ArtistByIdProps) {
   try {
     const { body, statusCode } = await spotifyApi.getArtist(artistId)
     return { body, statusCode }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return {
+      statusCode: spotifyWebApiErrorHandler(error),
+      error
+    }
   }
 }
 
@@ -185,6 +195,6 @@ export async function getArtistAlbumsPaginated({
       return { body: finalBody, statusCode }
     } else return { body: undefined, statusCode: 500 }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
