@@ -18,9 +18,9 @@ export default async function Page({ params }: Props) {
   const { queryParam } = params
 
   return (
-    <section className='flex bg-zinc-900 flex-col md:px-6 px-4 flex-1 gap-4 md:pt-16 pt-4 pb-4'>
+    <section className='flex bg-zinc-900 flex-col md:px-6 px-4 flex-1 gap-4 md:pt-16 py-4'>
       <Suspense
-        fallback={<SearchGenrePaginationSkeleton withCoverPlayer={true} />}
+        fallback={<SearchGenrePaginationSkeleton withCoverPlayer={false} />}
       >
         <SearchPlaylistPaginationStream
           queryParam={queryParam}

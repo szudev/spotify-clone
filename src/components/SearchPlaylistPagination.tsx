@@ -60,7 +60,7 @@ export default function SearchPlaylistPagination({
 
   return (
     <div className='flex flex-col flex-1 gap-4'>
-      <div className='grid md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] grid-cols-1 gap-3'>
+      <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
         {playlists.map((playlist) => {
           if (!playlist) return null
           const imageSrc =
@@ -71,7 +71,7 @@ export default function SearchPlaylistPagination({
             .map((track) => track!.uri)
           return (
             <Link
-              className='md:bg-hover-effect grid grid-cols-[25%_1fr] md:flex md:flex-col md:p-4 p-0 group md:gap-4 gap-2 bg-transparent md:bg-black/30 rounded-md'
+              className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 md:bg-black/30 bg-transparent md:bg-hover-effect md:gap-5 gap-2 group'
               key={playlist.id}
               href={`/playlist/${playlist.id}`}
             >

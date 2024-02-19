@@ -506,7 +506,7 @@ export function SearchGenrePaginationSkeleton({
   withCoverPlayer: boolean
 }) {
   return (
-    <div className='grid md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] grid-cols-1 gap-3'>
+    <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
       <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
       <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
       <SearchPlaylistPaginationItemSkeleton withCoverPlayer={withCoverPlayer} />
@@ -538,7 +538,7 @@ function SearchPlaylistPaginationItemSkeleton({
   withCoverPlayer: boolean
 }) {
   return (
-    <div className='grid grid-cols-[25%_1fr] md:flex md:flex-col md:p-4 p-0 md:gap-4 gap-2 bg-transparent rounded-md'>
+    <div className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 md:bg-black/30 bg-transparent md:gap-5 gap-2'>
       <div className='relative rounded-md'>
         <div className='rounded-md aspect-square w-full h-auto bg-zinc-400 animate-pulse' />
         {withCoverPlayer ? (
