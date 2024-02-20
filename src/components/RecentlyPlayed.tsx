@@ -2,21 +2,47 @@ import Image from 'next/image'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Link from 'next/link'
 import { getUserSavedAlbums } from '@/services/album'
-import { redirect } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
+import {
+  isCustomApiErrorObject,
+  CustomErrorExceptionType,
+  ApiStatusCodes
+} from '@/lib/errors'
 
 interface Props {
   spotifyApi: SpotifyWebApi
 }
 
 export default async function RecentlyPlayed({ spotifyApi }: Props) {
-  const { body: savedAlbums, statusCode } = await getUserSavedAlbums({
+  const {
+    body: savedAlbums,
+    statusCode,
+    error
+  } = await getUserSavedAlbums({
     spotifyApi
   })
 
-  if (statusCode === 401) return redirect('/login')
+  if (statusCode !== 200) {
+    if (statusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        throw new CustomErrorExceptionType({
+          statusCode: statusCode as ApiStatusCodes,
+          retryAfter: error.headers['retry-after']
+            ? parseInt(error.headers['retry-after'], 10)
+            : undefined
+        })
+      } else {
+        throw new CustomErrorExceptionType({
+          statusCode: statusCode as ApiStatusCodes
+        })
+      }
+    }
+    throw new CustomErrorExceptionType({
+      statusCode: statusCode as ApiStatusCodes
+    })
+  }
 
   const GreetingTime = dynamic(() => import('@/components/GreetingTime'), {
     ssr: false,
@@ -49,7 +75,7 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
             </Link>
           ) : null}
         </div>
-        {savedAlbums && (
+        {savedAlbums && savedAlbums.items.length > 0 ? (
           <div className='grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-2'>
             {savedAlbums.items.map((album) => {
               const tracks: (SpotifyApi.TrackObjectFull | null)[] =
@@ -101,6 +127,10 @@ export default async function RecentlyPlayed({ spotifyApi }: Props) {
                 </Link>
               )
             })}
+          </div>
+        ) : (
+          <div className='flex flex-col items-center justify-center'>
+            <p className='text-white'>No albums were found.</p>
           </div>
         )}
       </div>

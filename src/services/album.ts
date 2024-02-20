@@ -18,13 +18,13 @@ export async function getUserSavedAlbums({
   pageParam = 0
 }: UserSavedAlbumProps) {
   try {
-    const { body, headers } = await spotifyApi.getMySavedAlbums({
+    const { body, statusCode } = await spotifyApi.getMySavedAlbums({
       limit,
       offset: pageParam
     })
-    return { body, headers }
+    return { body, statusCode }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
 

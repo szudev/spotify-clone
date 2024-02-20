@@ -38,7 +38,7 @@ export async function getUserPlayLists2({
     })
     return { body, statusCode }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
 

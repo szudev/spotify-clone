@@ -257,24 +257,38 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
                     : '/404-img.png'
                   : '/404-img.png'
               }
-              className='rounded-md'
-              height={56}
-              width={56}
+              className='rounded-md aspect-square w-full h-auto'
+              height={42}
+              width={42}
               alt='Current track cover'
             />
           </div>
           <div className='flex flex-col overflow-hidden md:max-w-[85%] max-w-[90%]'>
             <Link
-              href={'#'}
+              href={`/album/${currentTrack.albumId}`}
               className='text-white font-bold md:font-normal block truncate text-sm hover:underline'
             >
               {currentTrack.song.name}
             </Link>
-            <p className='text-zinc-400 hidden text-[11px] md:block truncate'>
+            {/* <p className='text-zinc-400 hidden text-[11px] md:block truncate'>
               {currentTrack.song.artists
                 .map((artist) => artist.name)
                 .join(', ')}
-            </p>
+            </p> */}
+            <div className='hidden text-[11px] md:flex truncate'>
+              {currentTrack.song.artists.map((artist, index, arr) => (
+                <Link
+                  href={`/artist/${artist.id}`}
+                  key={artist.id}
+                  className='text-zinc-400 group block truncate'
+                >
+                  <span className='group-hover:underline group-focus:text-white group-hover:text-white'>
+                    {artist.name}
+                  </span>
+                  {index < arr.length - 1 ? ', ' : null}
+                </Link>
+              ))}
+            </div>
             <p className='block truncate md:hidden text-[11px] font-bold text-[#1ed760]'>
               {body && body.device
                 ? `${body.device.name}`

@@ -9,6 +9,7 @@ import {
   formatPlaylistTotalDuration,
   hasMillisecondProperty
 } from '@/lib/utils'
+import Link from 'next/link'
 
 interface Props {
   params: {
@@ -83,9 +84,16 @@ export default async function AlbumTitle({ params }: Props) {
               width={32}
               height={32}
             />
-            <strong className='text-white hover:underline cursor-pointer'>
-              {artistBody ? artistBody.name : 'Unknown'}
-            </strong>
+            {artistBody ? (
+              <Link
+                href={`/artist/${artistBody.id}`}
+                className='text-white hover:underline cursor-pointer'
+              >
+                {artistBody.name}
+              </Link>
+            ) : (
+              <strong className='text-white'>Unknown</strong>
+            )}
           </div>
           <span className='before:content-["•"] hidden md:inline before:text-white before:mx-1 '>
             <span className='text-white'>
