@@ -10,6 +10,11 @@ import {
   hasMillisecondProperty
 } from '@/lib/utils'
 import Link from 'next/link'
+import {
+  isCustomApiErrorObject,
+  CustomErrorExceptionType,
+  ApiStatusCodes
+} from '@/lib/errors'
 
 interface Props {
   params: {
@@ -23,11 +28,38 @@ export default async function AlbumTitle({ params }: Props) {
   if (session?.user && session.user.accessToken) {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
-  const { body: albumBody, statusCode: albumStatusCode } = await getAlbumById({
+  const {
+    body: albumBody,
+    statusCode: albumStatusCode,
+    error
+  } = await getAlbumById({
     albumId,
     spotifyApi
   })
-  if (!albumBody || albumStatusCode !== 200) return notFound()
+
+  if (!albumBody || albumStatusCode !== 200) {
+    if (albumStatusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        throw new CustomErrorExceptionType({
+          statusCode: albumStatusCode as ApiStatusCodes,
+          retryAfter: error.headers['retry-after']
+            ? parseInt(error.headers['retry-after'], 10)
+            : undefined
+        })
+      } else {
+        throw new CustomErrorExceptionType({
+          statusCode: albumStatusCode as ApiStatusCodes
+        })
+      }
+    }
+    if (!albumBody || albumStatusCode === 404 || albumStatusCode === 204) {
+      notFound()
+    }
+    throw new CustomErrorExceptionType({
+      statusCode: albumStatusCode as ApiStatusCodes
+    })
+  }
+
   const { body: artistBody, statusCode: artistStatusCode } =
     await getArtistById({
       artistId:

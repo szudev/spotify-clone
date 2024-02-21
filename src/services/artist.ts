@@ -73,7 +73,7 @@ export async function getArtistTopTracks({
     )
     return { body, statusCode }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
 

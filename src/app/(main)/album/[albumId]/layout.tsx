@@ -1,4 +1,9 @@
 import { getAuthSession } from '@/lib/auth'
+import {
+  isCustomApiErrorObject,
+  CustomErrorExceptionType,
+  ApiStatusCodes
+} from '@/lib/errors'
 import spotifyApi from '@/lib/spotify'
 import { getAlbumById } from '@/services/album'
 import { notFound } from 'next/navigation'
@@ -18,8 +23,33 @@ export async function generateMetadata({ params }: Props) {
   if (session?.user && session.user.accessToken) {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
-  const { body, statusCode } = await getAlbumById({ albumId, spotifyApi })
-  if (!body || statusCode !== 200) return notFound()
+  const { body, statusCode, error } = await getAlbumById({
+    albumId,
+    spotifyApi
+  })
+
+  if (!body || statusCode !== 200) {
+    if (statusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        throw new CustomErrorExceptionType({
+          statusCode: statusCode as ApiStatusCodes,
+          retryAfter: error.headers['retry-after']
+            ? parseInt(error.headers['retry-after'], 10)
+            : undefined
+        })
+      } else {
+        throw new CustomErrorExceptionType({
+          statusCode: statusCode as ApiStatusCodes
+        })
+      }
+    }
+    if (!body || statusCode === 404 || statusCode === 204) {
+      notFound()
+    }
+    throw new CustomErrorExceptionType({
+      statusCode: statusCode as ApiStatusCodes
+    })
+  }
 
   return {
     title: `${body.name} | Spotify ${body.type ?? 'album'}`

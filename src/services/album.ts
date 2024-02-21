@@ -33,7 +33,7 @@ export async function getAlbumById({ albumId, spotifyApi }: AlbumByIdProps) {
     const { body, statusCode } = await spotifyApi.getAlbum(albumId)
     return { body, statusCode }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
 
