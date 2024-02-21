@@ -1,7 +1,11 @@
 'use client'
 
 import { Button } from '@/components/Button'
-import { CustomErrorMessageObject, apiStatusDescriptions } from '@/lib/errors'
+import {
+  CustomErrorExceptionType,
+  CustomErrorMessageObject,
+  apiStatusDescriptions
+} from '@/lib/errors'
 import { formatTimeRemaining } from '@/lib/utils'
 import { useEffect, useRef, useState } from 'react'
 
@@ -9,7 +13,7 @@ export default function ErrorBoundary({
   error,
   reset
 }: {
-  error: Error & { digest?: string }
+  error: CustomErrorExceptionType
   reset: () => void
 }) {
   /* const messageObject: CustomErrorMessageObject = JSON.parse(error.message)
