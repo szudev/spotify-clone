@@ -1,4 +1,5 @@
 import AlbumTableItem from '@/components/AlbumTableItem'
+import CustomTooManyRequestErrorBoundary from '@/components/CustomTooManyRequestErrorBoundary'
 import { DurationIcon } from '@/components/Icons'
 import { getAuthSession } from '@/lib/auth'
 import {
@@ -31,16 +32,17 @@ export default async function AlbumTable({ params }: Props) {
   if (!body || statusCode !== 200) {
     if (statusCode === 429) {
       if (isCustomApiErrorObject(error)) {
-        throw new CustomErrorExceptionType({
-          statusCode: statusCode as ApiStatusCodes,
-          retryAfter: error.headers['retry-after']
-            ? parseInt(error.headers['retry-after'], 10)
-            : undefined
-        })
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
       } else {
-        throw new CustomErrorExceptionType({
-          statusCode: statusCode as ApiStatusCodes
-        })
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
     }
     if (!body || statusCode === 404 || statusCode === 204) {

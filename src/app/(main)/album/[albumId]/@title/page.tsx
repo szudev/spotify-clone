@@ -10,11 +10,8 @@ import {
   hasMillisecondProperty
 } from '@/lib/utils'
 import Link from 'next/link'
-import {
-  isCustomApiErrorObject,
-  CustomErrorExceptionType,
-  ApiStatusCodes
-} from '@/lib/errors'
+import { isCustomApiErrorObject } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from '@/components/CustomTooManyRequestErrorBoundary'
 
 interface Props {
   params: {
@@ -40,24 +37,25 @@ export default async function AlbumTitle({ params }: Props) {
   if (!albumBody || albumStatusCode !== 200) {
     if (albumStatusCode === 429) {
       if (isCustomApiErrorObject(error)) {
-        throw new CustomErrorExceptionType({
-          statusCode: albumStatusCode as ApiStatusCodes,
-          retryAfter: error.headers['retry-after']
-            ? parseInt(error.headers['retry-after'], 10)
-            : undefined
-        })
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={albumStatusCode}
+            retryAfter={retryAfter}
+          />
+        )
       } else {
-        throw new CustomErrorExceptionType({
-          statusCode: albumStatusCode as ApiStatusCodes
-        })
+        return (
+          <CustomTooManyRequestErrorBoundary statusCode={albumStatusCode} />
+        )
       }
     }
     if (!albumBody || albumStatusCode === 404 || albumStatusCode === 204) {
       notFound()
     }
-    throw new CustomErrorExceptionType({
-      statusCode: albumStatusCode as ApiStatusCodes
-    })
+    throw new Error('An error occurred.')
   }
 
   const { body: artistBody, statusCode: artistStatusCode } =

@@ -1,6 +1,5 @@
 import { getArtistAlbumsPaginated } from '@/services/artist'
 import { Session } from 'next-auth'
-import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import ArtistAlbumsPagination from './ArtistAlbumsPagination'
 import {
@@ -8,6 +7,7 @@ import {
   CustomErrorExceptionType,
   ApiStatusCodes
 } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   artistId: string
@@ -30,16 +30,17 @@ export default async function ArtistAlbumsPaginationStream({
   if (statusCode !== 200) {
     if (statusCode === 429) {
       if (isCustomApiErrorObject(error)) {
-        throw new CustomErrorExceptionType({
-          statusCode: statusCode as ApiStatusCodes,
-          retryAfter: error.headers['retry-after']
-            ? parseInt(error.headers['retry-after'], 10)
-            : undefined
-        })
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
       } else {
-        throw new CustomErrorExceptionType({
-          statusCode: statusCode as ApiStatusCodes
-        })
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
     }
     throw new CustomErrorExceptionType({
