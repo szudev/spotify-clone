@@ -87,7 +87,7 @@ export async function getArtistAlbums({
     })
     return { body, statusCode }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
 

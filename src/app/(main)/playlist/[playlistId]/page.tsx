@@ -17,12 +17,17 @@ export async function generateMetadata({ params }: Props) {
   if (session?.user && session.user.accessToken) {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
-  const playlistResponse = await getPlaylistById({ playlistId, spotifyApi })
-  if (!playlistResponse || playlistResponse.statusCode !== 200)
-    return notFound()
+  const { body, statusCode } = await getPlaylistById({ playlistId, spotifyApi })
+
+  if (!body || statusCode !== 200) {
+    if (!body || statusCode === 404 || statusCode === 204) {
+      notFound()
+    }
+    throw new Error('An error occurred.')
+  }
 
   return {
-    title: `${playlistResponse.body.name} | Spotify ${playlistResponse.body.type}`
+    title: `${body.name} | Spotify ${body.type}`
   }
 }
 

@@ -12,6 +12,6 @@ export async function getUserById({
     const { body, statusCode } = await spotifyApi.getUser(userId)
     return { body, statusCode }
   } catch (error) {
-    spotifyWebApiErrorHandler(error)
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }

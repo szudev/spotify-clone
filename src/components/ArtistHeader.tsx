@@ -3,12 +3,9 @@ import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { formatArtistFollowersCount } from '@/lib/utils'
-import {
-  ApiStatusCodes,
-  CustomErrorExceptionType,
-  isCustomApiErrorObject
-} from '@/lib/errors'
+import { isCustomApiErrorObject } from '@/lib/errors'
 import { notFound } from 'next/navigation'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -23,24 +20,23 @@ export default async function ArtistHeader({ artistId, spotifyApi }: Props) {
   if (!body || statusCode !== 200) {
     if (statusCode === 429) {
       if (isCustomApiErrorObject(error)) {
-        throw new CustomErrorExceptionType({
-          statusCode: statusCode as ApiStatusCodes,
-          retryAfter: error.headers['retry-after']
-            ? parseInt(error.headers['retry-after'], 10)
-            : undefined
-        })
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
       } else {
-        throw new CustomErrorExceptionType({
-          statusCode: statusCode as ApiStatusCodes
-        })
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
     }
-    if (!body || statusCode === 404) {
+    if (!body || statusCode === 404 || statusCode === 204) {
       notFound()
     }
-    throw new CustomErrorExceptionType({
-      statusCode: statusCode as ApiStatusCodes
-    })
+    throw new Error('An error occurred.')
   }
 
   const artistImageSrc =

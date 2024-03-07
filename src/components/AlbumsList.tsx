@@ -1,24 +1,51 @@
 import { getUserSavedAlbums } from '@/services/album'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
+import { isCustomApiErrorObject } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   spotifyApi: SpotifyWebApi
 }
 
 export default async function AlbumsList({ spotifyApi }: Props) {
-  const { body, statusCode } = await getUserSavedAlbums({
+  const { body, statusCode, error } = await getUserSavedAlbums({
     spotifyApi,
     limit: 8
   })
 
-  if (statusCode === 401) return redirect('/login')
-  //NO CONTENT MANAGMENT
-  if (!body || !body.items) return null
+  if (!body || statusCode !== 200) {
+    if (statusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
+      } else {
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
+      }
+    }
+    if (statusCode === 404) {
+      notFound()
+    }
+    if (!body || statusCode === 204) {
+      return (
+        <div className='flex flex-col items-center justify-center pb-4 md:px-6 px-4 flex-1 md:pt-6 pt-0'>
+          <p className='text-zinc-400'>No content were found.</p>
+        </div>
+      )
+    }
+    throw new Error('An error occurred.')
+  }
 
   return (
     <div className='grid xl:grid-cols-[repeat(4,minmax(150px,1fr))] md:grid-cols-[repeat(auto-fit,minmax(150px,1fr))] grid-cols-1 md:gap-4 gap-2'>

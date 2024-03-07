@@ -53,7 +53,7 @@ export async function getPlaylistById({
     const { body, statusCode } = await spotifyApi.getPlaylist(playlistId)
     return { body, statusCode }
   } catch (error) {
-    spotifyWebApiErrorHandler(error)
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
 
@@ -71,6 +71,6 @@ export async function getPlaylistTracksById({
     )
     return { body, statusCode }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }

@@ -5,6 +5,8 @@ import ClientCoverPlayer from './ClientCoverPlayer'
 import { getAlbumById } from '@/services/album'
 import { AlbumTrackMergeType } from '@/types/spotify-web-api-node'
 import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
+import { isCustomApiErrorObject } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   albumItem: SpotifyApi.AlbumObjectSimplified
@@ -15,12 +17,29 @@ export default async function GenreSearchedAlbumItem({
   albumItem,
   spotifyApi
 }: Props) {
-  const { body, statusCode } = await getAlbumById({
+  const { body, statusCode, error } = await getAlbumById({
     albumId: albumItem.id,
     spotifyApi
   })
 
-  if (!body || statusCode !== 200) return null
+  if (!body || statusCode !== 200) {
+    if (statusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
+      } else {
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
+      }
+    }
+    return null
+  }
 
   const tracks: AlbumTrackMergeType[] = body.tracks.items.map((item) => {
     return {

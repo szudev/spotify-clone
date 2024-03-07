@@ -4,7 +4,6 @@ import { SearchAlbumReturnType, SearchAlbums } from '@/services/search'
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { Session } from 'next-auth'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import { Button } from './Button'
@@ -27,36 +26,51 @@ export default function SearchAlbumPagination({
     pageParams: [0]
   }
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-    useInfiniteQuery(
-      ['infinite-album', queryParam],
-      async ({ pageParam }) =>
-        await SearchAlbums({
-          queryParam,
-          session,
-          limit: 5,
-          offset: pageParam
-        }),
-      {
-        getNextPageParam: (lastPage) => {
-          if (lastPage && lastPage.body && lastPage.body.next) {
-            const urlSearchParams = new URLSearchParams(
-              new URL(lastPage.body.next).search
-            )
-            const offsetValue = urlSearchParams.get('offset')
-            return Number(offsetValue)
-          }
-        },
-        initialData: initialData,
-        enabled: false,
-        refetchOnWindowFocus: false
-      }
-    )
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    error,
+    isError
+  } = useInfiniteQuery(
+    ['infinite-album', queryParam],
+    async ({ pageParam }) =>
+      await SearchAlbums({
+        queryParam,
+        session,
+        limit: 5,
+        offset: pageParam
+      }),
+    {
+      getNextPageParam: (lastPage) => {
+        if (lastPage && lastPage.body && lastPage.body.next) {
+          const urlSearchParams = new URLSearchParams(
+            new URL(lastPage.body.next).search
+          )
+          const offsetValue = urlSearchParams.get('offset')
+          return Number(offsetValue)
+        }
+      },
+      initialData: initialData,
+      enabled: false,
+      refetchOnWindowFocus: false
+    }
+  )
 
   const albums =
     data?.pages.flatMap((page) => page.body?.items) ?? body.body?.items
 
-  if (!albums) return notFound()
+  if (!albums) {
+    if (body.statusCode === 404 || body.statusCode === 204) {
+      throw new Error('An error occurred.')
+    }
+    return (
+      <div className='flex flex-col flex-1 gap-4'>
+        <p className='text-zinc-400'>No albums were found.</p>
+      </div>
+    )
+  }
 
   return (
     <div className='flex flex-col flex-1 gap-4'>

@@ -50,7 +50,7 @@ export async function SearchResults({
     )
     return { body, statusCode }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
 export type CustomPagingPlaylistObject =
@@ -60,10 +60,17 @@ type CustomPlaylistObject = SpotifyApi.PlaylistObjectSimplified & {
   tracks: (SpotifyApi.TrackObjectFull | null)[]
 }
 
-export type SearchPlaylistsReturnType = {
-  body?: CustomPagingPlaylistObject
-  statusCode: ApiStatusCodes
-}
+export type SearchPlaylistsReturnType =
+  | {
+      body?: CustomPagingPlaylistObject
+      statusCode: ApiStatusCodes
+      error?: undefined
+    }
+  | {
+      statusCode: ApiStatusCodes
+      error: unknown
+      body?: undefined
+    }
 
 export async function SearchPlaylists({
   queryParam,
@@ -146,7 +153,7 @@ export async function SearchPlaylists({
       return { body: finalBody, statusCode: searchStatusCode }
     } else return { body: undefined, statusCode: 500 }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
 
@@ -156,10 +163,17 @@ type CustomAlbumObject = SpotifyApi.AlbumObjectSimplified & {
   tracks: (SpotifyApi.TrackObjectFull | null)[]
 }
 
-export type SearchAlbumReturnType = {
-  body?: CustomPagingAlbumObject
-  statusCode: ApiStatusCodes
-}
+export type SearchAlbumReturnType =
+  | {
+      body?: CustomPagingAlbumObject
+      statusCode: ApiStatusCodes
+      error?: undefined
+    }
+  | {
+      statusCode: ApiStatusCodes
+      error: unknown
+      body?: undefined
+    }
 
 export async function SearchAlbums({
   queryParam,
@@ -179,7 +193,8 @@ export async function SearchAlbums({
       const promises = searchBody.albums.items.map(async (item) => {
         const { body: albumTracksBody, statusCode: albumTracksStatusCode } =
           await getAlbumTracksById({ albumId: item.id, spotifyApi })
-        if (albumTracksStatusCode !== 200 || !albumTracksBody) return null
+        if (albumTracksStatusCode !== 200 || !albumTracksBody)
+          throw new SpotifyApiError(albumTracksStatusCode)
         const fullTrackPromises = albumTracksBody.items.map(
           async (trackItem) => {
             const { body, statusCode } = await getTrackById({
@@ -230,7 +245,8 @@ export async function SearchAlbums({
             albumId: item.id,
             spotifyApi: spotifyApiImported
           })
-        if (albumTracksStatusCode !== 200 || !albumTracksBody) return null
+        if (albumTracksStatusCode !== 200 || !albumTracksBody)
+          throw new SpotifyApiError(albumTracksStatusCode)
         const fullTrackPromises = albumTracksBody.items.map(
           async (trackItem) => {
             const { body, statusCode } = await getTrackById({
@@ -264,6 +280,6 @@ export async function SearchAlbums({
       return { body: finalBody, statusCode: searchStatusCode }
     } else return { body: undefined, statusCode: 500 }
   } catch (error) {
-    return { statusCode: spotifyWebApiErrorHandler(error) }
+    return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }

@@ -1,10 +1,11 @@
 'use client'
 
 import { ApiStatusCodes } from '@/lib/errors'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useTransition } from 'react'
 import { Button } from './Button'
 import { useRouter } from 'next/navigation'
 import { formatTimeRemaining } from '@/lib/utils'
+import { Loader2 } from 'lucide-react'
 
 interface Props {
   statusCode: ApiStatusCodes
@@ -17,6 +18,7 @@ export default function CustomTooManyRequestErrorBoundary({
 }: Props) {
   const [countdown, setCountdown] = useState<number>(retryAfter ?? 0)
   const startTimeRef = useRef<number>(Date.now())
+  const [isReloading, setIsReloading] = useTransition()
   const router = useRouter()
 
   useEffect(() => {
@@ -36,19 +38,37 @@ export default function CustomTooManyRequestErrorBoundary({
     return () => clearInterval(timer)
   }, [retryAfter ? retryAfter : null])
 
+  const handleReloadClick = () => {
+    setIsReloading(() => {
+      router.refresh()
+    })
+  }
+
   return (
-    <div className='flex flex-col items-center justify-center gap-6 to-zinc-900 bg-gradient-to-b from-[#222222] px-6 pb-4 pt-16 min-h-full'>
-      <h2 className='text-white font-bold text-xl'>Error {statusCode}</h2>
-      <p className='text-zinc-400 font-medium text-lg'>Too many requests</p>
+    <div className='flex flex-col items-center justify-center gap-6 bg-zinc-900 px-6 pb-4 pt-16 flex-1'>
+      <h2 className='text-white font-bold text-xl text-center'>
+        Error {statusCode}
+      </h2>
+      <p className='text-zinc-400 font-medium text-lg text-center'>
+        Too many requests
+      </p>
       {countdown === 0 ? (
-        <Button
-          className='text-white text-lg bg-hover-effect px-4 py-2 rounded-md border border-zinc-400'
-          onClick={() => router.refresh()}
-        >
-          Reload now
-        </Button>
+        !isReloading ? (
+          <Button
+            className='text-white text-lg bg-hover-effect px-4 py-2 rounded-md border border-zinc-400'
+            onClick={handleReloadClick}
+          >
+            Reload now
+          </Button>
+        ) : (
+          <div className='flex items-center justify-center px-4 py-2'>
+            <Loader2 className='text-zinc-400 font-bold h-7 w-7 animate-spin' />
+          </div>
+        )
       ) : (
-        <p className='text-white text-lg'>{formatTimeRemaining(countdown)}</p>
+        <p className='text-white text-lg text-center'>
+          {formatTimeRemaining(countdown)}
+        </p>
       )}
     </div>
   )

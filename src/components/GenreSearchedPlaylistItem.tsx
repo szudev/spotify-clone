@@ -4,6 +4,8 @@ import { getPlaylistTracksById } from '@/services/playlists'
 import SpotifyWebApi from 'spotify-web-api-node'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
+import { isCustomApiErrorObject } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   playlistItem: SpotifyApi.PlaylistObjectSimplified
@@ -14,12 +16,29 @@ export default async function GenreSearchedPlaylistItem({
   playlistItem,
   spotifyApi
 }: Props) {
-  const { body, statusCode } = await getPlaylistTracksById({
+  const { body, statusCode, error } = await getPlaylistTracksById({
     playlistId: playlistItem.id,
     spotifyApi
   })
 
-  if (!body || statusCode !== 200) return null
+  if (!body || statusCode !== 200) {
+    if (statusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
+      } else {
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
+      }
+    }
+    return null
+  }
 
   const tracks = body.items.map((item) => item.track)
   const uris = body.items

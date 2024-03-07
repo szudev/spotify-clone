@@ -9,6 +9,8 @@ import {
   formatPlaylistTotalDuration,
   hasMillisecondProperty
 } from '@/lib/utils'
+import { isCustomApiErrorObject } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -19,14 +21,43 @@ export default async function PlaylistHeader({
   spotifyApi,
   playlistId
 }: Props) {
-  const playlistResponse = await getPlaylistById({ playlistId, spotifyApi })
-  if (!playlistResponse || playlistResponse.statusCode !== 200)
-    return notFound()
-  const userResponse = await getUserById({
-    userId: playlistResponse.body.owner.id,
+  const {
+    body: playlistBody,
+    statusCode: playlistStatusCode,
+    error: playlistError
+  } = await getPlaylistById({ playlistId, spotifyApi })
+  if (!playlistBody || playlistStatusCode !== 200) {
+    if (playlistStatusCode === 429) {
+      if (isCustomApiErrorObject(playlistError)) {
+        const retryAfter = playlistError.headers['retry-after']
+          ? parseInt(playlistError.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={playlistStatusCode}
+            retryAfter={retryAfter}
+          />
+        )
+      } else {
+        return (
+          <CustomTooManyRequestErrorBoundary statusCode={playlistStatusCode} />
+        )
+      }
+    }
+    if (
+      !playlistBody ||
+      playlistStatusCode === 404 ||
+      playlistStatusCode === 204
+    ) {
+      notFound()
+    }
+    throw new Error('An error occurred.')
+  }
+
+  const { body: userBody } = await getUserById({
+    userId: playlistBody.owner.id,
     spotifyApi
   })
-  if (!userResponse || userResponse.statusCode !== 200) return notFound()
 
   const PlaylistName = dynamic(() => import('./PlaylistName'), {
     ssr: false,
@@ -35,10 +66,7 @@ export default async function PlaylistHeader({
     )
   })
 
-  const { body: playlist } = playlistResponse
-  const { body: playlistUser } = userResponse
-
-  const filteredPlaylist = playlist.tracks.items.filter(
+  const filteredPlaylist = playlistBody.tracks.items.filter(
     (item) => item.track !== null && item.track.id
   )
   const playlistTracksCount = filteredPlaylist.length
@@ -46,51 +74,52 @@ export default async function PlaylistHeader({
   return (
     <div className='flex lg:flex-row flex-col pt-0 items-center md:pt-8 gap-4 md:px-6 px-4'>
       <Image
-        src={playlist.images[0].url}
+        src={playlistBody.images[0].url}
         width={192}
         height={192}
-        alt={`Playlist #${playlist.id} cover image.`}
+        alt={`Playlist #${playlistBody.id} cover image.`}
         className='rounded-md aspect-square shadow-2xl'
         priority
       />
       <div
         className={cn('flex flex-col justify-end self-start md:self-center', {
-          'gap-6': !playlist.description,
-          'gap-2': playlist.description
+          'gap-6': !playlistBody.description,
+          'gap-2': playlistBody.description
         })}
       >
         <div className='flex flex-col gap-2'>
           <p className='text-white text-base hidden md:inline'>Playlist</p>
-          <PlaylistName playlistName={playlist.name} />
-          {playlist.description && (
+          <PlaylistName playlistName={playlistBody.name} />
+          {playlistBody.description && (
             <span className='text-zinc-300'>
-              {playlist.description.replace(/<\/?[^>]+(>|$)/g, '')}
+              {playlistBody.description.replace(/<\/?[^>]+(>|$)/g, '')}
             </span>
           )}
         </div>
         <div className='text-base flex gap-1 md:flex-row flex-col md:items-center items-start'>
           <div className='flex items-center gap-1'>
-            {playlistUser.images &&
-              playlistUser.images.find(
+            {userBody &&
+              userBody.images &&
+              userBody.images.find(
                 (img) => img.url !== undefined && img.url !== null
               )?.url !== undefined && (
                 <Image
                   src={
-                    playlistUser.images.find(
+                    userBody.images.find(
                       (img) => img.url !== undefined && img.url !== null
                     )?.url as string
                   }
-                  alt={`Profile picture of user #${playlist.owner.id}`}
+                  alt={`Profile picture of user #${playlistBody.owner.id}`}
                   className='rounded-full'
                   width={32}
                   height={32}
                 />
               )}
             <strong className='text-white hover:underline cursor-pointer'>
-              {playlist.owner.display_name
-                ? playlist.owner.display_name
-                : playlistUser.display_name
-                ? playlistUser.display_name
+              {playlistBody.owner.display_name
+                ? playlistBody.owner.display_name
+                : userBody && userBody.display_name
+                ? userBody.display_name
                 : 'Unknown'}
             </strong>
           </div>

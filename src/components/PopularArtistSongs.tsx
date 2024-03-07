@@ -1,11 +1,8 @@
 import { getArtistTopTracks } from '@/services/artist'
 import SpotifyWebApi from 'spotify-web-api-node'
 import ClientPopularArtistSongsDisplayer from './ClientPopularArtistSongsDisplayer'
-import {
-  ApiStatusCodes,
-  CustomErrorExceptionType,
-  isCustomApiErrorObject
-} from '@/lib/errors'
+import { isCustomApiErrorObject } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   spotifyApi: SpotifyWebApi
@@ -24,21 +21,20 @@ export default async function PopularArtistSongs({
   if (statusCode !== 200) {
     if (statusCode === 429) {
       if (isCustomApiErrorObject(error)) {
-        throw new CustomErrorExceptionType({
-          statusCode: statusCode as ApiStatusCodes,
-          retryAfter: error.headers['retry-after']
-            ? parseInt(error.headers['retry-after'], 10)
-            : undefined
-        })
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
       } else {
-        throw new CustomErrorExceptionType({
-          statusCode: statusCode as ApiStatusCodes
-        })
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
     }
-    throw new CustomErrorExceptionType({
-      statusCode: statusCode as ApiStatusCodes
-    })
+    throw new Error('An error occurred.')
   }
 
   if (!body)

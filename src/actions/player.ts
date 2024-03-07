@@ -3,6 +3,7 @@
 import { getAuthSession } from '@/lib/auth'
 import { spotifyWebApiErrorHandler } from '@/lib/errors'
 import spotifyApi from '@/lib/spotify'
+import { ApiStatusCodes } from '@/lib/errors'
 
 export const playSong = async (
   uris: string[] | string,
@@ -35,6 +36,34 @@ export const pauseSong = async (deviceId: string) => {
     return await spotifyApi.pause({
       device_id: deviceId
     })
+  } catch (error) {
+    return { statusCode: spotifyWebApiErrorHandler(error) }
+  }
+}
+
+export async function SkipNextSong(deviceId: string) {
+  const session = await getAuthSession()
+  if (session?.user && session.user.accessToken) {
+    spotifyApi.setAccessToken(session.user.accessToken)
+  }
+  try {
+    const { statusCode } = await spotifyApi.skipToNext({ device_id: deviceId })
+    return { statusCode }
+  } catch (error) {
+    return { statusCode: spotifyWebApiErrorHandler(error) }
+  }
+}
+
+export async function SkipPreviousSong(deviceId: string) {
+  const session = await getAuthSession()
+  if (session?.user && session.user.accessToken) {
+    spotifyApi.setAccessToken(session.user.accessToken)
+  }
+  try {
+    const { statusCode } = await spotifyApi.skipToPrevious({
+      device_id: deviceId
+    })
+    return { statusCode }
   } catch (error) {
     return { statusCode: spotifyWebApiErrorHandler(error) }
   }

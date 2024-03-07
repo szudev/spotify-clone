@@ -2,11 +2,7 @@ import { getArtistAlbumsPaginated } from '@/services/artist'
 import { Session } from 'next-auth'
 import SpotifyWebApi from 'spotify-web-api-node'
 import ArtistAlbumsPagination from './ArtistAlbumsPagination'
-import {
-  isCustomApiErrorObject,
-  CustomErrorExceptionType,
-  ApiStatusCodes
-} from '@/lib/errors'
+import { isCustomApiErrorObject } from '@/lib/errors'
 import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
@@ -43,9 +39,7 @@ export default async function ArtistAlbumsPaginationStream({
         return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
     }
-    throw new CustomErrorExceptionType({
-      statusCode: statusCode as ApiStatusCodes
-    })
+    throw new Error('An error occurred.')
   }
 
   return (

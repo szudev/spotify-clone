@@ -5,6 +5,8 @@ import SpotifyWebApi from 'spotify-web-api-node'
 import { cn } from '@/lib/utils'
 import GenreSearchedPlaylistItem from './GenreSearchedPlaylistItem'
 import GenreSearchedAlbumItem from './GenreSearchedAlbumItem'
+import { isCustomApiErrorObject } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   queryParam: string
@@ -15,11 +17,39 @@ export default async function GenreSearchedResult({
   queryParam,
   spotifyApi
 }: Props) {
-  const { body, statusCode } = await SearchResults({
+  const { body, statusCode, error } = await SearchResults({
     queryParam,
     spotifyApi
   })
-  if (statusCode !== 200) return notFound()
+
+  if (!body || statusCode !== 200) {
+    if (statusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
+      } else {
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
+      }
+    }
+    if (statusCode === 404) {
+      notFound()
+    }
+    if (!body || statusCode === 204) {
+      return (
+        <div className='flex flex-col flex-1'>
+          <p className='text-zinc-400'>No content were found.</p>
+        </div>
+      )
+    }
+    throw new Error()
+  }
 
   return (
     <section className='flex flex-col flex-1'>

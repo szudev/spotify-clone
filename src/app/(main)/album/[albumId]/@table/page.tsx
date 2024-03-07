@@ -45,8 +45,15 @@ export default async function AlbumTable({ params }: Props) {
         return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
     }
-    if (!body || statusCode === 404 || statusCode === 204) {
+    if (statusCode === 404) {
       notFound()
+    }
+    if (!body || statusCode === 204) {
+      return (
+        <div className='flex flex-col flex-1 justify-center items-center'>
+          <p className='text-zinc-400'>No content were found</p>
+        </div>
+      )
     }
     throw new CustomErrorExceptionType({
       statusCode: statusCode as ApiStatusCodes

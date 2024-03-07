@@ -20,7 +20,12 @@ import {
   isPlayingAtom,
   volumeAtom
 } from '@/store/atoms/player-atom'
-import { pauseSong, playSong } from '@/actions/player'
+import {
+  pauseSong,
+  playSong,
+  SkipNextSong,
+  SkipPreviousSong
+} from '@/actions/player'
 import { Slider } from './ui/slider'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from '@/hooks/use-toast'
@@ -233,6 +238,47 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
     if (intervalId) return () => clearInterval(intervalId)
   }, [isPlaying, accessToken, setCurrentTrack])
 
+  const handlePlayNextSong = async () => {
+    if (
+      !deviceId ||
+      !currentTrack ||
+      currentTrack.tracks.length <= 1 ||
+      currentTrack.tracks.findIndex(
+        (track) => track?.id === currentTrack.song?.id
+      ) ===
+        currentTrack.tracks.length - 1
+    )
+      return
+    const { statusCode } = await SkipNextSong(deviceId)
+    if (statusCode !== 202) {
+      toast({
+        title: 'There was an error',
+        description: 'Could not skip to the next song, try again later.',
+        variant: 'destructive'
+      })
+    }
+  }
+
+  const handlePlayPreviousSong = async () => {
+    if (
+      !deviceId ||
+      !currentTrack ||
+      currentTrack.tracks.length <= 1 ||
+      currentTrack.tracks.findIndex(
+        (track) => track?.id === currentTrack.song?.id
+      ) === 0
+    )
+      return
+    const { statusCode } = await SkipPreviousSong(deviceId)
+    if (statusCode !== 202) {
+      toast({
+        title: 'There was an error',
+        description: 'Could not skip to the previous song, try again later.',
+        variant: 'destructive'
+      })
+    }
+  }
+
   return (
     <div
       className={cn(
@@ -257,7 +303,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
                     : '/404-img.png'
                   : '/404-img.png'
               }
-              className='rounded-md aspect-square w-full h-auto'
+              className='rounded-md aspect-square w-full h-[52px]'
               height={42}
               width={42}
               alt='Current track cover'
@@ -270,11 +316,6 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
             >
               {currentTrack.song.name}
             </Link>
-            {/* <p className='text-zinc-400 hidden text-[11px] md:block truncate'>
-              {currentTrack.song.artists
-                .map((artist) => artist.name)
-                .join(', ')}
-            </p> */}
             <div className='hidden text-[11px] md:flex truncate'>
               {currentTrack.song.artists.map((artist, index, arr) => (
                 <Link
@@ -306,7 +347,18 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
           <button className='group hidden md:inline' disabled={true}>
             <RandomOffModeIcon className='h-4 w-4 fill-zinc-400 group-disabled:fill-[#4D4D4D] hover:fill-white' />
           </button>
-          <button className='group hidden md:inline' disabled={true}>
+          <button
+            className='group hidden md:inline'
+            disabled={
+              !deviceId ||
+              !currentTrack ||
+              currentTrack.tracks.length <= 1 ||
+              currentTrack.tracks.findIndex(
+                (track) => track?.id === currentTrack.song?.id
+              ) === 0
+            }
+            onClick={handlePlayPreviousSong}
+          >
             <PlayBeforeIcon className='h-4 w-4 fill-zinc-400 group-disabled:fill-[#4D4D4D] hover:fill-white' />
           </button>
           <button
@@ -320,7 +372,19 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
               <PlayIcon className='md:h-4 md:w-4 h-auto w-6 fill-white md:fill-black' />
             )}
           </button>
-          <button className='group hidden md:inline' disabled={true}>
+          <button
+            className='group hidden md:inline'
+            disabled={
+              !deviceId ||
+              !currentTrack ||
+              currentTrack.tracks.length <= 1 ||
+              currentTrack.tracks.findIndex(
+                (track) => track?.id === currentTrack.song?.id
+              ) ===
+                currentTrack.tracks.length - 1
+            }
+            onClick={handlePlayNextSong}
+          >
             <PlayNextIcon className='h-4 w-4 fill-zinc-400 group-disabled:fill-[#4D4D4D] hover:fill-white' />
           </button>
           <button className='group hidden md:inline' disabled={true}>

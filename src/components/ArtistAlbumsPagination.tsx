@@ -7,7 +7,6 @@ import {
 import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { Session } from 'next-auth'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import { Suspense } from 'react'
 import ClientCoverPlayer from './ClientCoverPlayer'
@@ -61,7 +60,17 @@ export default function ArtistAlbumsPagination({
   const albums =
     data?.pages.flatMap((page) => page.body?.items) ?? body.body?.items
 
-  if (!albums) return notFound()
+  if (!albums) {
+    if (body.statusCode === 404 || body.statusCode === 204) {
+      throw new Error('An error occurred.')
+    }
+    return (
+      <div className='flex flex-col flex-1 gap-4'>
+        <h1 className='text-white text-2xl font-bold'>Artist Albums</h1>
+        <p className='text-zinc-400'>No albums were found.</p>
+      </div>
+    )
+  }
 
   return (
     <div className='flex flex-col flex-1 gap-4'>
