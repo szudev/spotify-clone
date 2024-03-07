@@ -38,7 +38,11 @@ export async function generateMetadata({ params }: Props) {
     title:
       body && statusCode === 200
         ? `${body.name} | Spotify ${body.type ?? 'album'}`
-        : `${apiStatusDescriptions[statusCode as ApiStatusCodes]} | Spotify`
+        : `${
+            apiStatusDescriptions[statusCode as ApiStatusCodes]
+              ? apiStatusDescriptions[statusCode as ApiStatusCodes]
+              : 'Error'
+          } | Spotify`
   }
 }
 
