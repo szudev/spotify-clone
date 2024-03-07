@@ -85,7 +85,7 @@ export default async function AlbumLayout({ params, table, title }: Props) {
   }
 
   return (
-    <section className='flex flex-col gap-6 bg-zinc-900 pt-16 flex-1 rounded-t-lg'>
+    <section className='flex flex-col gap-6 bg-transparent pt-16 flex-1 rounded-t-lg'>
       {title}
       {table}
     </section>

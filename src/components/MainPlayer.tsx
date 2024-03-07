@@ -55,7 +55,8 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
   const [volumeValue, setVolumeValue] = useAtom(volumeAtom)
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
   const [currentTrack, setCurrentTrack] = useAtom(currentTrackAtom)
-  const [isChangingSongPosition, setIsChangingSongPosition] = useState(false)
+  const [isChangingSongPosition, setIsChangingSongPosition] =
+    useState<boolean>(false)
 
   const debounceVolumeChange = useCallback(
     (newVolume: number, targetDevice: string | undefined) => {
@@ -364,7 +365,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
           <button
             onClick={isPlaying ? handlePause : handlePlay}
             disabled={!currentTrack || !currentTrack.song}
-            className='rounded-full disabled:bg-[#4D4D4D] md:bg-white bg-transparent p-2 flex items-center justify-center'
+            className='rounded-full disabled:bg-[#4D4D4D] md:bg-white bg-transparent p-2 flex items-center justify-center z-20'
           >
             {isPlaying ? (
               <PauseIcon className='md:h-4 md:w-4 h-auto w-6 fill-white md:fill-black' />
@@ -502,7 +503,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
               defaultValue={[0]}
               max={100}
               min={0}
-              className='group'
+              className='group z-20'
             />
           </div>
         </div>
