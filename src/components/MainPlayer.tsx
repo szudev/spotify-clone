@@ -312,7 +312,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
           </div>
           <div className='flex flex-col overflow-hidden md:max-w-[85%] max-w-[90%]'>
             <Link
-              href={`/album/${currentTrack.albumId}`}
+              href={`/album/${currentTrack.song.album.id}`}
               className='text-white font-bold md:font-normal block truncate text-sm hover:underline'
             >
               {currentTrack.song.name}

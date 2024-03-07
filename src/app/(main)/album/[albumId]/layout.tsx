@@ -75,8 +75,8 @@ export default async function AlbumLayout({ params, table, title }: Props) {
     }
     if (!body || statusCode === 204) {
       return (
-        <div className='flex flex-col gap-6 bg-zinc-900 pt-16 flex-1 rounded-t-lg'>
-          <p className='text-zinc-400'>No content were found</p>
+        <div className='flex flex-col items-center justify-center gap-6 bg-zinc-900 pt-16 flex-1'>
+          <p className='text-zinc-400'>No content were found.</p>
         </div>
       )
     }
