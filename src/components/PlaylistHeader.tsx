@@ -26,6 +26,7 @@ export default async function PlaylistHeader({
     statusCode: playlistStatusCode,
     error: playlistError
   } = await getPlaylistById({ playlistId, spotifyApi })
+
   if (!playlistBody || playlistStatusCode !== 200) {
     if (playlistStatusCode === 429) {
       if (isCustomApiErrorObject(playlistError)) {

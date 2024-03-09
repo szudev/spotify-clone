@@ -4,6 +4,7 @@ import spotifyApi from '@/lib/spotify'
 import PlaylistTable from '@/components/PlaylistTable'
 import { getPlaylistById } from '@/services/playlists'
 import { notFound } from 'next/navigation'
+import { ApiStatusCodes, apiStatusDescriptions } from '@/lib/errors'
 
 interface Props {
   params: {
@@ -19,15 +20,19 @@ export async function generateMetadata({ params }: Props) {
   }
   const { body, statusCode } = await getPlaylistById({ playlistId, spotifyApi })
 
-  if (!body || statusCode !== 200) {
-    if (!body || statusCode === 404 || statusCode === 204) {
-      notFound()
-    }
-    throw new Error('An error occurred.')
+  if (statusCode === 404) {
+    notFound()
   }
 
   return {
-    title: `${body.name} | Spotify ${body.type}`
+    title:
+      body && statusCode === 200
+        ? `${body.name} | Spotify ${body.type}`
+        : `${
+            apiStatusDescriptions[statusCode as ApiStatusCodes]
+              ? apiStatusDescriptions[statusCode as ApiStatusCodes]
+              : 'Error'
+          } | Spotify`
   }
 }
 

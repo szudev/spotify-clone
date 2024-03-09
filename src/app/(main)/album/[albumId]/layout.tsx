@@ -6,7 +6,7 @@ import {
   isCustomApiErrorObject
 } from '@/lib/errors'
 import spotifyApi from '@/lib/spotify'
-import { getAlbumById, cachedGetAlbumById } from '@/services/album'
+import { getAlbumById } from '@/services/album'
 import { notFound } from 'next/navigation'
 
 interface Props {
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props) {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
 
-  const { body, statusCode } = await cachedGetAlbumById({
+  const { body, statusCode } = await getAlbumById({
     albumId,
     spotifyApi
   })
@@ -53,7 +53,7 @@ export default async function AlbumLayout({ params, table, title }: Props) {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
 
-  const { body, statusCode, error } = await cachedGetAlbumById({
+  const { body, statusCode, error } = await getAlbumById({
     albumId,
     spotifyApi
   })

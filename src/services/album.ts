@@ -1,6 +1,5 @@
 import { spotifyWebApiErrorHandler } from '@/lib/errors'
 import SpotifyWebApi from 'spotify-web-api-node'
-import { cache } from 'react'
 
 interface UserSavedAlbumProps {
   spotifyApi: SpotifyWebApi
@@ -37,17 +36,6 @@ export async function getAlbumById({ albumId, spotifyApi }: AlbumByIdProps) {
     return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
-
-export const cachedGetAlbumById = cache(
-  async ({ albumId, spotifyApi }: AlbumByIdProps) => {
-    try {
-      const { body, statusCode } = await spotifyApi.getAlbum(albumId)
-      return { body, statusCode }
-    } catch (error) {
-      return { statusCode: spotifyWebApiErrorHandler(error), error }
-    }
-  }
-)
 
 export async function getAlbumTracksById({
   albumId,
