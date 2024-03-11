@@ -1,6 +1,7 @@
 import { spotifyWebApiErrorHandler } from '@/lib/errors'
 import spotifyApi from '@/lib/spotify'
 import { Session } from 'next-auth'
+import { cache } from 'react'
 import SpotifyWebApi from 'spotify-web-api-node'
 
 interface Props {
@@ -44,18 +45,39 @@ export async function getUserPlayLists2({
 
 export async function getPlaylistById({
   playlistId,
-  spotifyApi
+  spotifyApi,
+  fields
 }: {
   playlistId: string
   spotifyApi: SpotifyWebApi
+  fields?: string
 }) {
   try {
-    const { body, statusCode } = await spotifyApi.getPlaylist(playlistId)
+    const { body, statusCode } = await spotifyApi.getPlaylist(playlistId, {
+      fields
+    })
     return { body, statusCode }
   } catch (error) {
     return { statusCode: spotifyWebApiErrorHandler(error), error }
   }
 }
+
+export const cachedGetPlaylistById = cache(
+  async ({
+    playlistId,
+    spotifyApi
+  }: {
+    playlistId: string
+    spotifyApi: SpotifyWebApi
+  }) => {
+    try {
+      const { body, statusCode } = await spotifyApi.getPlaylist(playlistId)
+      return { body, statusCode }
+    } catch (error) {
+      return { statusCode: spotifyWebApiErrorHandler(error), error }
+    }
+  }
+)
 
 export async function getPlaylistTracksById({
   playlistId,

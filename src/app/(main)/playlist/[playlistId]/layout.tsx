@@ -6,13 +6,13 @@ import {
   isCustomApiErrorObject
 } from '@/lib/errors'
 import spotifyApi from '@/lib/spotify'
-import { getAlbumById } from '@/services/album'
+import { getPlaylistById } from '@/services/playlists'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 interface Props {
   params: {
-    albumId: string
+    playlistId: string
   }
   children: React.ReactNode
   title: React.ReactNode
@@ -20,15 +20,16 @@ interface Props {
 }
 
 /* export async function generateMetadata({ params }: Props) {
-  const { albumId } = params
+  const { playlistId } = params
   const session = await getAuthSession()
   if (session?.user && session.user.accessToken) {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
 
-  const { body, statusCode } = await getAlbumById({
-    albumId,
-    spotifyApi
+  const { body, statusCode } = await getPlaylistById({
+    playlistId,
+    spotifyApi,
+    fields: 'id,name'
   })
 
   if (statusCode === 404) {
@@ -38,7 +39,7 @@ interface Props {
   return {
     title:
       body && statusCode === 200
-        ? `${body.name} | Spotify ${body.type ?? 'album'}`
+        ? `${body.name} | Spotify playlist`
         : `${
             apiStatusDescriptions[statusCode as ApiStatusCodes]
               ? apiStatusDescriptions[statusCode as ApiStatusCodes]
@@ -48,19 +49,19 @@ interface Props {
 } */
 
 export const metadata: Metadata = {
-  title: 'Spotify album',
-  description: 'Spotify album page.'
+  title: 'Spotify playlist',
+  description: 'Spotify playlist page.'
 }
 
-export default async function AlbumLayout({ params, table, title }: Props) {
-  const { albumId } = params
+export default async function PlaylistLayout({ params, title, table }: Props) {
+  const { playlistId } = params
   const session = await getAuthSession()
   if (session?.user && session.user.accessToken) {
     spotifyApi.setAccessToken(session.user.accessToken)
   }
 
-  const { body, statusCode, error } = await getAlbumById({
-    albumId,
+  const { body, statusCode, error } = await getPlaylistById({
+    playlistId,
     spotifyApi
   })
 
@@ -95,9 +96,11 @@ export default async function AlbumLayout({ params, table, title }: Props) {
   }
 
   return (
-    <section className='flex flex-col gap-6 bg-transparent pt-16 flex-1 rounded-t-lg'>
+    <section className='flex flex-col gap-6 pt-16 flex-1 rounded-t-lg'>
       {title}
-      {table}
+      <div className='bg-gradient-to-b md:from-black/10 from-transparent md:to-zinc-900 to-zinc-900 to-[100px] md:to-[200px] w-full flex-1'>
+        {table}
+      </div>
     </section>
   )
 }
