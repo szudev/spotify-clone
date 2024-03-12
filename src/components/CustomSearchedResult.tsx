@@ -4,15 +4,14 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Link from 'next/link'
-import ClientCoverPlayer from './ClientCoverPlayer'
-import CustomSearchedSongName from './CustomSearchedSongName'
-import CustomSearchedSongDuration from './CustomSearchedSongDuration'
 import { Suspense } from 'react'
 import StreamCustomSearchAlbumPlayer from './StreamCustomSearchAlbumPlayer'
 import StreamCustomSearchPlaylistPlayer from './StreamCustomSearchPlaylistPlayer'
 import CustomSearchArtistSection from './CustomSearchArtistSection'
 import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 import CustomSearchedSongItem from './CustomSearchedSongItem'
+import { isCustomApiErrorObject } from '@/lib/errors'
+import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
   queryParam: string
@@ -23,15 +22,43 @@ export default async function CustomSearchedResult({
   queryParam,
   spotifyApi
 }: Props) {
-  const { body, statusCode } = await SearchResults({
+  const { body, statusCode, error } = await SearchResults({
     queryParam,
     spotifyApi,
     limit: 5,
     withArtists: true,
     withTracks: true
   })
-  if (statusCode !== 200) return notFound()
-  const topResultArtist = body?.artists?.items[0]
+  if (!body || statusCode !== 200) {
+    if (statusCode === 429) {
+      if (isCustomApiErrorObject(error)) {
+        const retryAfter = error.headers['retry-after']
+          ? parseInt(error.headers['retry-after'], 10)
+          : undefined
+        return (
+          <CustomTooManyRequestErrorBoundary
+            statusCode={statusCode}
+            retryAfter={retryAfter}
+          />
+        )
+      } else {
+        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
+      }
+    }
+    if (statusCode === 404) {
+      notFound()
+    }
+    if (!body || statusCode === 204) {
+      return (
+        <div className='flex flex-col flex-1 justify-center items-center'>
+          <p className='text-zinc-400'>No content were found.</p>
+        </div>
+      )
+    }
+    throw new Error()
+  }
+
+  const topResultArtist = body.artists?.items[0]
 
   return (
     <section className='flex flex-col flex-1'>
@@ -43,7 +70,7 @@ export default async function CustomSearchedResult({
         <div className='flex flex-col justify-start h-full gap-4'>
           <h1 className='text-white text-2xl font-bold'>Songs</h1>
           <section className='grid grid-cols-1 w-full grid-rows-[1fr] rounded-md gap-2 md:gap-0 flex-1'>
-            {body?.tracks?.items.slice(0, 4).map((track, i) => (
+            {body.tracks?.items.slice(0, 4).map((track, i) => (
               <CustomSearchedSongItem key={track.id} track={track} i={i} />
             ))}
           </section>
@@ -52,7 +79,7 @@ export default async function CustomSearchedResult({
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
         <h1 className='text-white text-2xl font-bold'>Albums</h1>
         <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
-          {body?.albums?.items.map((album) => (
+          {body.albums?.items.map((album) => (
             <Link
               href={`/album/${album.id}`}
               key={album.id}
@@ -100,7 +127,7 @@ export default async function CustomSearchedResult({
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
         <h1 className='text-white text-2xl font-bold'>Playlists</h1>
         <div className='grid md:grid-cols-5 grid-cols-2 md:gap-2 gap-4'>
-          {body?.playlists?.items.map((playlist) => (
+          {body.playlists?.items.map((playlist) => (
             <Link
               href={`/playlist/${playlist.id}`}
               key={playlist.id}

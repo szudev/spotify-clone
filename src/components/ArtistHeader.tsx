@@ -1,44 +1,12 @@
-import { getArtistById } from '@/services/artist'
-import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
 import dynamic from 'next/dynamic'
 import { formatArtistFollowersCount } from '@/lib/utils'
-import { isCustomApiErrorObject } from '@/lib/errors'
-import { notFound } from 'next/navigation'
-import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
 
 interface Props {
-  spotifyApi: SpotifyWebApi
-  artistId: string
+  body: SpotifyApi.SingleArtistResponse
 }
 
-export default async function ArtistHeader({ artistId, spotifyApi }: Props) {
-  const { body, statusCode, error } = await getArtistById({
-    artistId,
-    spotifyApi
-  })
-  if (!body || statusCode !== 200) {
-    if (statusCode === 429) {
-      if (isCustomApiErrorObject(error)) {
-        const retryAfter = error.headers['retry-after']
-          ? parseInt(error.headers['retry-after'], 10)
-          : undefined
-        return (
-          <CustomTooManyRequestErrorBoundary
-            statusCode={statusCode}
-            retryAfter={retryAfter}
-          />
-        )
-      } else {
-        return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
-      }
-    }
-    if (!body || statusCode === 404 || statusCode === 204) {
-      notFound()
-    }
-    throw new Error('An error occurred.')
-  }
-
+export default async function ArtistHeader({ body }: Props) {
   const artistImageSrc =
     body.images.find((image) => image.url)?.url ?? '/404-img.png'
 

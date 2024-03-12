@@ -18,7 +18,7 @@ export default async function PopularArtistSongs({
     spotifyApi
   })
 
-  if (statusCode !== 200) {
+  if (!body || statusCode !== 200) {
     if (statusCode === 429) {
       if (isCustomApiErrorObject(error)) {
         const retryAfter = error.headers['retry-after']
@@ -34,15 +34,14 @@ export default async function PopularArtistSongs({
         return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
     }
+    if (!body || statusCode === 204 || statusCode === 404)
+      return (
+        <div className='flex flex-col items-start gap-4'>
+          <p className='text-zinc-400'>No songs were found.</p>
+        </div>
+      )
     throw new Error('An error occurred.')
   }
-
-  if (!body)
-    return (
-      <div className='flex flex-col items-start gap-4'>
-        <p className='text-zinc-400'>No songs were found.</p>
-      </div>
-    )
 
   const tracks = body.tracks.filter((track) => track.uri)
   const uris = body.tracks

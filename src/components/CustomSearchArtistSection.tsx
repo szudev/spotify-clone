@@ -7,7 +7,7 @@ import StreamCustomSearchArtistPlayer from './StreamCustomSearchArtistPlayer'
 interface Props {
   children: React.ReactNode
   topResultArtist: SpotifyApi.ArtistObjectFull | undefined
-  body: SpotifyApi.SearchResponse | undefined
+  body: SpotifyApi.SearchResponse
   spotifyApi: SpotifyWebApi
 }
 
@@ -34,7 +34,7 @@ export default async function CustomSearchArtistSection({
               <Image
                 src={topResultImageSrc}
                 alt={
-                  body && body.artists && topResultArtist
+                  body.artists && topResultArtist
                     ? `Artist ${topResultArtist.name} profile image`
                     : `Unkown artist profile picture`
                 }
@@ -71,7 +71,7 @@ export default async function CustomSearchArtistSection({
       <section className='flex flex-col justify-start h-full gap-4 pb-7'>
         <h1 className='text-white text-2xl font-bold'>Artists</h1>
         <div className='grid md:grid-cols-5 grid-cols-1 grid-rows-[1fr] gap-4'>
-          {body?.artists?.items.map((artist) => (
+          {body.artists?.items.map((artist) => (
             <Link
               href={`/artist/${artist.id}`}
               key={artist.id}

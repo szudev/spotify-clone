@@ -4,6 +4,7 @@ import SpotifyWebApi from 'spotify-web-api-node'
 import spotifyApiImported from '@/lib/spotify'
 import { getAlbumTracksById } from './album'
 import { getTrackById } from './track'
+import { cache } from 'react'
 
 class SpotifyApiError extends Error {
   statusCode: number

@@ -40,6 +40,20 @@ export default async function ArtistAlbums({ artistId, spotifyApi }: Props) {
         </section>
       )
     }
+
+    if (!body || statusCode === 204 || statusCode === 404) {
+      return (
+        <section className='flex flex-col justify-start h-full gap-4 md:pb-7 pb-7 pt-0 md:px-6 px-4'>
+          <div className='flex justify-between items-center'>
+            <h1 className='text-white text-2xl font-bold'>Artist Albums</h1>
+          </div>
+          <div className='flex items-start'>
+            <p className='text-zinc-400'>No albums were found.</p>
+          </div>
+        </section>
+      )
+    }
+
     throw new Error('An error occurred.')
   }
 
