@@ -109,7 +109,7 @@ export default function ClientBodyProvider({
             <p className='cursor-pointer hover:text-white'>About Ads</p>
             <p className='cursor-pointer hover:text-white'>Accessibility</p>
           </div>
-          <p>© {getCurrentYear()} Fake-Spotify</p>
+          <p>© {getCurrentYear()} Szudev-Music</p>
         </div>
       </section>
     </main>
