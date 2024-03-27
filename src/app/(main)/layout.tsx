@@ -14,8 +14,8 @@ import ServerMobileModal from '@/components/ServerMobileModal'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Spotify Clone',
-  description: 'Spotify Clone app'
+  title: 'Szudev Music',
+  description: 'Szudev Music app'
 }
 
 export default function RootLayout({

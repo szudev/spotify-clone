@@ -48,8 +48,8 @@ interface Props {
 } */
 
 export const metadata: Metadata = {
-  title: 'Spotify album',
-  description: 'Spotify album page.'
+  title: 'Szudev album',
+  description: 'Szudev album page.'
 }
 
 export default async function AlbumLayout({ params, table, title }: Props) {

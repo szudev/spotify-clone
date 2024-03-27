@@ -49,8 +49,8 @@ interface Props {
 } */
 
 export const metadata: Metadata = {
-  title: 'Spotify playlist',
-  description: 'Spotify playlist page.'
+  title: 'Szudev playlist',
+  description: 'Szudev playlist page.'
 }
 
 export default async function PlaylistLayout({ params, title, table }: Props) {
