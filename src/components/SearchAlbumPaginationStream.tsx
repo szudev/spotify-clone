@@ -4,6 +4,7 @@ import SpotifyWebApi from 'spotify-web-api-node'
 import SearchAlbumPagination from './SearchAlbumPagination'
 import { isCustomApiErrorObject } from '@/lib/errors'
 import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
+import { notFound } from 'next/navigation'
 
 interface Props {
   queryParam: string
@@ -38,6 +39,9 @@ export default async function SearchAlbumPaginationStream({
       } else {
         return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
+    }
+    if (statusCode === 404) {
+      notFound()
     }
     throw new Error('An error occurred.')
   }

@@ -2,9 +2,9 @@ import { SearchPlaylists } from '@/services/search'
 import SearchPlaylistPagination from './SearchPlaylistPagination'
 import SpotifyWebApi from 'spotify-web-api-node'
 import { Session } from 'next-auth'
-import { notFound } from 'next/navigation'
 import { isCustomApiErrorObject } from '@/lib/errors'
 import CustomTooManyRequestErrorBoundary from './CustomTooManyRequestErrorBoundary'
+import { notFound } from 'next/navigation'
 
 interface Props {
   queryParam: string
@@ -39,6 +39,9 @@ export default async function SearchPlaylistPaginationStream({
       } else {
         return <CustomTooManyRequestErrorBoundary statusCode={statusCode} />
       }
+    }
+    if (statusCode === 404) {
+      notFound()
     }
     throw new Error('An error occurred.')
   }

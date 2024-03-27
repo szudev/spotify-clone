@@ -7,7 +7,6 @@ import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
 import { SearchPlaylists, SearchPlaylistsReturnType } from '@/services/search'
 import { Session } from 'next-auth'
 import { SearchGenrePaginationLoadMoreSkeleton } from './ui/Skeletons'
-import { notFound } from 'next/navigation'
 import ClientCoverPlayer from './ClientCoverPlayer'
 import ClientCurrentOnPlayCoverName from './ClientCurrentOnPlayCoverName'
 
@@ -56,12 +55,18 @@ export default function SearchPlaylistPagination({
   const playlists =
     data?.pages.flatMap((page) => page.body?.items) ?? body.body?.items
 
-  if (!playlists) return notFound()
+  if (!playlists) {
+    return (
+      <div className='flex flex-col flex-1 items-center'>
+        <p className='text-zinc-400'>No playlists were found.</p>
+      </div>
+    )
+  }
 
   return (
     <div className='flex flex-col flex-1 gap-4'>
       <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
-        {playlists.map((playlist) => {
+        {playlists.map((playlist, index) => {
           if (!playlist) return null
           const imageSrc =
             playlist.images.find((image) => image.url)?.url ?? '/404-img.png'
@@ -72,7 +77,7 @@ export default function SearchPlaylistPagination({
           return (
             <Link
               className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 md:bg-black/30 bg-transparent md:bg-hover-effect md:gap-5 gap-2 group'
-              key={playlist.id}
+              key={`${playlist.id}-playlist-#${index}`}
               href={`/playlist/${playlist.id}`}
             >
               <div className='relative rounded-md'>

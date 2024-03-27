@@ -26,37 +26,31 @@ export default function SearchAlbumPagination({
     pageParams: [0]
   }
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    error,
-    isError
-  } = useInfiniteQuery(
-    ['infinite-album', queryParam],
-    async ({ pageParam }) =>
-      await SearchAlbums({
-        queryParam,
-        session,
-        limit: 5,
-        offset: pageParam
-      }),
-    {
-      getNextPageParam: (lastPage) => {
-        if (lastPage && lastPage.body && lastPage.body.next) {
-          const urlSearchParams = new URLSearchParams(
-            new URL(lastPage.body.next).search
-          )
-          const offsetValue = urlSearchParams.get('offset')
-          return Number(offsetValue)
-        }
-      },
-      initialData: initialData,
-      enabled: false,
-      refetchOnWindowFocus: false
-    }
-  )
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery(
+      ['infinite-album', queryParam],
+      async ({ pageParam }) =>
+        await SearchAlbums({
+          queryParam,
+          session,
+          limit: 5,
+          offset: pageParam
+        }),
+      {
+        getNextPageParam: (lastPage) => {
+          if (lastPage && lastPage.body && lastPage.body.next) {
+            const urlSearchParams = new URLSearchParams(
+              new URL(lastPage.body.next).search
+            )
+            const offsetValue = urlSearchParams.get('offset')
+            return Number(offsetValue)
+          }
+        },
+        initialData: initialData,
+        enabled: false,
+        refetchOnWindowFocus: false
+      }
+    )
 
   const albums =
     data?.pages.flatMap((page) => page.body?.items) ?? body.body?.items
@@ -66,7 +60,7 @@ export default function SearchAlbumPagination({
       throw new Error('An error occurred.')
     }
     return (
-      <div className='flex flex-col flex-1 gap-4'>
+      <div className='flex flex-col flex-1 items-center'>
         <p className='text-zinc-400'>No albums were found.</p>
       </div>
     )
@@ -75,7 +69,7 @@ export default function SearchAlbumPagination({
   return (
     <div className='flex flex-col flex-1 gap-4'>
       <div className='grid md:grid-cols-5 grid-cols-2 gap-4 md:gap-2'>
-        {albums.map((album) => {
+        {albums.map((album, index) => {
           if (!album) return null
           const imageSrc =
             album.images.find((image) => image.url)?.url ?? '/404-img.png'
@@ -86,7 +80,7 @@ export default function SearchAlbumPagination({
           return (
             <Link
               className='grid grid-cols-1 grid-rows-[1fr_auto] rounded-md md:p-4 p-0 md:bg-black/30 bg-transparent md:bg-hover-effect md:gap-5 gap-2 group'
-              key={album.id}
+              key={`${album.id}-album-#${index}}`}
               href={`/album/${album.id}`}
             >
               <div className='relative rounded-md'>
