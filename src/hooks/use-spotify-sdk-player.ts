@@ -6,6 +6,7 @@ import {
 } from '@/store/atoms/player-atom'
 import { useAtom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
+import { toast } from './use-toast'
 
 interface Props {
   accessToken: string | undefined
@@ -52,13 +53,22 @@ export default function useSpotifySdkPlayer({ accessToken }: Props) {
 
       player.addListener('not_ready', ({ device_id }) => {
         player.disconnect()
-        console.log({ location: 'not_ready Listener.' })
+        toast({
+          title: 'Error',
+          description: 'The Web Playback SDK could not connect to Spotify!',
+          variant: 'destructive'
+        })
         setPlayerSdk(undefined)
       })
 
       player.connect().then((success) => {
         if (success)
-          console.log('The Web Playback SDK successfully connected to Spotify!')
+          toast({
+            title: 'Spotify SDK ready',
+            description:
+              'The Web Playback SDK was successfully connected to Spotify!',
+            variant: 'success'
+          })
       })
     }
   }, [])

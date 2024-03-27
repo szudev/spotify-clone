@@ -1,6 +1,6 @@
 import { getUserSavedAlbums } from '@/services/album'
 import Link from 'next/link'
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import SpotifyWebApi from 'spotify-web-api-node'
 import Image from 'next/image'
 import ClientCoverPlayer from './ClientCoverPlayer'
