@@ -18,7 +18,8 @@ import {
   currentTrackAtom,
   deviceIdAtom,
   isPlayingAtom,
-  volumeAtom
+  volumeAtom,
+  playerErrorAtom
 } from '@/store/atoms/player-atom'
 import {
   pauseSong,
@@ -55,6 +56,7 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
   const [volumeValue, setVolumeValue] = useAtom(volumeAtom)
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
   const [currentTrack, setCurrentTrack] = useAtom(currentTrackAtom)
+  const playerError = useAtomValue(playerErrorAtom)
   const [isChangingSongPosition, setIsChangingSongPosition] =
     useState<boolean>(false)
 
@@ -120,6 +122,15 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
       !currentTrack.song ||
       !currentTrack.progress_ms
     ) {
+      if (!deviceId) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
       return
     }
     const index = currentTrack.tracks
@@ -151,8 +162,18 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
       currentTrack === undefined ||
       !currentTrack.song ||
       !currentTrack.progress_ms
-    )
+    ) {
+      if (!deviceId) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
       return
+    }
     const { statusCode } = await pauseSong(deviceId)
     if (statusCode !== 202) {
       toast({
@@ -168,7 +189,18 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
     initialValue: number,
     targetDevice: string | undefined
   ) => {
-    if (!targetDevice) return
+    if (!targetDevice) {
+      if (!targetDevice) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
+      return
+    }
     const { statusCode } = await setPlaybackVolume({
       volume: newVolume,
       accessToken,
@@ -190,7 +222,18 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
       initialValue: number,
       targetDevice: string | undefined
     ) => {
-      if (!targetDevice) return
+      if (!targetDevice) {
+        if (!targetDevice) {
+          toast({
+            title: 'Error on player',
+            description:
+              playerError?.description ??
+              'Could not perform the player action, try reloading the page',
+            variant: 'destructive'
+          })
+        }
+        return
+      }
       const { statusCode } = await seekToPosition({
         deviceId: targetDevice,
         positionMs: newPosition,
@@ -248,8 +291,18 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
         (track) => track?.id === currentTrack.song?.id
       ) ===
         currentTrack.tracks.length - 1
-    )
+    ) {
+      if (!deviceId) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
       return
+    }
     const { statusCode } = await SkipNextSong(deviceId)
     if (statusCode !== 202) {
       toast({
@@ -268,8 +321,18 @@ export default function MainPlayer({ accessToken, body, statusCode }: Props) {
       currentTrack.tracks.findIndex(
         (track) => track?.id === currentTrack.song?.id
       ) === 0
-    )
+    ) {
+      if (!deviceId) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
       return
+    }
     const { statusCode } = await SkipPreviousSong(deviceId)
     if (statusCode !== 202) {
       toast({

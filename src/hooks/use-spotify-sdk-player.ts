@@ -2,7 +2,9 @@ import {
   playerSdkAtom,
   deviceIdAtom,
   isPlayingAtom,
-  currentTrackAtom
+  currentTrackAtom,
+  playerErrorAtom,
+  errorDescriptions
 } from '@/store/atoms/player-atom'
 import { useAtom, useSetAtom } from 'jotai'
 import { useEffect } from 'react'
@@ -17,6 +19,8 @@ export default function useSpotifySdkPlayer({ accessToken }: Props) {
   const setIsPlaying = useSetAtom(isPlayingAtom)
   const setDeviceId = useSetAtom(deviceIdAtom)
   const [currentTrack, setCurrentTrack] = useAtom(currentTrackAtom)
+  const setPlayerError = useSetAtom(playerErrorAtom)
+
   useEffect(() => {
     const script = document.createElement('script')
     script.src = 'https://sdk.scdn.co/spotify-player.js'
@@ -31,6 +35,58 @@ export default function useSpotifySdkPlayer({ accessToken }: Props) {
           cb(accessToken as string)
         },
         volume: 0.5
+      })
+
+      player.on('authentication_error', () => {
+        setPlayerError({
+          errorType: 'authentication_error',
+          description: errorDescriptions['authentication_error']
+        })
+        toast({
+          title: 'Authentication error',
+          description:
+            'Spotify Player fails to instantiate a valid Spotify connection.',
+          variant: 'destructive'
+        })
+      })
+
+      player.on('account_error', () => {
+        setPlayerError({
+          errorType: 'account_error',
+          description: errorDescriptions['account_error']
+        })
+        toast({
+          title: 'Premium required',
+          description:
+            'An spotify premmium account is required to use the player.',
+          variant: 'warning'
+        })
+      })
+
+      player.on('initialization_error', ({ message }) => {
+        setPlayerError({
+          errorType: 'initialization_error',
+          description: errorDescriptions['initialization_error']
+        })
+        toast({
+          title: 'Player Initialization Error',
+          description:
+            message ??
+            'Failed to instantiate a player capable of playing content in the current environment.',
+          variant: 'destructive'
+        })
+      })
+
+      player.on('playback_error', () => {
+        setPlayerError({
+          errorType: 'playback_error',
+          description: errorDescriptions['playback_error']
+        })
+        toast({
+          title: 'Playback error',
+          description: 'Error to perform playback.',
+          variant: 'destructive'
+        })
       })
 
       setPlayerSdk(player)
@@ -52,6 +108,7 @@ export default function useSpotifySdkPlayer({ accessToken }: Props) {
       })
 
       player.addListener('not_ready', ({ device_id }) => {
+        console.log('HERE!!!')
         player.disconnect()
         toast({
           title: 'Error',

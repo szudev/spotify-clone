@@ -4,7 +4,8 @@ import { PauseIcon, PlayIcon } from './Icons'
 import {
   currentTrackAtom,
   deviceIdAtom,
-  isPlayingAtom
+  isPlayingAtom,
+  playerErrorAtom
 } from '@/store/atoms/player-atom'
 import { useAtom, useAtomValue } from 'jotai'
 import { pauseSong, playSong } from '@/actions/player'
@@ -45,6 +46,7 @@ export default function ClientCoverPlayer(props: Props) {
   const [currentTrack, setCurrentTrack] = useAtom(currentTrackAtom)
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
   const deviceId = useAtomValue(deviceIdAtom)
+  const playerError = useAtomValue(playerErrorAtom)
   const { buttonStyles, iconStyles, playerType, tracks, uris } = props
 
   const albumIdSetter = playerType === 'album' ? props.albumId : undefined
@@ -95,7 +97,18 @@ export default function ClientCoverPlayer(props: Props) {
     (playerType === 'artist' && props.artistId === currentTrack?.artistId)
 
   const handlePlay = async () => {
-    if (!track || !deviceId) return
+    if (!track || !deviceId) {
+      if (!deviceId) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
+      return
+    }
     const { statusCode } = await playSong(
       typeof uris === 'string' ? uris : uris.slice(index, uris.length),
       deviceId,
@@ -133,7 +146,18 @@ export default function ClientCoverPlayer(props: Props) {
   }
 
   const handlePause = async () => {
-    if (!track || !deviceId) return
+    if (!track || !deviceId) {
+      if (!deviceId) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
+      return
+    }
     const { statusCode } = await pauseSong(deviceId)
     if (statusCode !== 202) {
       toast({

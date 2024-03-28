@@ -3,7 +3,8 @@
 import {
   currentTrackAtom,
   deviceIdAtom,
-  isPlayingAtom
+  isPlayingAtom,
+  playerErrorAtom
 } from '@/store/atoms/player-atom'
 import { useAtom, useAtomValue } from 'jotai'
 import { useState } from 'react'
@@ -33,9 +34,21 @@ export default function ClientTopArtistTrackItem({
   const [isPlaying, setIsPlaying] = useAtom(isPlayingAtom)
   const [isHovering, setIsHovering] = useState(false)
   const deviceId = useAtomValue(deviceIdAtom)
+  const playerError = useAtomValue(playerErrorAtom)
 
   const handlePlaySong = async () => {
-    if (!track || !deviceId) return
+    if (!track || !deviceId) {
+      if (!deviceId) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
+      return
+    }
     const { statusCode } = await playSong(
       uris.slice(i, uris.length),
       deviceId,
@@ -70,7 +83,18 @@ export default function ClientTopArtistTrackItem({
   }
 
   const handlePauseSong = async () => {
-    if (!track || !deviceId) return
+    if (!track || !deviceId) {
+      if (!deviceId) {
+        toast({
+          title: 'Error on player',
+          description:
+            playerError?.description ??
+            'Could not perform the player action, try reloading the page',
+          variant: 'destructive'
+        })
+      }
+      return
+    }
     const { statusCode } = await pauseSong(deviceId)
     if (statusCode !== 202) {
       toast({
